@@ -1,0 +1,218 @@
+const db = require("../config/database");
+
+const getSellerRequests = (req, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal Server Error" });
+      } else {
+        const sql = "SELECT * FROM seller_requests WHERE status=?";
+        connection.query(sql, ["Pending"], (error, results) => {
+          connection.release();
+          if (error) {
+            return res.status(500).json({ error: "Internal Server Error" });
+          } else {
+            resolve(results);
+          }
+        });
+      }
+    });
+  });
+};
+
+const getRequestDetails = (requestID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal Server Error!" });
+      } else {
+        const sql = "SELECT * FROM seller_requests WHERE requestID=?";
+        connection.query(sql, [requestID], (error, results) => {
+          connection.release();
+          if (error) {
+            reject();
+          } else {
+            resolve(results[0]);
+          }
+        });
+      }
+    });
+  });
+};
+
+const getVerificationDocs = (requestID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal Server Error!" });
+      } else {
+        const sql =
+          "SELECT docName FROM seller_requests_docs WHERE requestID=?";
+        connection.query(sql, [requestID], (error, results) => {
+          connection.release();
+          if (error) {
+            reject();
+          } else {
+            resolve(results);
+          }
+        });
+      }
+    });
+  });
+};
+
+const requestAccepted = (requestID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal Server Error!" });
+      } else {
+        const sql = "UPDATE seller_requests SET status=? WHERE requestID=?";
+        connection.query(sql, ["Accepted", requestID], (err, results) => {
+          if (err) {
+            reject();
+          } else {
+            resolve();
+          }
+        });
+      }
+    });
+  });
+};
+
+const createSeller = (data, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        res.status(500).json({ error: "Internal Server Error" });
+      } else {
+        const {
+          email,
+          password,
+          ownersName,
+          ownersContactNo,
+          ownersAddress,
+          verificationNo,
+        } = data;
+        const sql =
+          "INSERT INTO sellers (email, password, ownersName, ownersContactNo, ownersAddress, verificationNo) VALUES (?, ?, ?, ?, ?, ?)";
+        connection.query(
+          sql,
+          [
+            email,
+            password,
+            ownersName,
+            ownersContactNo,
+            ownersAddress,
+            verificationNo,
+          ],
+          (err, results) => {
+            connection.release();
+            if (err) {
+              return res.status(500).json({ error: "Internal Server Error" });
+            } else {
+              db.getConnection((err, connection) => {
+                if (err) {
+                  return res
+                    .status(500)
+                    .json({ error: "Internal Server Error" });
+                } else {
+                  const sql = "SELECT sellerID FROM sellers WHERE email=?";
+                  connection.query(sql, [email], (err, results) => {
+                    connection.release();
+                    if (err) {
+                      reject();
+                    } else {
+                      resolve(results[0]);
+                    }
+                  });
+                }
+              });
+            }
+          }
+        );
+      }
+    });
+  });
+};
+
+const createStore = (data, res) => {
+  const { sellerID, storeName } = data;
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal Server Error" });
+      } else {
+        const sql = "INSERT INTO stores (sellerID, storeName) VALUES (?, ?)";
+
+        connection.query(sql, [sellerID, storeName], (err, results) => {
+          if (err) {
+            reject();
+          } else {
+            resolve();
+          }
+        });
+      }
+    });
+  });
+};
+
+const addVerificationDocs = (data, res) => {
+  const { sellerID, verificationDocs } = data;
+  return new Promise((resolve, reject) => {
+    for (let i = 0; i < verificationDocs.length; i++) {
+      db.getConnection((err, connection) => {
+        if (err) {
+          return res.status(500).json({ error: "Internal Server Error" });
+        } else {
+          const sql =
+            "INSERT INTO sellers_verification_docs (sellerID, docName) VALUES (?, ?)";
+
+          connection.query(
+            sql,
+            [sellerID, verificationDocs[i]],
+            (err, results) => {
+              connection.release();
+
+              if (err) {
+                reject();
+              } else {
+                resolve();
+              }
+            }
+          );
+        }
+      });
+    }
+  });
+};
+
+const requestRejected = (requestID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal Server Error!" });
+      } else {
+        const sql = "UPDATE seller_requests SET status=? WHERE requestID=?";
+        connection.query(sql, ["Rejected", requestID], (err, results) => {
+          if (err) {
+            reject();
+          } else {
+            resolve();
+          }
+        });
+      }
+    });
+  });
+};
+
+module.exports = {
+  getSellerRequests,
+  getRequestDetails,
+  getVerificationDocs,
+  requestAccepted,
+  createSeller,
+  createStore,
+  addVerificationDocs,
+  requestRejected,
+};

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import CategoriesBar from "./CategoriesBar";
 import NavBar from "./NavBar";
 import mask2 from "../images/mask2.jpg";
@@ -396,11 +397,15 @@ const ProductView = () => {
             </select>
 
             <div class="mt-14">
-              <input
-                class="rounded font-semibold shadow-lg text-white bg-orange-500 p-2.5 w-60"
-                type="submit"
-                value="Add to Cart"
-              />
+              <Link to="/cart">
+                <button
+                  class="rounded font-semibold shadow-lg text-white bg-orange-500 p-2.5 w-60"
+                  type="button"
+                  value="Add to Cart"
+                >
+                  Add to Cart
+                </button>
+              </Link>
               <input
                 class="rounded font-semibold shadow-lg text-white bg-gray-900 ml-4 p-2.5 w-60"
                 type="submit"

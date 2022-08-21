@@ -5,15 +5,10 @@ import logo from "../../images/logo.png";
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const EMAIL_REGEX = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
 
-const RegisterPersonalInfo = () => {
+const RegisterPersonalInfo = (props) => {
   const [focus, setFocus] = useState({
     email: false,
     password: false,
-  });
-
-  const [user, setUser] = useState({
-    email: "",
-    password: "",
   });
 
   //validation state
@@ -25,21 +20,35 @@ const RegisterPersonalInfo = () => {
   const [errMsg, setErrorMsg] = useState("");
 
   useEffect(() => {
-    const result = EMAIL_REGEX.test(user.email);
+    const result = EMAIL_REGEX.test(props.values.email);
     setValidInput({ ...validInput, validEmail: result });
-  }, [user.email]);
+  }, [props.values.email]);
 
   useEffect(() => {
-    const result = PWD_REGEX.test(user.password);
+    const result = PWD_REGEX.test(props.values.password);
     setValidInput({ ...validInput, validPassword: result });
-  }, [user.password]);
+  }, [props.values.password]);
 
   useEffect(() => {
     setErrorMsg("");
-  }, [user.email, user.password]);
+  }, [props.values.email, props.values.password]);
 
-  const handleSubmit = (e) => {
+  const loadPersonal = (e) => {
     e.preventDefault();
+    props.set(1);
+  };
+  const loadStore = (e) => {
+    e.preventDefault();
+    props.set(2);
+  };
+  const loadVerify = (e) => {
+    e.preventDefault();
+    props.set(3);
+  };
+
+  const Continue = (e) => {
+    e.preventDefault();
+    props.next();
   };
 
   return (
@@ -52,11 +61,14 @@ const RegisterPersonalInfo = () => {
         </div>
         <div className="col-span-5">
           <div className="h-screen flex justify-center items-center">
-            <form onSubmit={handleSubmit} method="POST" className="w-9/12">
+            <form className="w-9/12">
               {/* tabs for pages */}
 
               <div className="mb-16 flex ">
-                <button className="flex items-center h-10 px-2 py-2 -mb-px text-center text-orange-600 bg-transparent border-b-2 border-orange-500 sm:px-4 -px-1  whitespace-nowrap focus:outline-none">
+                <button
+                  className="flex items-center h-10 px-2 py-2 -mb-px text-center text-orange-600 bg-transparent border-b-2 border-orange-500 sm:px-4 -px-1  whitespace-nowrap focus:outline-none"
+                  onClick={loadPersonal}
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="w-4 h-4 mx-1 sm:w-6 sm:h-6"
@@ -77,9 +89,9 @@ const RegisterPersonalInfo = () => {
                   </span>
                 </button>
 
-                <Link
+                <button
                   className="flex items-center h-10 px-2 py-2 -mb-px text-center text-gray-700 bg-transparent border-b-2 border-transparent sm:px-4 -px-1  whitespace-nowrap cursor-base focus:outline-none hover:border-gray-400"
-                  to="/sellers/register/storeinfo"
+                  onClick={loadStore}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -97,11 +109,11 @@ const RegisterPersonalInfo = () => {
                   </svg>
 
                   <span className="mx-1 text-sm sm:text-base">Store Info</span>
-                </Link>
+                </button>
 
-                <Link
+                <button
                   className="flex items-center h-10 px-2 py-2 -mb-px text-center text-gray-700 bg-transparent border-b-2 border-transparent sm:px-4 -px-1  whitespace-nowrap cursor-base focus:outline-none hover:border-gray-400"
-                  to="/sellers/register/verifyinfo"
+                  onClick={loadVerify}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -121,7 +133,7 @@ const RegisterPersonalInfo = () => {
                   <span className="mx-1 text-sm sm:text-base">
                     Verification
                   </span>
-                </Link>
+                </button>
               </div>
 
               <h1 className="text-5xl font-bold mb-5 text-gray-700">
@@ -133,7 +145,7 @@ const RegisterPersonalInfo = () => {
               >
                 Already a Member?
                 <Link
-                  to="/buyers/login"
+                  to="/sellers/login"
                   className="ml-2 text-orange-500 dark:text-orange-500"
                 >
                   Login
@@ -151,13 +163,8 @@ const RegisterPersonalInfo = () => {
                   <input
                     type="email"
                     id="email"
-                    value={user.email}
-                    onChange={(e) =>
-                      setUser({
-                        ...user,
-                        email: e.target.value,
-                      })
-                    }
+                    value={props.values.email}
+                    onChange={props.change("email")}
                     onFocus={() => setFocus({ ...focus, email: true })}
                     onBlur={() => setFocus({ ...focus, email: false })}
                     className="block w-full p-2.5 shadow-sm bg-white-500 border border-gray-300 text-gray-900 text- rounded-lg"
@@ -220,13 +227,8 @@ const RegisterPersonalInfo = () => {
                   <input
                     type="password"
                     id="password"
-                    value={user.password}
-                    onChange={(e) =>
-                      setUser({
-                        ...user,
-                        password: e.target.value,
-                      })
-                    }
+                    value={props.values.password}
+                    onChange={props.change("password")}
                     onFocus={() => setFocus({ ...focus, password: true })}
                     onBlur={() => setFocus({ ...focus, password: false })}
                     className="block w-full p-2.5 shadow-sm bg-white-500 border border-gray-300 text-gray-900 text- rounded-lg"
@@ -284,6 +286,7 @@ const RegisterPersonalInfo = () => {
                 <button
                   type="submit"
                   className="mt-8 text-white bg-orange-500 hover:bg-orange-600 font-medium rounded-lg text-md px-5 py-4 text-center w-full"
+                  onClick={Continue}
                 >
                   Continue
                 </button>

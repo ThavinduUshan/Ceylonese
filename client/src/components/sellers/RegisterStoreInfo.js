@@ -2,9 +2,23 @@ import React from "react";
 import { Link } from "react-router-dom";
 import logo from "../../images/logo.png";
 
-const RegisterStoreInfo = () => {
-  const handleSubmit = (e) => {
+const RegisterStoreInfo = (props) => {
+  const loadPersonal = (e) => {
     e.preventDefault();
+    props.set(1);
+  };
+  const loadStore = (e) => {
+    e.preventDefault();
+    props.set(2);
+  };
+  const loadVerify = (e) => {
+    e.preventDefault();
+    props.set(3);
+  };
+
+  const Continue = (e) => {
+    e.preventDefault();
+    props.next();
   };
 
   return (
@@ -17,13 +31,13 @@ const RegisterStoreInfo = () => {
         </div>
         <div className="col-span-5">
           <div className="h-screen flex justify-center items-center">
-            <form onSubmit={handleSubmit} method="POST" className="w-9/12">
+            <form className="w-9/12">
               {/* tabs for pages */}
 
               <div className="mb-16 flex ">
-                <Link
+                <button
                   className="flex items-center h-10 px-2 py-2 -mb-px text-center text-gray-700 bg-transparent border-b-2 border-transparent sm:px-4 -px-1  whitespace-nowrap cursor-base focus:outline-none hover:border-gray-400"
-                  to="/sellers/register/personalinfo"
+                  onClick={loadPersonal}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -43,11 +57,11 @@ const RegisterStoreInfo = () => {
                   <span className="mx-1 text-sm sm:text-base">
                     Account Info
                   </span>
-                </Link>
+                </button>
 
-                <Link
+                <button
                   className="flex items-center h-10 px-2 py-2 -mb-px text-center text-orange-600 bg-transparent border-b-2 border-orange-500 sm:px-4 -px-1  whitespace-nowrap focus:outline-none"
-                  to="/sellers/register/storeinfo"
+                  onClick={loadStore}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -65,11 +79,11 @@ const RegisterStoreInfo = () => {
                   </svg>
 
                   <span className="mx-1 text-sm sm:text-base">Store Info</span>
-                </Link>
+                </button>
 
-                <Link
+                <button
                   className="flex items-center h-10 px-2 py-2 -mb-px text-center text-gray-700 bg-transparent border-b-2 border-transparent sm:px-4 -px-1  whitespace-nowrap cursor-base focus:outline-none hover:border-gray-400"
-                  to="/sellers/register/verifyinfo"
+                  onClick={loadVerify}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -89,7 +103,7 @@ const RegisterStoreInfo = () => {
                   <span className="mx-1 text-sm sm:text-base">
                     Verification
                   </span>
-                </Link>
+                </button>
               </div>
 
               <div className="mt-10">
@@ -104,6 +118,8 @@ const RegisterStoreInfo = () => {
                     type="text"
                     id="contactNo"
                     className="block w-full p-2.5 shadow-sm bg-white-500 border border-gray-300 text-gray-900 text- rounded-lg"
+                    value={props.values.storeName}
+                    onChange={props.change("storeName")}
                     required
                   />
                 </div>
@@ -119,6 +135,8 @@ const RegisterStoreInfo = () => {
                     type="text"
                     id="contactNo"
                     className="block w-full p-2.5 shadow-sm bg-white-500 border border-gray-300 text-gray-900 text- rounded-lg"
+                    value={props.values.ownersName}
+                    onChange={props.change("ownersName")}
                     required
                   />
                 </div>
@@ -134,6 +152,8 @@ const RegisterStoreInfo = () => {
                     type="text"
                     id="contactNo"
                     className="block w-full p-2.5 shadow-sm bg-white-500 border border-gray-300 text-gray-900 text- rounded-lg"
+                    value={props.values.ownersContactNo}
+                    onChange={props.change("ownersContactNo")}
                     required
                   />
                 </div>
@@ -149,6 +169,8 @@ const RegisterStoreInfo = () => {
                     type="text"
                     id="contactNo"
                     className="block w-full p-2.5 shadow-sm bg-white-500 border border-gray-300 text-gray-900 text- rounded-lg"
+                    value={props.values.ownersAddress}
+                    onChange={props.change("ownersAddress")}
                     required
                   />
                 </div>
@@ -156,6 +178,7 @@ const RegisterStoreInfo = () => {
                 <button
                   type="submit"
                   className="mt-8 text-white bg-orange-500 hover:bg-orange-600 font-medium rounded-lg text-md px-5 py-4 text-center w-full"
+                  onClick={Continue}
                 >
                   Continue
                 </button>

@@ -14,7 +14,7 @@ const SearchView = () => {
           <div class="container flex flex-wrap mx-auto p-5">
             <div class="w-full sm:w-1/2 md:w-1/2 xl:w-1/4 p-4">
               <Link
-                to="/"
+                to="/product"
                 class="c-card block bg-white shadow-md hover:shadow-xl rounded-lg overflow-hidden"
               >
                 <div class="relative pb-48 overflow-hidden">

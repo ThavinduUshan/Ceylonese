@@ -78,6 +78,9 @@ const NavBar = () => {
                 placeholder="Search items..."
               />
             </div>
+            <Link to="/search" className="text-gray-900">
+              click
+            </Link>
             <button
               onClick={toggleMenu}
               data-collapse-toggle="NavBar-search"
@@ -130,7 +133,7 @@ const NavBar = () => {
               />
             </div>
             <ul className="flex flex-col p-4 mt-4 bg-gray-50 rounded-lg border border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-gray-900 dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-              {!auth.user ? (
+              {!auth.user && (
                 <>
                   <li>
                     <Link
@@ -150,7 +153,7 @@ const NavBar = () => {
                     </Link>
                   </li>
                   <li>
-                    <Link to="/">
+                    <Link to="/cart">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-8 w-8"
@@ -168,11 +171,12 @@ const NavBar = () => {
                     </Link>
                   </li>
                 </>
-              ) : (
+              )}
+              {auth.roles === 5150 && (
                 <>
                   <li>
                     <Link
-                      to="/"
+                      to="/cart"
                       className="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
                       aria-current="page"
                     >
@@ -192,6 +196,132 @@ const NavBar = () => {
                       </svg>
                     </Link>
                   </li>
+                  <li>
+                    <Link
+                      to="/"
+                      className="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-8 w-8"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="#fff"
+                        strokeWidth="2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                        />
+                      </svg>
+                    </Link>
+                  </li>
+                  <button onClick={toggleDropDown}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-8 w-8"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="#fff"
+                      strokeWidth="2"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </button>
+                </>
+              )}
+
+              {auth.roles === 2436 && (
+                <>
+                  <li>
+                    <Link
+                      to="/"
+                      className="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-8 w-8"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="#fff"
+                        strokeWidth="2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                        />
+                      </svg>
+                    </Link>
+                  </li>
+                  <button onClick={toggleDropDown}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-8 w-8"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="#fff"
+                      strokeWidth="2"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </button>
+                </>
+              )}
+
+              {auth.roles === 9871 && (
+                <>
+                  <li>
+                    <Link
+                      to="/"
+                      className="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-8 w-8"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="#fff"
+                        strokeWidth="2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                        />
+                      </svg>
+                    </Link>
+                  </li>
+                  <button onClick={toggleDropDown}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-8 w-8"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="#fff"
+                      strokeWidth="2"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </button>
+                </>
+              )}
+
+              {auth.roles === 2347 && (
+                <>
                   <li>
                     <Link
                       to="/"
@@ -270,7 +400,7 @@ const NavBar = () => {
         {showMenu && (
           <>
             <ul className="md:hidden mx-5 flex flex-col p-4 mt-4 bg-gray-800 rounded-lg border border-gray-700 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-gray-900 dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
-              {!auth.user ? (
+              {!auth.user && (
                 <>
                   <li>
                     <Link
@@ -298,52 +428,154 @@ const NavBar = () => {
                     </Link>
                   </li>
                 </>
-              ) : (
-                <>
-                  <li>
-                    <Link
-                      to="/login"
-                      className="block py-2 pr-4 pl-3 text-orange-500 text-base rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-white md:p-0 "
-                      aria-current="page"
-                    >
-                      Add to Cart
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/login"
-                      className="block py-2 pr-4 pl-3 text-gray-400 text-base rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-white md:p-0 "
-                      aria-current="page"
-                    >
-                      Notifications
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      to="/login"
-                      className="block py-2 pr-4 pl-3 text-gray-400 text-base rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-white md:p-0 "
-                      aria-current="page"
-                    >
-                      Profile
-                    </Link>
-                  </li>
-                  <li>
-                    <button
-                      onClick={logout}
-                      to="/"
-                      className="block mt-2 w-full py-2 pr-4 pl-3 bg-orange-500 text-white text-base rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-white md:p-0"
-                    >
-                      Log out
-                    </button>
-                  </li>
-                </>
               )}
+
+              {auth.roles ===
+                5150(
+                  <>
+                    <li>
+                      <Link
+                        to="/login"
+                        className="block py-2 pr-4 pl-3 text-orange-500 text-base rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-white md:p-0 "
+                        aria-current="page"
+                      >
+                        Add to Cart
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/login"
+                        className="block py-2 pr-4 pl-3 text-gray-400 text-base rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-white md:p-0 "
+                        aria-current="page"
+                      >
+                        Notifications
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/login"
+                        className="block py-2 pr-4 pl-3 text-gray-400 text-base rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-white md:p-0 "
+                        aria-current="page"
+                      >
+                        Profile
+                      </Link>
+                    </li>
+                    <li>
+                      <button
+                        onClick={logout}
+                        to="/"
+                        className="block mt-2 w-full py-2 pr-4 pl-3 bg-orange-500 text-white text-base rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-white md:p-0"
+                      >
+                        Log out
+                      </button>
+                    </li>
+                  </>
+                )}
+
+              {auth.roles ===
+                2436(
+                  <>
+                    <li>
+                      <Link
+                        to="/login"
+                        className="block py-2 pr-4 pl-3 text-gray-400 text-base rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-white md:p-0 "
+                        aria-current="page"
+                      >
+                        Notifications
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/login"
+                        className="block py-2 pr-4 pl-3 text-gray-400 text-base rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-white md:p-0 "
+                        aria-current="page"
+                      >
+                        Profile
+                      </Link>
+                    </li>
+                    <li>
+                      <button
+                        onClick={logout}
+                        to="/"
+                        className="block mt-2 w-full py-2 pr-4 pl-3 bg-orange-500 text-white text-base rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-white md:p-0"
+                      >
+                        Log out
+                      </button>
+                    </li>
+                  </>
+                )}
+
+              {auth.roles ===
+                9871(
+                  <>
+                    <li>
+                      <Link
+                        to="/login"
+                        className="block py-2 pr-4 pl-3 text-gray-400 text-base rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-white md:p-0 "
+                        aria-current="page"
+                      >
+                        Notifications
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/login"
+                        className="block py-2 pr-4 pl-3 text-gray-400 text-base rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-white md:p-0 "
+                        aria-current="page"
+                      >
+                        Profile
+                      </Link>
+                    </li>
+                    <li>
+                      <button
+                        onClick={logout}
+                        to="/"
+                        className="block mt-2 w-full py-2 pr-4 pl-3 bg-orange-500 text-white text-base rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-white md:p-0"
+                      >
+                        Log out
+                      </button>
+                    </li>
+                  </>
+                )}
+
+              {auth.roles ===
+                2347(
+                  <>
+                    <li>
+                      <Link
+                        to="/login"
+                        className="block py-2 pr-4 pl-3 text-gray-400 text-base rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-white md:p-0 "
+                        aria-current="page"
+                      >
+                        Notifications
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/login"
+                        className="block py-2 pr-4 pl-3 text-gray-400 text-base rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-white md:p-0 "
+                        aria-current="page"
+                      >
+                        Profile
+                      </Link>
+                    </li>
+                    <li>
+                      <button
+                        onClick={logout}
+                        to="/"
+                        className="block mt-2 w-full py-2 pr-4 pl-3 bg-orange-500 text-white text-base rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-white md:p-0"
+                      >
+                        Log out
+                      </button>
+                    </li>
+                  </>
+                )}
             </ul>
           </>
         )}
       </nav>
       {/* Drop Down Menu */}
-      {showDropDown && auth.user && (
+      {showDropDown && auth.roles === 5150 && (
         <>
           <div
             className="hidden md:block md:w-2/12 md:right-0 md:absolute md:z-50  md:text-base md:list-none md:bg-white md:rounded md:divide-y md:divide-gray-100 md:shadow-md "
@@ -356,6 +588,145 @@ const NavBar = () => {
                 </span>
                 <span className="block text-sm font-medium text-gray-500 truncate dark:text-gray-400">
                   thavinduushan@gmail.com
+                </span>
+              </div>
+            </Link>
+            <ul className="py-1" aria-labelledby="user-menu-button">
+              <li>
+                <Link
+                  to="/"
+                  className="block py-2 px-5 text-sm text-gray-700 hover:bg-gray-100 "
+                >
+                  Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/"
+                  className="block py-2 px-5 text-sm text-gray-700 hover:bg-gray-100 "
+                >
+                  Settings
+                </Link>
+              </li>
+
+              <li>
+                <button
+                  onClick={logout}
+                  to="/"
+                  className="block py-2 px-5 text-sm text-left font-bold text-orange-500 hover:text-white hover:bg-orange-500 w-full "
+                >
+                  Logout
+                </button>
+              </li>
+            </ul>
+          </div>
+        </>
+      )}
+      {showDropDown && auth.roles === 2436 && (
+        <>
+          <div
+            className="hidden md:block md:w-2/12 md:right-0 md:absolute md:z-50  md:text-base md:list-none md:bg-white md:rounded md:divide-y md:divide-gray-100 md:shadow-md "
+            id="user-dropdown"
+          >
+            <Link to="/sys/admins/profile">
+              <div className="py-3 px-5">
+                <span className="block text-sm text-gray-900 ">Admin</span>
+                <span className="block text-sm font-medium text-gray-500 truncate dark:text-gray-400">
+                  admin@ceylonesehandicrafts.com
+                </span>
+              </div>
+            </Link>
+            <ul className="py-1" aria-labelledby="user-menu-button">
+              <li>
+                <Link
+                  to="/"
+                  className="block py-2 px-5 text-sm text-gray-700 hover:bg-gray-100 "
+                >
+                  Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/"
+                  className="block py-2 px-5 text-sm text-gray-700 hover:bg-gray-100 "
+                >
+                  Settings
+                </Link>
+              </li>
+
+              <li>
+                <button
+                  onClick={logout}
+                  to="/"
+                  className="block py-2 px-5 text-sm text-left font-bold text-orange-500 hover:text-white hover:bg-orange-500 w-full "
+                >
+                  Logout
+                </button>
+              </li>
+            </ul>
+          </div>
+        </>
+      )}
+
+      {showDropDown && auth.roles === 9871 && (
+        <>
+          <div
+            className="hidden md:block md:w-2/12 md:right-0 md:absolute md:z-50  md:text-base md:list-none md:bg-white md:rounded md:divide-y md:divide-gray-100 md:shadow-md "
+            id="user-dropdown"
+          >
+            <Link to="/sys/moderators/profile">
+              <div className="py-3 px-5">
+                <span className="block text-sm text-gray-900 ">Moderator</span>
+                <span className="block text-sm font-medium text-gray-500 truncate dark:text-gray-400">
+                  modkt@ceylonesehandicrafts.com
+                </span>
+              </div>
+            </Link>
+            <ul className="py-1" aria-labelledby="user-menu-button">
+              <li>
+                <Link
+                  to="/"
+                  className="block py-2 px-5 text-sm text-gray-700 hover:bg-gray-100 "
+                >
+                  Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/"
+                  className="block py-2 px-5 text-sm text-gray-700 hover:bg-gray-100 "
+                >
+                  Settings
+                </Link>
+              </li>
+
+              <li>
+                <button
+                  onClick={logout}
+                  to="/"
+                  className="block py-2 px-5 text-sm text-left font-bold text-orange-500 hover:text-white hover:bg-orange-500 w-full "
+                >
+                  Logout
+                </button>
+              </li>
+            </ul>
+          </div>
+        </>
+      )}
+
+      {showDropDown && auth.roles === 2347 && (
+        <>
+          <div
+            className="hidden md:block md:w-2/12 md:right-0 md:absolute md:z-50  md:text-base md:list-none md:bg-white md:rounded md:divide-y md:divide-gray-100 md:shadow-md "
+            id="user-dropdown"
+          >
+            <Link to="/sellers/profile">
+              <div className="py-3 px-5">
+                <span className="block text-sm text-gray-900 ">
+                  {auth?.user.ownersName}
+                </span>
+                <span className="block text-sm font-medium text-gray-500 truncate dark:text-gray-400">
+                  {auth?.user.email}
                 </span>
               </div>
             </Link>

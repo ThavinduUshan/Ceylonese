@@ -40,13 +40,13 @@ const Home = () => {
               Ceylonese Masterpieces
             </span>
           </h1>
-          <h3 className="shadow text-3xl pt-4 font-medium">
-            Find Your Ideal Craft
-          </h3>
+          <h3 className=" text-3xl pt-4 font-medium">Find Your Ideal Craft</h3>
 
-          <button className=" mt-8 mr-2 mb-2 bg-gray-900 hover:bg-orange-500 text-white font-bold py-3 px-8 border border-gray-900 hover:border-orange-500 rounded-lg">
-            Shop Now
-          </button>
+          <Link to="/search">
+            <button className=" mt-8 mr-2 mb-2 bg-gray-900 hover:bg-orange-500 text-white font-bold py-3 px-8 border border-gray-900 hover:border-orange-500 rounded-lg">
+              Shop Now
+            </button>
+          </Link>
         </div>
       </container>
 
@@ -518,7 +518,8 @@ const Home = () => {
               Join the creative marketplace where millions of customers spend so
               much money annually doing business with individuals like you.
             </p>
-            <button
+            <Link
+              to="/sellers/register"
               type="button"
               className=" transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 mt-10 ml-20 text-gray-900 bg-white hover:text-white border border-gray-800
                     hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 
@@ -526,7 +527,7 @@ const Home = () => {
                     dark:text-gray-900 dark:hover:text-white dark:hover:bg-orange-500 dark:focus:ring-gray-800"
             >
               Start Selling
-            </button>
+            </Link>
           </div>
         </div>
       </section>
