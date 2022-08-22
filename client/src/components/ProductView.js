@@ -1,30 +1,84 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import axios from "../api/axios";
 import CategoriesBar from "./CategoriesBar";
 import NavBar from "./NavBar";
 import mask2 from "../images/mask2.jpg";
+import useCart from "../hooks/useCart";
 
 const ProductView = () => {
+  const { cart, setCart } = useCart();
+
+  const { id } = useParams();
+  const GET_PRODUCT_DETAILS_URL = `root/getproducts/${id}`;
+
+  const [product, setProduct] = useState();
+  const [alreadyAdded, setAlreadyAdded] = useState(false);
+  const [qt, setQt] = useState(1);
+
+  useEffect(() => {
+    axios.get(GET_PRODUCT_DETAILS_URL).then((response) => {
+      console.log(response.data.product);
+      setProduct(response.data.product);
+    });
+  }, []);
+
+  const addToCart = (e) => {
+    e.preventDefault();
+
+    let itemCount = cart.count;
+    const isItemAlreadyAdded = cart.cartItems.some(
+      (item) => item.productID == product.productID
+    );
+
+    if (isItemAlreadyAdded) {
+      setAlreadyAdded(true);
+      setTimeout(() => {
+        setAlreadyAdded(false);
+      }, 3000);
+    } else {
+      console.log(product);
+      let items = cart.cartItems.push(product);
+      setCart({ ...cart, cartItems: items });
+      setCart({
+        ...cart,
+        count: ++itemCount,
+      });
+    }
+  };
+
   return (
     <>
       <NavBar />
       <CategoriesBar />
       <div class="grid grid-cols-2 gap-6">
         <div class="p-10 col-span-1 border-r-2">
-          <img src={mask2} class="w-auto h-auto" alt="" />
-          <div class="flex gap-7">
-            <img src={mask2} class="border-gray-800 border w-32 h-32" alt="" />
+          <img
+            src={`http://localhost:3500/products/${product?.image1}`}
+            class="w-auto h-auto"
+            alt=""
+          />
+          <div class="mt-5 flex justify-between">
             <img
-              src={mask2}
-              class="border-gray-800 border rotate-90 w-32 h-32"
+              src={`http://localhost:3500/products/${product?.image2}`}
+              class="border-gray-800 border rounded-lg w-32 h-32"
               alt=""
             />
             <img
-              src={mask2}
-              class="border-gray-800 border rotate-180 w-32 h-32"
+              src={`http://localhost:3500/products/${product?.image3}`}
+              class="border-gray-800 border rounded-lg  w-32 h-32"
               alt=""
             />
-            <img src={mask2} class="border-gray-800 border  w-32 h-32" alt="" />
+            <img
+              src={`http://localhost:3500/products/${product?.image4}`}
+              class="border-gray-800 border rounded-lg w-32 h-32"
+              alt=""
+            />
+            <img
+              src={`http://localhost:3500/products/${product?.image5}`}
+              class="border-gray-800 border rounded-lg  w-32 h-32"
+              alt=""
+            />
           </div>
           <div class="mt-6">
             <p class="mt-8 text-lg">
@@ -332,10 +386,7 @@ const ProductView = () => {
         </div>
 
         <div class="col-span-1 p-10">
-          <p class="text-2xl">
-            Lorem Ipsum is simply dummy of text of the printing and type titles
-            industry. Loream Ipsum text here
-          </p>
+          <p class="text-2xl">{product?.title}</p>
           <div class="flex gap-1 mt-1">
             <img
               class="w-5 h-5"
@@ -366,46 +417,38 @@ const ProductView = () => {
             <p class="text-green-500">in-stock</p>
           </div>
           <p class="text-gray-900 text-4xl mt-2">
-            <b>USD 50.00</b>
+            <b>USD {product?.price}.00</b>
           </p>
           <div class="flex gap-2">
-            <p class="text-orange-600 text-xl">USD 62.50</p>
+            <p class="line-through text-orange-600 text-xl">USD 62.50</p>
             <p class="mt-0.5">38%</p>
           </div>
           <p class="text-gray-500">Deliver to worldwide</p>
           <form action="" class="mt-5">
-            <label for="size">Size *</label>
+            <br />
+            <label htmlFor="qt" className="mb-5">
+              Quantity *
+            </label>
             <br />
             <input
-              class="border border-gray-600 rounded w-60 h-8"
-              type="text"
-              id="size"
-              name="size"
+              type="number"
+              class="mt-5 px-5 py-3 border border-gray-600 rounded w-20 h-10"
+              value={qt}
+              onChange={(e) => {
+                setQt(e.target.value);
+                setProduct({ ...product, qt: e.target.value });
+              }}
             />
-            <br />
-            <br />
-            <label for="qt">Quantity *</label>
-            <br />
-            <select class="border border-gray-600 rounded w-60 h-8">
-              <option value="1" selected>
-                1
-              </option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5</option>
-            </select>
 
             <div class="mt-14">
-              <Link to="/cart">
-                <button
-                  class="rounded font-semibold shadow-lg text-white bg-orange-500 p-2.5 w-60"
-                  type="button"
-                  value="Add to Cart"
-                >
-                  Add to Cart
-                </button>
-              </Link>
+              <button
+                class="rounded font-semibold shadow-lg text-white bg-orange-500 p-2.5 w-60"
+                type="button"
+                value="Add to Cart"
+                onClick={addToCart}
+              >
+                Add to Cart
+              </button>
               <input
                 class="rounded font-semibold shadow-lg text-white bg-gray-900 ml-4 p-2.5 w-60"
                 type="submit"
@@ -414,17 +457,35 @@ const ProductView = () => {
             </div>
           </form>
 
+          {alreadyAdded && (
+            <>
+              <div className="flex mt-5 px-3 py-2 bg-green-100">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 mr-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="#16a34a"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <p className="text-sm text-green-500">
+                  Item Already In the Cart
+                </p>
+              </div>
+            </>
+          )}
+
           <div class="mt-12">
             <p class="mt-8 text-lg">
               <b>Description</b>
             </p>
-            <p>
-              The personalized cigar case would be completely customized to your
-              request. Which is a great gift for your beloved dad, boyfriend,
-              husband, officiant, groomsmen, best man, groom, it's also a good
-              choice for bachelor party, birthday, wedding party, holiday,
-              anniversary, valentines day, Christmas gift or any other occasion.
-            </p>
+            <p>{product?.description}</p>
             <p class="mt-8 text-lg">
               <b>SHIPPING</b>
             </p>

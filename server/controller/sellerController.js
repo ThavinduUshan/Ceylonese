@@ -12,7 +12,8 @@ const submitSellerRequests = async (req, res) => {
     ownersContactNo,
     ownersAddress,
     verificationNo,
-    verificationDocs,
+    verificationDocFront,
+    verificationDocBack,
   } = req.body;
 
   if (!email) {
@@ -43,7 +44,10 @@ const submitSellerRequests = async (req, res) => {
     return res.status(400).json({ error: "Verfication No can't be empty" });
   }
 
-  if (!verificationDocs) {
+  if (!verificationDocFront) {
+    return res.status(400).json({ error: "Verfication Docs can't be empty" });
+  }
+  if (!verificationDocBack) {
     return res.status(400).json({ error: "Verfication Docs can't be empty" });
   }
 
@@ -64,7 +68,8 @@ const submitSellerRequests = async (req, res) => {
 
         data = {
           requestID: requestID,
-          verificationDocs: verificationDocs,
+          verificationDocFront: verificationDocFront,
+          verificationDocBack: verificationDocBack,
         };
 
         sellerModel.submitSellerVerificationDocs(data, res);
@@ -251,4 +256,24 @@ const addProduct = async (req, res) => {
   }
 };
 
-module.exports = { submitSellerRequests, loginSeller, addProduct };
+const getSellerListings = async (req, res) => {
+  const { sellerID } = req.body;
+  console.log(sellerID);
+
+  try {
+    await sellerModel.getSellerListings(sellerID, res).then((results) => {
+      const listings = results;
+      console.log(listings);
+      res.json({ listings: listings });
+    });
+  } catch (err) {
+    return res.json({ error: "Internal Server Error!" });
+  }
+};
+
+module.exports = {
+  submitSellerRequests,
+  loginSeller,
+  addProduct,
+  getSellerListings,
+};

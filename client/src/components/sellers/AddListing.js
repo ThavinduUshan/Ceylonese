@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "../../api/axios";
 import NavBar from "../NavBar";
 import useAuth from "../../hooks/useAuth";
@@ -9,6 +9,8 @@ const ADD_PRODUCT_URL = "sellers/addproduct";
 
 const AddListing = () => {
   const { auth } = useAuth();
+
+  const navigateTo = useNavigate();
 
   const [listings, setListings] = useState({
     title: "",
@@ -23,8 +25,17 @@ const AddListing = () => {
   });
 
   const [category, setCategory] = useState();
+  const [subCategory, setSubCategory] = useState();
 
   const [images, setImages] = useState({
+    image1: "",
+    image2: "",
+    image3: "",
+    image4: "",
+    image5: "",
+  });
+
+  const [imageNames, setImageNames] = useState({
     image1: "",
     image2: "",
     image3: "",
@@ -49,9 +60,16 @@ const AddListing = () => {
 
   const handleSelectCategory = (e) => {
     e.preventDefault();
-    console.log(e.target.value);
+
     setCategory(parseInt(e.target.value));
     setListings({ ...listings, category: parseInt(e.target.value) });
+  };
+
+  const handleSelectSubCategory = (e) => {
+    e.preventDefault();
+
+    setSubCategory(parseInt(e.target.value));
+    setListings({ ...listings, subCategory: parseInt(e.target.value) });
   };
 
   const uploadImages = async (e) => {
@@ -152,6 +170,7 @@ const AddListing = () => {
             shippingTime: "",
             shippingPrice: "",
           });
+          navigateTo("/sellers/profile/listings");
         }
       });
     } catch (err) {
@@ -336,20 +355,20 @@ const AddListing = () => {
                       <option value="2">Outdoor & Garden</option>
                       <option value="3">Arts & Crafts</option>
                       <option value="4">Gift Ideas</option>
-                      <option value="5">Collectables</option>
+                      <option value="5">Ornaments and Clothing</option>
                     </select>
                   </div>
                 </div>
 
                 {category === 0 && <></>}
 
-                {category === 1 && (
+                {category == 1 && (
                   <>
                     <div className="md:flex md:items-center mb-6">
                       <div className="md:w-1/3">
                         <label
                           className="block text-gray-900 font-semibold pl-40 mb-1 md:mb-0 pr-4"
-                          htmlFor="category"
+                          htmlFor="subcategory"
                         >
                           SubCategory*
                         </label>
@@ -358,17 +377,12 @@ const AddListing = () => {
                       <div className="md:w-2/5">
                         <select
                           className="bg-white border-2 border-gray-200 rounded w-2/3 py-2 px-4 text-gray-400  focus:bg-white focus:border-gray-500"
-                          id="category"
-                          onChange={(e) =>
-                            setListings({
-                              ...listings,
-                              subCategory: e.target.value,
-                            })
-                          }
+                          id="subcategory"
+                          onChange={handleSelectSubCategory}
                         >
-                          <option value="11">Home & Living</option>
-                          <option value="12">Outdoor & Garden</option>
-                          <option value="13">Arts & Crafts</option>
+                          <option value="0">Select Sub Category</option>
+                          <option value="11">Home Decorations</option>
+                          <option value="12">Kitchen and Dining</option>
                         </select>
                       </div>
                     </div>
@@ -381,7 +395,7 @@ const AddListing = () => {
                       <div className="md:w-1/3">
                         <label
                           className="block text-gray-900 font-semibold pl-40 mb-1 md:mb-0 pr-4"
-                          htmlFor="category"
+                          htmlFor="subcategory"
                         >
                           SubCategory*
                         </label>
@@ -390,17 +404,12 @@ const AddListing = () => {
                       <div className="md:w-2/5">
                         <select
                           className="bg-white border-2 border-gray-200 rounded w-2/3 py-2 px-4 text-gray-400  focus:bg-white focus:border-gray-500"
-                          id="category"
-                          onChange={(e) =>
-                            setListings({
-                              ...listings,
-                              subCategory: e.target.value,
-                            })
-                          }
+                          id="subcategory"
+                          onChange={handleSelectSubCategory}
                         >
-                          <option value="11">Home & Living</option>
-                          <option value="12">Outdoor & Garden</option>
-                          <option value="13">Arts & Crafts</option>
+                          <option value="0">Select Sub Category</option>
+                          <option value="21">Garden & Tools</option>
+                          <option value="22">Garden decos</option>
                         </select>
                       </div>
                     </div>
@@ -413,7 +422,7 @@ const AddListing = () => {
                       <div className="md:w-1/3">
                         <label
                           className="block text-gray-900 font-semibold pl-40 mb-1 md:mb-0 pr-4"
-                          htmlFor="category"
+                          htmlFor="subcategory"
                         >
                           SubCategory*
                         </label>
@@ -422,17 +431,15 @@ const AddListing = () => {
                       <div className="md:w-2/5">
                         <select
                           className="bg-white border-2 border-gray-200 rounded w-2/3 py-2 px-4 text-gray-400  focus:bg-white focus:border-gray-500"
-                          id="category"
-                          onChange={(e) =>
-                            setListings({
-                              ...listings,
-                              subCategory: e.target.value,
-                            })
-                          }
+                          id="subcategory"
+                          onChange={handleSelectSubCategory}
                         >
-                          <option value="11">Home & Living</option>
-                          <option value="12">Outdoor & Garden</option>
-                          <option value="13">Arts & Crafts</option>
+                          <option value="0">Select Sub Category</option>
+                          <option value="31">Coir Products</option>
+                          <option value="32">Wood Carvings</option>
+                          <option value="33">Clay & Pottery</option>
+                          <option value="34">Cane Products</option>
+                          <option value="35">Brass Wear</option>
                         </select>
                       </div>
                     </div>
@@ -445,7 +452,7 @@ const AddListing = () => {
                       <div className="md:w-1/3">
                         <label
                           className="block text-gray-900 font-semibold pl-40 mb-1 md:mb-0 pr-4"
-                          htmlFor="category"
+                          htmlFor="subcategory"
                         >
                           SubCategory*
                         </label>
@@ -454,17 +461,12 @@ const AddListing = () => {
                       <div className="md:w-2/5">
                         <select
                           className="bg-white border-2 border-gray-200 rounded w-2/3 py-2 px-4 text-gray-400  focus:bg-white focus:border-gray-500"
-                          id="category"
-                          onChange={(e) =>
-                            setListings({
-                              ...listings,
-                              subCategory: e.target.value,
-                            })
-                          }
+                          id="subcategory"
+                          onChange={handleSelectSubCategory}
                         >
-                          <option value="11">Home & Living</option>
-                          <option value="12">Outdoor & Garden</option>
-                          <option value="13">Arts & Crafts</option>
+                          <option value="0">Select Sub Category</option>
+                          <option value="41">Personalized Gifts</option>
+                          <option value="42">Gift Cards</option>
                         </select>
                       </div>
                     </div>
@@ -477,7 +479,7 @@ const AddListing = () => {
                       <div className="md:w-1/3">
                         <label
                           className="block text-gray-900 font-semibold pl-40 mb-1 md:mb-0 pr-4"
-                          htmlFor="category"
+                          htmlFor="subcategory"
                         >
                           SubCategory*
                         </label>
@@ -486,17 +488,12 @@ const AddListing = () => {
                       <div className="md:w-2/5">
                         <select
                           className="bg-white border-2 border-gray-200 rounded w-2/3 py-2 px-4 text-gray-400  focus:bg-white focus:border-gray-500"
-                          id="category"
-                          onChange={(e) =>
-                            setListings({
-                              ...listings,
-                              subCategory: e.target.value,
-                            })
-                          }
+                          id="subcategory"
+                          onChange={handleSelectSubCategory}
                         >
-                          <option value="11">Home & Living</option>
-                          <option value="12">Outdoor & Garden</option>
-                          <option value="13">Arts & Crafts</option>
+                          <option value="0">Select Sub Category</option>
+                          <option value="51">Jewelleries</option>
+                          <option value="52">Clothing</option>
                         </select>
                       </div>
                     </div>
@@ -647,17 +644,47 @@ const AddListing = () => {
                 >
                   Image 1:
                 </label>
-                <input
-                  className="block p-2.5 w-full text-sm shadow-sm text-gray-600 bg-white rounded-lg border border-gray-300 cursor-pointer "
-                  id="multiple_files"
-                  type="file"
-                  onChange={(e) =>
-                    setImages({
-                      ...images,
-                      image1: e.target.files[0],
-                    })
-                  }
-                />
+                {!imageNames.image1 ? (
+                  <>
+                    <input
+                      className="block p-2.5 w-full text-sm shadow-sm text-gray-600 bg-white rounded-lg border border-gray-300 cursor-pointer "
+                      id="multiple_files"
+                      type="file"
+                      onChange={(e) => {
+                        setImages({
+                          ...images,
+                          image1: e.target.files[0],
+                        });
+                        setImageNames({
+                          ...imageNames,
+                          image1: e.target.files[0].name,
+                        });
+                      }}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <div className="flex mt-2 px-3 py-2 bg-gray-100">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 mr-2"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="#16a34a"
+                        strokeWidth="2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      <p className="text-sm text-gray-500">
+                        {imageNames.image1}
+                      </p>
+                    </div>
+                  </>
+                )}
               </div>
               <div className="m-3">
                 <label
@@ -666,17 +693,47 @@ const AddListing = () => {
                 >
                   Image 2:
                 </label>
-                <input
-                  className="block p-2.5 w-full text-sm shadow-sm text-gray-600 bg-white rounded-lg border border-gray-300 cursor-pointer "
-                  id="multiple_files"
-                  type="file"
-                  onChange={(e) =>
-                    setImages({
-                      ...images,
-                      image2: e.target.files[0],
-                    })
-                  }
-                />
+                {!imageNames.image2 ? (
+                  <>
+                    <input
+                      className="block p-2.5 w-full text-sm shadow-sm text-gray-600 bg-white rounded-lg border border-gray-300 cursor-pointer "
+                      id="multiple_files"
+                      type="file"
+                      onChange={(e) => {
+                        setImages({
+                          ...images,
+                          image2: e.target.files[0],
+                        });
+                        setImageNames({
+                          ...imageNames,
+                          image2: e.target.files[0].name,
+                        });
+                      }}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <div className="flex mt-2 px-3 py-2 bg-gray-100">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 mr-2"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="#16a34a"
+                        strokeWidth="2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      <p className="text-sm text-gray-500">
+                        {imageNames.image2}
+                      </p>
+                    </div>
+                  </>
+                )}
               </div>
               <div className="m-3">
                 <label
@@ -685,17 +742,47 @@ const AddListing = () => {
                 >
                   Image 3:
                 </label>
-                <input
-                  className="block p-2.5 w-full text-sm shadow-sm text-gray-600 bg-white rounded-lg border border-gray-300 cursor-pointer "
-                  id="multiple_files"
-                  type="file"
-                  onChange={(e) =>
-                    setImages({
-                      ...images,
-                      image3: e.target.files[0],
-                    })
-                  }
-                />
+                {!imageNames.image3 ? (
+                  <>
+                    <input
+                      className="block p-2.5 w-full text-sm shadow-sm text-gray-600 bg-white rounded-lg border border-gray-300 cursor-pointer "
+                      id="multiple_files"
+                      type="file"
+                      onChange={(e) => {
+                        setImages({
+                          ...images,
+                          image3: e.target.files[0],
+                        });
+                        setImageNames({
+                          ...imageNames,
+                          image3: e.target.files[0].name,
+                        });
+                      }}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <div className="flex mt-2 px-3 py-2 bg-gray-100">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 mr-2"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="#16a34a"
+                        strokeWidth="2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      <p className="text-sm text-gray-500">
+                        {imageNames.image3}
+                      </p>
+                    </div>
+                  </>
+                )}
               </div>
               <div className="m-3">
                 <label
@@ -704,17 +791,47 @@ const AddListing = () => {
                 >
                   Image 4:
                 </label>
-                <input
-                  className="block p-2.5 w-full text-sm shadow-sm text-gray-600 bg-white rounded-lg border border-gray-300 cursor-pointer "
-                  id="multiple_files"
-                  type="file"
-                  onChange={(e) =>
-                    setImages({
-                      ...images,
-                      image4: e.target.files[0],
-                    })
-                  }
-                />
+                {!imageNames.image4 ? (
+                  <>
+                    <input
+                      className="block p-2.5 w-full text-sm shadow-sm text-gray-600 bg-white rounded-lg border border-gray-300 cursor-pointer "
+                      id="multiple_files"
+                      type="file"
+                      onChange={(e) => {
+                        setImages({
+                          ...images,
+                          image4: e.target.files[0],
+                        });
+                        setImageNames({
+                          ...imageNames,
+                          image4: e.target.files[0].name,
+                        });
+                      }}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <div className="flex mt-2 px-3 py-2 bg-gray-100">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 mr-2"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="#16a34a"
+                        strokeWidth="2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      <p className="text-sm text-gray-500">
+                        {imageNames.image4}
+                      </p>
+                    </div>
+                  </>
+                )}
               </div>
               <div className="m-3">
                 <label
@@ -723,17 +840,47 @@ const AddListing = () => {
                 >
                   Image 5:
                 </label>
-                <input
-                  className="block p-2.5 w-full text-sm shadow-sm text-gray-600 bg-white rounded-lg border border-gray-300 cursor-pointer "
-                  id="multiple_files"
-                  type="file"
-                  onChange={(e) =>
-                    setImages({
-                      ...images,
-                      image5: e.target.files[0],
-                    })
-                  }
-                />
+                {!imageNames.image5 ? (
+                  <>
+                    <input
+                      className="block p-2.5 w-full text-sm shadow-sm text-gray-600 bg-white rounded-lg border border-gray-300 cursor-pointer "
+                      id="multiple_files"
+                      type="file"
+                      onChange={(e) => {
+                        setImages({
+                          ...images,
+                          image5: e.target.files[0],
+                        });
+                        setImageNames({
+                          ...imageNames,
+                          image5: e.target.files[0].name,
+                        });
+                      }}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <div className="flex mt-2 px-3 py-2 bg-gray-100">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 mr-2"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="#16a34a"
+                        strokeWidth="2"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                      <p className="text-sm text-gray-500">
+                        {imageNames.image5}
+                      </p>
+                    </div>
+                  </>
+                )}
               </div>
               <div className="w-full bg-gray-200 rounded-full h-1.5 mb-4 ">
                 <div
@@ -992,7 +1139,7 @@ const AddListing = () => {
               <div className="flex mt-16 justify-end space-x-2">
                 <button
                   type="submit"
-                  className="w-full inline-block px-6 py-4 bg-orange-500 text-white font-medium text-base leading-tight uppercase rounded shadow-md hover:bg-orange-600 hover:shadow-lg focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-blue-800 active:shadow-lg transition duration-150 ease-in-out"
+                  className="w-full inline-block px-6 py-4 bg-orange-500 text-white font-medium text-base leading-tight uppercase rounded shadow-md hover:bg-orange-600 hover:shadow-lg  focus:shadow-lg focus:outline-none focus:ring-0  active:shadow-lg transition duration-150 ease-in-out"
                 >
                   Add Listing
                 </button>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logo from "../../images/logo.png";
 import axios from "../../api/axios";
 
@@ -11,6 +11,8 @@ const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const EMAIL_REGEX = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$/;
 
 const Register = () => {
+  const navigateTo = useNavigate();
+
   //focus state
   const [focus, setFocus] = useState({
     username: false,
@@ -79,6 +81,7 @@ const Register = () => {
               email: "",
               password: "",
             });
+            navigateTo("/buyers/login");
           }
         });
       } catch {
@@ -159,7 +162,7 @@ const Register = () => {
                           />
                         </svg>
                         <p className="bg-red-100 text-sm text-red-500">
-                          Username is not valid!
+                          Username must be at least 4 characters
                         </p>
                       </div>
                     </>
@@ -228,7 +231,8 @@ const Register = () => {
                           />
                         </svg>
                         <p className="bg-red-100 text-sm mt-2 text-red-500">
-                          Email is not valid!
+                          Email must be in the Correct Format ex:
+                          'name@mail.com'
                         </p>
                       </div>
                     </>
@@ -298,7 +302,8 @@ const Register = () => {
                           />
                         </svg>
                         <p className="text-sm text-red-500">
-                          Password is not valid!
+                          Password must have at least 8 characters, 1 symbol 1
+                          uppercase and 1 number
                         </p>
                       </div>
                     </>
@@ -353,6 +358,35 @@ const Register = () => {
                 >
                   Register new account
                 </button>
+              </div>
+              <div
+                id="alert-5"
+                className="mt-10 flex p-4 bg-gray-200 rounded-lg "
+                role="alert"
+              >
+                <svg
+                  aria-hidden="true"
+                  className="flex-shrink-0 w-5 h-5 text-gray-700 "
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                    clipRule="evenodd"
+                  ></path>
+                </svg>
+                <span className="sr-only">Info</span>
+                <div className="ml-3 text-sm font-medium text-gray-500 ">
+                  If you want to join As a seller,
+                  <Link
+                    to="/sellers/register"
+                    className="ml-2 font-semibold underline hover:text-gray-500"
+                  >
+                    Go from here
+                  </Link>
+                </div>
               </div>
             </form>
           </div>

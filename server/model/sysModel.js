@@ -8,6 +8,7 @@ const isUserExists = (email, res) => {
       } else {
         const sql = "SELECT * FROM sys_users WHERE email=?";
         connection.query(sql, [email], (err, results) => {
+          connection.release();
           if (!err && results.length === 1) {
             resolve(results[0]);
           } else {

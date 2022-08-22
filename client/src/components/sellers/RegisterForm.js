@@ -12,7 +12,8 @@ const RegisterForm = () => {
     ownersContactNo: "",
     ownersAddress: "",
     verificationNo: "",
-    verificationDocs: "",
+    verificationDocFront: "",
+    verificationDocBack: "",
   });
 
   const [step, setStep] = useState(1);
@@ -32,10 +33,17 @@ const RegisterForm = () => {
     });
   };
 
-  const setUploadedFiles = (filesArray) => {
+  const handleVerificationDocFront = (fileName) => {
     setInfo({
       ...info,
-      verificationDocs: filesArray,
+      verificationDocFront: fileName,
+    });
+  };
+
+  const handleVerificationDocBack = (fileName) => {
+    setInfo({
+      ...info,
+      verificationDocBack: fileName,
     });
   };
 
@@ -70,7 +78,8 @@ const RegisterForm = () => {
             change={handleChange}
             values={info}
             set={setStepValue}
-            upload={setUploadedFiles}
+            frontDoc={handleVerificationDocFront}
+            backDoc={handleVerificationDocBack}
           />
         </>
       );

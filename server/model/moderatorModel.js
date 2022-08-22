@@ -6,7 +6,8 @@ const getSellerRequests = (req, res) => {
       if (err) {
         return res.status(500).json({ error: "Internal Server Error" });
       } else {
-        const sql = "SELECT * FROM seller_requests WHERE status=?";
+        const sql =
+          "SELECT * FROM seller_requests WHERE status=? ORDER BY requestID DESC";
         connection.query(sql, ["Pending"], (error, results) => {
           connection.release();
           if (error) {
@@ -26,7 +27,8 @@ const getRequestDetails = (requestID, res) => {
       if (err) {
         return res.status(500).json({ error: "Internal Server Error!" });
       } else {
-        const sql = "SELECT * FROM seller_requests WHERE requestID=?";
+        const sql =
+          "SELECT seller_requests.*, seller_requests_docs.frontDocName, seller_requests_docs.backDocName FROM seller_requests INNER JOIN seller_requests_docs ON seller_requests.requestID = seller_requests_docs.requestID WHERE seller_requests.requestID=?";
         connection.query(sql, [requestID], (error, results) => {
           connection.release();
           if (error) {
@@ -40,26 +42,26 @@ const getRequestDetails = (requestID, res) => {
   });
 };
 
-const getVerificationDocs = (requestID, res) => {
-  return new Promise((resolve, reject) => {
-    db.getConnection((err, connection) => {
-      if (err) {
-        return res.status(500).json({ error: "Internal Server Error!" });
-      } else {
-        const sql =
-          "SELECT docName FROM seller_requests_docs WHERE requestID=?";
-        connection.query(sql, [requestID], (error, results) => {
-          connection.release();
-          if (error) {
-            reject();
-          } else {
-            resolve(results);
-          }
-        });
-      }
-    });
-  });
-};
+// const getVerificationDocs = (requestID, res) => {
+//   return new Promise((resolve, reject) => {
+//     db.getConnection((err, connection) => {
+//       if (err) {
+//         return res.status(500).json({ error: "Internal Server Error!" });
+//       } else {
+//         const sql =
+//           "SELECT docName FROM seller_requests_docs WHERE requestID=?";
+//         connection.query(sql, [requestID], (error, results) => {
+//           connection.release();
+//           if (error) {
+//             reject();
+//           } else {
+//             resolve(results);
+//           }
+//         });
+//       }
+//     });
+//   });
+// };
 
 const requestAccepted = (requestID, res) => {
   return new Promise((resolve, reject) => {
@@ -158,32 +160,30 @@ const createStore = (data, res) => {
 };
 
 const addVerificationDocs = (data, res) => {
-  const { sellerID, verificationDocs } = data;
+  const { sellerID, frontDocName, backDocName } = data;
   return new Promise((resolve, reject) => {
-    for (let i = 0; i < verificationDocs.length; i++) {
-      db.getConnection((err, connection) => {
-        if (err) {
-          return res.status(500).json({ error: "Internal Server Error" });
-        } else {
-          const sql =
-            "INSERT INTO sellers_verification_docs (sellerID, docName) VALUES (?, ?)";
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "INSERT INTO sellers_verification_docs (sellerID, frontDocName, backDocName) VALUES (?, ?, ?)";
 
-          connection.query(
-            sql,
-            [sellerID, verificationDocs[i]],
-            (err, results) => {
-              connection.release();
+        connection.query(
+          sql,
+          [sellerID, frontDocName, backDocName],
+          (err, results) => {
+            connection.release();
 
-              if (err) {
-                reject();
-              } else {
-                resolve();
-              }
+            if (err) {
+              reject();
+            } else {
+              resolve();
             }
-          );
-        }
-      });
-    }
+          }
+        );
+      }
+    });
   });
 };
 
@@ -209,7 +209,6 @@ const requestRejected = (requestID, res) => {
 module.exports = {
   getSellerRequests,
   getRequestDetails,
-  getVerificationDocs,
   requestAccepted,
   createSeller,
   createStore,

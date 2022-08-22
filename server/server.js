@@ -14,10 +14,12 @@ app.use(express.static(path.join(__dirname, "uploads")));
 
 //routes
 
+app.use("/root", require("./routes/root"));
 app.use("/upload", require("./routes/upload"));
 app.use("/buyers", require("./routes/buyers"));
 app.use("/sellers", require("./routes/sellers"));
 app.use("/sys", require("./routes/sys"));
+app.use("/admins", require("./routes/admins"));
 app.use("/moderators", require("./routes/moderators"));
 
 app.listen(PORT, () => {

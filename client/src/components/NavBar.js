@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logo from "../images/logo.png";
 import useAuth from "../hooks/useAuth";
+import useCart from "../hooks/useCart";
 
 const NavBar = () => {
   const { auth, setAuth } = useAuth();
+  const { cart, setCart } = useCart();
   const navigateTo = useNavigate();
 
   const [showSearch, setShowSearch] = useState(false);
@@ -17,6 +19,10 @@ const NavBar = () => {
 
   const logout = () => {
     setAuth({});
+    setCart({
+      cartItems: [],
+      count: 0,
+    });
     navigateTo("/");
   };
 
@@ -73,7 +79,7 @@ const NavBar = () => {
               </div>
               <input
                 type="text"
-                id="search-NavBar"
+                id="search-NavBar1"
                 className="block p-2 pl-10 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Search items..."
               />
@@ -127,7 +133,7 @@ const NavBar = () => {
               </div>
               <input
                 type="text"
-                id="search-NavBar"
+                id="search-NavBar2"
                 className="block p-2 pl-10 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Search..."
               />
@@ -152,50 +158,69 @@ const NavBar = () => {
                       Register
                     </Link>
                   </li>
-                  <li>
-                    <Link to="/cart">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-8 w-8"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="#f97316"
-                        strokeWidth="2"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                        />
-                      </svg>
-                    </Link>
-                  </li>
+                  <div className="flex">
+                    <li>
+                      <Link to="/cart">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-8 w-8"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="#f97316"
+                          strokeWidth="2"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                          />
+                        </svg>
+                      </Link>
+                    </li>
+
+                    {cart.count !== 0 && (
+                      <>
+                        <span class="inline-flex justify-center items-center p-2 ml-2 w-2 h-2 text-sm font-medium text-gary-800 bg-white rounded-full ">
+                          {cart.count}
+                        </span>
+                      </>
+                    )}
+                  </div>
                 </>
               )}
               {auth.roles === 5150 && (
                 <>
-                  <li>
-                    <Link
-                      to="/cart"
-                      className="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
-                      aria-current="page"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-8 w-8"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="#f97316"
-                        strokeWidth="2"
+                  <div className="flex">
+                    <li>
+                      <Link
+                        to="/cart"
+                        className="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 md:dark:hover:text-white dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700"
+                        aria-current="page"
                       >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                        />
-                      </svg>
-                    </Link>
-                  </li>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-8 w-8"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="#f97316"
+                          strokeWidth="2"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                          />
+                        </svg>
+                      </Link>
+                    </li>
+                    {cart.count !== 0 && (
+                      <>
+                        <span class="inline-flex justify-center items-center p-2 ml-2 w-2 h-2 text-sm font-medium text-gary-800 bg-white rounded-full ">
+                          {cart.count}
+                        </span>
+                      </>
+                    )}
+                  </div>
                   <li>
                     <Link
                       to="/"
@@ -388,7 +413,7 @@ const NavBar = () => {
                 </div>
                 <input
                   type="text"
-                  id="search-NavBar"
+                  id="search-NavBar3"
                   className="block p-2 pl-10 w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 sm:text-sm focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                   placeholder="Search..."
                 />

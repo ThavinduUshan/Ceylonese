@@ -29,12 +29,36 @@ const Home = () => {
       <NavBar />
       <CategoriesBar />
       {/* Home Page */}
-      <container>
+      <div>
+        <div className="z-50 fixed bottom-0 right-0 m-16">
+          <a href="#seller-section">
+            <button
+              type="button"
+              className="text-white bg-orange-600 hover:bg-orange-800  font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center "
+            >
+              Join As a Seller
+              <svg
+                aria-hidden="true"
+                class="ml-2 -mr-1 w-5 h-5"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+            </button>
+          </a>
+        </div>
         <div
           className=" mb-20 relative text-center text-white font-popins bg-cover bg-center h-screen brightness-50"
           style={{ backgroundImage: `url(${mainBanner})` }}
         ></div>
-        <div className="py-16 px-10 -translate-x-1/2 -translate-y-1/2 absolute text-center text-white left-1/2 top-3/4 md:top-2/3">
+
+        <div className=" px-10 -translate-x-1/2 -translate-y-1/2 absolute text-center text-white left-1/2 top-3/4 md:top-2/3">
           <h1>
             <span className="text-5xl pb-4 font-medium tracking-wide">
               Ceylonese Masterpieces
@@ -43,12 +67,12 @@ const Home = () => {
           <h3 className=" text-3xl pt-4 font-medium">Find Your Ideal Craft</h3>
 
           <Link to="/search">
-            <button className=" mt-8 mr-2 mb-2 bg-gray-900 hover:bg-orange-500 text-white font-bold py-3 px-8 border border-gray-900 hover:border-orange-500 rounded-lg">
+            <button className=" mt-8 mr-2 mb-2 bg-gray-900 hover:bg-orange-500 text-white font-bold py-3 px-8 border border-gray-900 hover:border-orange-600 rounded-lg">
               Shop Now
             </button>
           </Link>
         </div>
-      </container>
+      </div>
 
       <div className="mx-4 my-16">
         <h1 className="text-center text-5xl text-gray-900 leading-loose tracking-widest px-4">
@@ -493,7 +517,7 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="mx-4 my-16">
+      <div id="seller-section" className="mx-4 my-16">
         <h1 className="text-center text-5xl text-gray-900 leading-loose tracking-widest px-4">
           Join Seller Community
         </h1>
@@ -528,6 +552,19 @@ const Home = () => {
             >
               Start Selling
             </Link>
+
+            <Link
+              to="/sellers/login"
+              type="button"
+              className=" transition ease-in-out delay-150 hover:-translate-y-1 hover:scale-110 duration-300 mt-10 ml-5 text-gray-900 bg-white hover:text-white border border-gray-800
+                    hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 
+                    font-medium rounded-lg text-sm px-8 py-2.5 text-center dark:border-gray-600
+                    dark:text-gray-900 dark:hover:text-white dark:hover:bg-orange-500 dark:focus:ring-gray-800"
+            >
+              Seller Login
+            </Link>
+
+            <div className="flex"></div>
           </div>
         </div>
       </section>

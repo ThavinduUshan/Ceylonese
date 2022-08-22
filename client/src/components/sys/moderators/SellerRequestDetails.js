@@ -8,6 +8,8 @@ const SellerRequestDetails = () => {
   const { id } = useParams();
 
   const [request, setRequest] = useState();
+  const [accept, setAccept] = useState(false);
+  const [reject, setReject] = useState(false);
 
   const GET_SELLER_REQUESTS_URL = `moderators/sellerrequests/${id}`;
   console.log(GET_SELLER_REQUESTS_URL);
@@ -87,6 +89,10 @@ const SellerRequestDetails = () => {
     axios.post(SELLER_REQUEST_REJECT_URL, request).then((response) => {
       console.log(response);
       // sendRejectEmail();
+      setReject(true);
+      setTimeout(() => {
+        setReject(false);
+      }, 5000);
     });
   };
 
@@ -94,7 +100,11 @@ const SellerRequestDetails = () => {
     e.preventDefault();
     axios.post(SELLER_REQUEST_ACCEPT_URL, request).then((response) => {
       console.log(response);
-      sendSuccessEmail();
+      //sendSuccessEmail();
+      setAccept(true);
+      setTimeout(() => {
+        setAccept(false);
+      }, 5000);
     });
   };
 
@@ -109,7 +119,7 @@ const SellerRequestDetails = () => {
           <div className="m-20 text-4xl text-gray-700">
             {request?.storeName}
           </div>
-          <div className="bg-white shadow overflow-hidden sm:rounded-lg m-20">
+          <div className="bg-white shadow overflow-hidden sm:rounded-lg mt-20 mx-20 mb-8">
             <div className="px-4 py-5 sm:px-6">
               <h3 className="text-lg leading-6 font-medium text-gray-900">
                 Requesting Seller Account
@@ -182,7 +192,7 @@ const SellerRequestDetails = () => {
                           <img
                             src={
                               request &&
-                              `http://localhost:3500/docs/${request?.verificationDocs[0]}`
+                              `http://localhost:3500/docs/${request?.frontDocName}`
                             }
                           ></img>
                         </div>
@@ -192,7 +202,7 @@ const SellerRequestDetails = () => {
                           <img
                             src={
                               request &&
-                              `http://localhost:3500/docs/${request?.verificationDocs[1]}`
+                              `http://localhost:3500/docs/${request?.backDocName}`
                             }
                           ></img>
                         </div>
@@ -202,7 +212,7 @@ const SellerRequestDetails = () => {
                 </div>
               </dl>
             </div>
-            <div className="my-10 float-right ">
+            <div className="my-8 float-right ">
               <button
                 onClick={handleReject}
                 className="mx-5 bg-gray-700 h-12 px-12 text-white rounded-md"
@@ -217,6 +227,52 @@ const SellerRequestDetails = () => {
               </button>
             </div>
           </div>
+          {accept && (
+            <>
+              <div className="flex justify-center mx-20 px-3 py-2 bg-green-100">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 mr-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="#16a34a"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <p className="text-sm text-green-500">
+                  Seller Request has been Accepted!
+                </p>
+              </div>
+            </>
+          )}
+          {reject && (
+            <>
+              <div className="flex justify-center mx-20 px-3 py-2 bg-red-100">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 mr-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="#dc2626"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <p className="text-sm text-red-500">
+                  Seller Request has been Rejected!
+                </p>
+              </div>
+            </>
+          )}
         </section>
       </main>
     </>

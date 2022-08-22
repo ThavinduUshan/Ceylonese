@@ -163,7 +163,7 @@ const RegisterStoreInfo = (props) => {
                     htmlFor="password"
                     className="block mb-3 text-sm font-medium text-gray-500"
                   >
-                    Owner's Address :
+                    Store Address :
                   </label>
                   <input
                     type="text"

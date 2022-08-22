@@ -16,26 +16,14 @@ const getRequestDetails = async (req, res) => {
   const requestID = req.params.id;
   try {
     await moderatorModel.getRequestDetails(requestID, res).then((response) => {
-      let details = response;
-      console.log(details);
-      moderatorModel.getVerificationDocs(requestID, res).then((response) => {
-        const docs = [];
-        for (let i = 0; i < response.length; i++) {
-          docs.push(response[i].docName);
-        }
-        console.log(docs);
-
-        details = {
-          ...details,
-          verificationDocs: docs,
-        };
-        console.log(details);
-        res.json({
-          request: details,
-        });
+      const details = response;
+      res.json({
+        request: details,
       });
     });
-  } catch {}
+  } catch (err) {
+    res.json({ error: err });
+  }
 };
 
 const acceptSeller = async (req, res) => {
@@ -48,7 +36,8 @@ const acceptSeller = async (req, res) => {
     ownersContactNo,
     ownersAddress,
     verificationNo,
-    verificationDocs,
+    frontDocName,
+    backDocName,
   } = req.body;
 
   try {
@@ -74,7 +63,8 @@ const acceptSeller = async (req, res) => {
         moderatorModel.createStore(data, res).then(() => {
           data = {
             sellerID: sellerID,
-            verificationDocs: verificationDocs,
+            frontDocName: frontDocName,
+            backDocName: backDocName,
           };
 
           moderatorModel.addVerificationDocs(data, res).then(() => {

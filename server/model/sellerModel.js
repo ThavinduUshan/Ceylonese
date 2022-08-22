@@ -60,31 +60,30 @@ const createSellerRequest = (data, res) => {
 
 const submitSellerVerificationDocs = (data, res) => {
   const requestID = data.requestID;
-  const verificationDocs = data.verificationDocs;
+  const verificationDocFront = data.verificationDocFront;
+  const verificationDocBack = data.verificationDocBack;
 
-  for (let i = 0; i < verificationDocs.length; i++) {
-    db.getConnection((err, connection) => {
-      if (err) {
-        throw err;
-      } else {
-        const sql =
-          "INSERT INTO seller_requests_docs (requestID, docName) VALUES (? , ? )";
-        connection.query(
-          sql,
-          [requestID, verificationDocs[i]],
-          (error, results) => {
-            connection.release();
+  db.getConnection((err, connection) => {
+    if (err) {
+      throw err;
+    } else {
+      const sql =
+        "INSERT INTO seller_requests_docs (requestID, frontDocName, backDocName) VALUES (? , ?, ? )";
+      connection.query(
+        sql,
+        [requestID, verificationDocFront, verificationDocBack],
+        (error, results) => {
+          connection.release();
 
-            if (error) {
-              throw error;
-            } else {
-              console.log(results);
-            }
+          if (error) {
+            throw error;
+          } else {
+            console.log(results);
           }
-        );
-      }
-    });
-  }
+        }
+      );
+    }
+  });
 };
 
 const isSellerExists = (email, res) => {
@@ -198,6 +197,7 @@ const addProductImages = (
         sql,
         [productID, image1, image2, image3, image4, image5],
         (err, results) => {
+          connection.release();
           if (err) {
             return res.json({ error: "Internal Server Error" });
           } else {
@@ -209,10 +209,33 @@ const addProductImages = (
   });
 };
 
+const getSellerListings = (sellerID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "SELECT products.*, product_images.image1, product_images.image2, product_images.image3, product_images.image4, product_images.image5 FROM products INNER JOIN product_images ON products.productID = product_images.productID WHERE products.sellerID = ?";
+        connection.query(sql, [sellerID], (err, results) => {
+          connection.release();
+          if (err) {
+            reject();
+          } else {
+            console.log(results);
+            resolve(results);
+          }
+        });
+      }
+    });
+  });
+};
+
 module.exports = {
   createSellerRequest,
   submitSellerVerificationDocs,
   isSellerExists,
   addProduct,
   addProductImages,
+  getSellerListings,
 };

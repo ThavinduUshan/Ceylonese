@@ -7,29 +7,49 @@ const UPLOAD_URL = "upload/docs";
 const SELLER_REQUESTS_URL = "sellers/requests";
 
 const RegisterVerifyInfo = (props) => {
-  const [files, setFiles] = useState();
+  const [files, setFiles] = useState({
+    front: "",
+    back: "",
+  });
   const [uploadPrecentage, setUploadPrecentage] = useState(0);
   const [isFilesUploaded, setIsFileUploaded] = useState(false);
+  const [fileNames, setFileNames] = useState({
+    front: "",
+    back: "",
+  });
 
-  const inputRef = useRef();
+  const inputRefFront = useRef();
+  const inputRefBack = useRef();
   const navigateTo = useNavigate();
 
-  const selectFileHandler = (e) => {
-    setFiles(e.target.files);
+  const selectFileHandlerFront = (e) => {
+    setFiles({ ...files, front: e.target.files[0] });
+    setFileNames({ ...fileNames, front: e.target.files[0].name });
+    props.frontDoc(e.target.files[0].name);
   };
 
-  const clearSelectedFiles = (e) => {
+  const selectFileHandlerBack = (e) => {
+    setFiles({ ...files, back: e.target.files[0] });
+    setFileNames({ ...fileNames, back: e.target.files[0].name });
+    props.backDoc(e.target.files[0].name);
+  };
+
+  const clearFileFront = (e) => {
     e.preventDefault();
-    inputRef.current.value = null;
+    inputRefFront.current.value = null;
+  };
+
+  const clearFileBack = (e) => {
+    e.preventDefault();
+    inputRefFront.current.value = null;
   };
 
   const uploadFiles = async (e) => {
     e.preventDefault();
     const formData = new FormData();
 
-    for (let i = 0; i < files.length; i++) {
-      formData.append(files.item(i).name, files.item(i));
-    }
+    formData.append(fileNames.front, files.front);
+    formData.append(fileNames.back, files.back);
 
     try {
       const res = await axios.post(UPLOAD_URL, formData, {
@@ -48,9 +68,11 @@ const RegisterVerifyInfo = (props) => {
         },
       });
       console.log(res.data);
-      props.upload(res.data.files);
       setIsFileUploaded(true);
-      setFiles();
+      setFiles({
+        front: "",
+        back: "",
+      });
     } catch (err) {
       console.log(err);
     }
@@ -216,16 +238,85 @@ const RegisterVerifyInfo = (props) => {
                     htmlFor="file_input"
                     className="block mb-3 text-sm font-medium text-gray-500"
                   >
-                    Uplodad Document:
+                    Upload a image of frontside of the Document:
                   </label>
-                  <input
-                    className="block p-2.5 w-full text-sm shadow-sm text-gray-600 bg-white rounded-lg border border-gray-300 cursor-pointer "
-                    id="multiple_files"
-                    type="file"
-                    ref={inputRef}
-                    multiple
-                    onChange={selectFileHandler}
-                  />
+                  {!fileNames.front ? (
+                    <>
+                      <input
+                        className="block p-2.5 w-full text-sm shadow-sm text-gray-600 bg-white rounded-lg border border-gray-300 cursor-pointer "
+                        id="multiple_files"
+                        type="file"
+                        ref={inputRefFront}
+                        multiple
+                        onChange={selectFileHandlerFront}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex mt-2 px-3 py-2 bg-gray-100">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5 mr-2"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="#16a34a"
+                          strokeWidth="2"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                        <p className="text-sm text-gray-500">
+                          {fileNames.front}
+                        </p>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                <div className="mb-3">
+                  <label
+                    htmlFor="file_input"
+                    className="block mb-3 text-sm font-medium text-gray-500"
+                  >
+                    Upload a image of backside of the Document:
+                  </label>
+                  {!fileNames.back ? (
+                    <>
+                      <input
+                        className="block p-2.5 w-full text-sm shadow-sm text-gray-600 bg-white rounded-lg border border-gray-300 cursor-pointer "
+                        id="multiple_files"
+                        type="file"
+                        ref={inputRefBack}
+                        multiple
+                        onChange={selectFileHandlerBack}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <div className="flex mt-2 px-3 py-2 bg-gray-100">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5 mr-2"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="#16a34a"
+                          strokeWidth="2"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                        <p className="text-sm text-gray-500">
+                          {fileNames.back}
+                        </p>
+                      </div>
+                    </>
+                  )}
                 </div>
                 <div className="w-full bg-white rounded-full h-1.5 mb-4 ">
                   <div
@@ -233,7 +324,7 @@ const RegisterVerifyInfo = (props) => {
                     style={{ width: `${uploadPrecentage}%` }}
                   ></div>
                 </div>
-                {files && (
+                {files.front && files.back && (
                   <>
                     <div className="flex">
                       <button
@@ -242,13 +333,6 @@ const RegisterVerifyInfo = (props) => {
                         onClick={uploadFiles}
                       >
                         Upload Files
-                      </button>
-                      <button
-                        className="ml-3 px-3 py-2 bg-gray-700 text-white rounded"
-                        type="submit"
-                        onClick={clearSelectedFiles}
-                      >
-                        Clear Files
                       </button>
                     </div>
                   </>
