@@ -25,4 +25,34 @@ const getProductDetails = async (req, res) => {
   }
 };
 
-module.exports = { getProducts, getProductDetails };
+const getAuctions = async (req, res) => {
+  try {
+    await rootModel.getAuctions().then((results) => {
+      const auctions = results;
+      res.json({ auctions: auctions });
+    });
+  } catch (err) {
+    return res.json({ error: err });
+  }
+};
+
+const getAuctionDetails = async (req, res) => {
+  const auctionID = req.params.id;
+
+  try {
+    await rootModel.getAuctionDetails(auctionID, res).then((result) => {
+      const auction = result;
+      console.log(auction);
+      res.json({ auction: auction });
+    });
+  } catch (err) {
+    return res.json({ error: err });
+  }
+};
+
+module.exports = {
+  getProducts,
+  getProductDetails,
+  getAuctions,
+  getAuctionDetails,
+};

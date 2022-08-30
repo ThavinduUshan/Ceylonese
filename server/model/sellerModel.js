@@ -209,6 +209,118 @@ const addProductImages = (
   });
 };
 
+const addAuction = (
+  sellerID,
+  title,
+  description,
+  category,
+  subCategory,
+  attrNames,
+  attrValues,
+  stPrice,
+  duration,
+  endDate,
+  endTime,
+  shipTo,
+  shippingTime,
+  shippingPrice,
+  res
+) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error 1" });
+      } else {
+        console.log(attrNames);
+        console.log(attrValues);
+        const sql =
+          "INSERT INTO auctions (sellerID, title, description, category, subCategory, attribute1Name, attribute1Value, attribute2Name, attribute2Value, attribute3Name, attribute3Value,attribute4Name, attribute4Value, attribute5Name, attribute5Value, startingPrice, Duration, endDate, endTime, isShippingToWorldwide, shippingTime, shippingPrice) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        connection.query(
+          sql,
+          [
+            sellerID,
+            title,
+            description,
+            category,
+            subCategory,
+            attrNames[0],
+            attrValues[0],
+            attrNames[1],
+            attrValues[1],
+            attrNames[2],
+            attrValues[2],
+            attrNames[3],
+            attrValues[3],
+            attrNames[4],
+            attrValues[4],
+            stPrice,
+            duration,
+            endDate,
+            endTime,
+            shipTo,
+            shippingTime,
+            shippingPrice,
+          ],
+          (err, results) => {
+            connection.release();
+            if (err) {
+              return res.json({ error: "Internal Server Error 2" });
+            } else {
+              db.getConnection((err, connection) => {
+                if (err) {
+                  return res.json({ error: "Internal Server Error" });
+                } else {
+                  const sql =
+                    "SELECT auctionID FROM auctions WHERE sellerID=? ORDER BY auctionID DESC LIMIT 1";
+                  connection.query(sql, [sellerID], (err, results) => {
+                    connection.release();
+                    if (err) {
+                      reject();
+                    } else {
+                      resolve(results[0]);
+                    }
+                  });
+                }
+              });
+            }
+          }
+        );
+      }
+    });
+  });
+};
+
+const addAuctionImages = (
+  auctionID,
+  image1,
+  image2,
+  image3,
+  image4,
+  image5,
+  res
+) => {
+  db.getConnection((err, connection) => {
+    if (err) {
+      return res.json({ error: "Internal Server Error" });
+    } else {
+      const sql =
+        "INSERT INTO auction_images (auctionID, image1, image2, image3, image4, image5) VALUES (?,?,?,?,?,?)";
+      connection.query(
+        sql,
+        [auctionID, image1, image2, image3, image4, image5],
+        (err, results) => {
+          connection.release();
+          if (err) {
+            return res.json({ error: "Internal Server Error" });
+          } else {
+            res.json({ success: "Auction has been successfully added" });
+          }
+        }
+      );
+    }
+  });
+};
+
 const getSellerListings = (sellerID, res) => {
   return new Promise((resolve, reject) => {
     db.getConnection((err, connection) => {
@@ -231,11 +343,36 @@ const getSellerListings = (sellerID, res) => {
   });
 };
 
+const getSellerAuctions = (sellerID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "SELECT auctions.*, auction_images.image1, auction_images.image2, auction_images.image3, auction_images.image4, auction_images.image5 FROM auctions INNER JOIN auction_images ON auctions.auctionID = auction_images.auctionID WHERE auctions.sellerID = ?";
+        connection.query(sql, [sellerID], (err, results) => {
+          connection.release();
+          if (err) {
+            reject();
+          } else {
+            console.log(results);
+            resolve(results);
+          }
+        });
+      }
+    });
+  });
+};
+
 module.exports = {
   createSellerRequest,
   submitSellerVerificationDocs,
   isSellerExists,
   addProduct,
+  addAuction,
+  addAuctionImages,
   addProductImages,
   getSellerListings,
+  getSellerAuctions,
 };

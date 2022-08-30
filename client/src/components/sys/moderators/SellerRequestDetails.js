@@ -27,7 +27,7 @@ const SellerRequestDetails = () => {
   const sendSuccessEmail = (e) => {
     e.preventDefault();
     let data = {
-      service_id: "service_esmvt5i",
+      service_id: "service_26984ak",
       template_id: "template_scq6tah",
       user_id: "7v0_CisEp31iy063a",
       template_params: {
@@ -57,7 +57,7 @@ const SellerRequestDetails = () => {
   const sendRejectEmail = (e) => {
     e.preventDefault();
     let data = {
-      service_id: "service_esmvt5i",
+      service_id: "service_26984ak",
       template_id: "template_obs382n",
       user_id: "7v0_CisEp31iy063a",
       template_params: {
@@ -88,7 +88,7 @@ const SellerRequestDetails = () => {
     e.preventDefault();
     axios.post(SELLER_REQUEST_REJECT_URL, request).then((response) => {
       console.log(response);
-      // sendRejectEmail();
+      sendRejectEmail();
       setReject(true);
       setTimeout(() => {
         setReject(false);
@@ -100,7 +100,7 @@ const SellerRequestDetails = () => {
     e.preventDefault();
     axios.post(SELLER_REQUEST_ACCEPT_URL, request).then((response) => {
       console.log(response);
-      //sendSuccessEmail();
+      sendSuccessEmail(e);
       setAccept(true);
       setTimeout(() => {
         setAccept(false);

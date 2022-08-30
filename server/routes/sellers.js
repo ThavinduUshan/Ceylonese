@@ -5,6 +5,8 @@ const sellerController = require("../controller/sellerController");
 router.route("/requests").post(sellerController.submitSellerRequests);
 router.route("/login").post(sellerController.loginSeller);
 router.route("/addproduct").post(sellerController.addProduct);
+router.route("/addauction").post(sellerController.addAuction);
 router.route("/getlistings").post(sellerController.getSellerListings);
+router.route("/getauctions").post(sellerController.getSellerAuctions);
 
 module.exports = router;

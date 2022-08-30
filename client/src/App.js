@@ -18,12 +18,14 @@ import SellerRequestDetails from "./components/sys/moderators/SellerRequestDetai
 import SellerLogin from "./components/sellers/SellerLogin";
 import SellerProfile from "./components/sellers/SellerProfile";
 import Listings from "./components/sellers/Listings";
-import AddListing from "./components/sellers/AddListing";
 import AdminProfile from "./components/sys/admins/AdminProfile";
 import ModeratorProfile from "./components/sys/moderators/ModeratorProfile";
 import Unauthorized from "./components/Unauthorized";
 import ViewModerators from "./components/sys/admins/ViewModerators";
 import AddModerators from "./components/sys/admins/AddModerators";
+import AddLisitingForm from "./components/sellers/AddLisitingForm";
+import AuctionView from "./components/AuctionView";
+import Auctions from "./components/sellers/Auctions";
 
 function App() {
   return (
@@ -33,7 +35,9 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/search" element={<SearchView />} />
         <Route path="/product" element={<ProductView />} />
+        <Route path="/auction" element={<AuctionView />} />
         <Route path="/product/:id" element={<ProductView />} />
+        <Route path="/auction/:id" element={<AuctionView />} />
         <Route path="/cart" element={<CartView />} />
         <Route path="/buyers/login" element={<Login />} />
         <Route path="/buyers/register" element={<Register />} />
@@ -47,7 +51,11 @@ function App() {
         <Route element={<RequireAuth allowedRole={2347} />}>
           <Route path="/sellers/profile" element={<SellerProfile />} />
           <Route path="/sellers/profile/listings" element={<Listings />} />
-          <Route path="/sellers/profile/newlisting" element={<AddListing />} />
+          <Route path="/sellers/profile/auctions" element={<Auctions />} />
+          <Route
+            path="/sellers/profile/newlisting"
+            element={<AddLisitingForm />}
+          />
         </Route>
 
         {/* Admin Routes */}

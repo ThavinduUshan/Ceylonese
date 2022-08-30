@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "../../api/axios";
-import mask from "../../images/Mask.png";
-import SellerSideBar from "./SellerSideBar";
 import NavBar from "../NavBar";
+import SellerSideBar from "./SellerSideBar";
 import useAuth from "../../hooks/useAuth";
 
-const GET_LISTINGS_URL = "sellers/getlistings";
+const GET_AUCTIONS_URL = "sellers/getauctions";
 
-const Listings = () => {
-  const [listings, setListings] = useState();
+const Auctions = () => {
+  const [auctions, setAuctions] = useState();
 
   const { auth } = useAuth();
 
@@ -18,12 +17,12 @@ const Listings = () => {
     const data = {
       sellerID: sellerID,
     };
-    axios.post(GET_LISTINGS_URL, data).then((response) => {
+    axios.post(GET_AUCTIONS_URL, data).then((response) => {
       if (response.data.error) {
         console.log(`${response.data.error}`);
       } else {
-        setListings(response.data.listings);
-        console.log(response.data.listings);
+        setAuctions(response.data.auctions);
+        console.log(response.data.auctions);
       }
     });
   }, []);
@@ -38,19 +37,19 @@ const Listings = () => {
 
         <div className="col-span-4 bg-white-500 ">
           <ul className="mt-20 mx-14 flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 ">
-            <li className="w-48 rounded-t-lg bg-gray-200">
+            <li className="w-48 rounded-t-lg bg-gray-100">
               <Link
                 to="/sellers/profile/listings"
                 aria-current="page"
-                className="inline-block p-4 text-orange-500 text-base active"
+                className="inline-block p-4  text-base active"
               >
                 Listings
               </Link>
             </li>
-            <li className="w-48 rounded-t-lg bg-gray-100">
+            <li className="w-48 rounded-t-lg bg-gray-200">
               <Link
                 to="/sellers/profile/auctions"
-                className="inline-block p-4 text-base rounded-t-lg "
+                className="inline-block p-4 text-orange-500 text-base rounded-t-lg "
               >
                 Auctions
               </Link>
@@ -72,7 +71,7 @@ const Listings = () => {
             </div>
           </div>
 
-          {listings?.length === 0 && (
+          {auctions?.length === 0 && (
             <>
               <div className="flex justify-center ml-8 mr-8 mt-5 px-3 py-10 bg-gray-100">
                 <p className="text-lg text-gray-300">No items to Display</p>
@@ -80,12 +79,12 @@ const Listings = () => {
             </>
           )}
 
-          {listings?.map((listing) => {
+          {auctions?.map((auction) => {
             return (
-              <div key={listing.productID}>
+              <div key={auction.auctionID}>
                 <div className="flex flex-col p-1 ml-12 mr-12 md:flex-row md:space-x-2 md:mt-6 md:text-sm md:font-medium rounded bg-white-300 border border-gray-200 dark:border-gray-300 shadow-lg">
                   <img
-                    src={`http://localhost:3500/products/${listing.image1}`}
+                    src={`http://localhost:3500/auctions/${auction.image1}`}
                     className="mr-3 h-28 ml-2"
                   />
 
@@ -93,8 +92,10 @@ const Listings = () => {
                     <p className="block py-4 pr-4 w-80 text-left pl-3 mt-8">
                       Lorem Ipsum is simply dummy of text
                     </p>
-                    <li className="block ml-20 mt-12">{listing.price}</li>
-                    <li className="block ml-28 mt-12">{listing.quantity}</li>
+                    <li className="block ml-20 mt-12">
+                      {auction.startingPrice}
+                    </li>
+                    <li className="block ml-28 mt-12">{auction.Duration}</li>
                     <li className="block ml-44 mr-20 mt-12">
                       <button>Edit</button>
                     </li>
@@ -123,4 +124,4 @@ const Listings = () => {
   );
 };
 
-export default Listings;
+export default Auctions;

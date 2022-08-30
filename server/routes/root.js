@@ -4,5 +4,7 @@ const rootController = require("../controller/rootController");
 
 router.route("/getproducts").get(rootController.getProducts);
 router.route("/getproducts/:id").get(rootController.getProductDetails);
+router.route("/getauctions").get(rootController.getAuctions);
+router.route("/getauctions/:id").get(rootController.getAuctionDetails);
 
 module.exports = router;

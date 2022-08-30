@@ -7,11 +7,13 @@ import vass1 from "../../images/home/04.jpg";
 import statue1 from "../../images/home/06.jpg";
 import vass2 from "../../images/home/13.jpg";
 import vector from "../../images/vector.jpg";
+import CategoriesBar from "../CategoriesBar";
 
 const Profile = () => {
   return (
     <>
       <NavBar />
+      <CategoriesBar />
       <div className="grid grid-cols-5">
         <SideBar />
         <div className="col-span-3">

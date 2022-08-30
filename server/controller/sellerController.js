@@ -147,10 +147,6 @@ const addProduct = async (req, res) => {
     type,
     category,
     subCategory,
-    pColor,
-    sColor,
-    size,
-    material,
     price,
     quantity,
     shipTo,
@@ -176,27 +172,27 @@ const addProduct = async (req, res) => {
   }
 
   if (!category) {
-    return res.json({ error: "category Went Wrong!" });
+    return res.json({ error: "category can't be empty" });
   }
 
   if (!subCategory) {
-    return res.json({ error: "subcategory Went Wrong!" });
+    return res.json({ error: "subcategory can't be empty" });
   }
 
   if (!price) {
-    return res.json({ error: "price Went Wrong!" });
+    return res.json({ error: "price can't be empty" });
   }
 
   if (!quantity) {
-    return res.json({ error: "quantity Went Wrong!" });
+    return res.json({ error: "quantity can't be empty" });
   }
 
   if (!shippingTime) {
-    return res.json({ error: "shipping time Went Wrong!" });
+    return res.json({ error: "shipping time can't be empty" });
   }
 
   if (!shippingPrice) {
-    return res.json({ error: "shipping price Went Wrong!" });
+    return res.json({ error: "shipping price can't be empty" });
   }
 
   if (!image1) {
@@ -225,12 +221,10 @@ const addProduct = async (req, res) => {
         type,
         category,
         subCategory,
-        pColor,
-        sColor,
-        size,
-        material,
         price,
         quantity,
+        endDate,
+        endTime,
         shipTo,
         shippingTime,
         shippingPrice,
@@ -271,9 +265,154 @@ const getSellerListings = async (req, res) => {
   }
 };
 
+const addAuction = async (req, res) => {
+  const {
+    sellerID,
+    title,
+    description,
+    category,
+    subCategory,
+    attributes,
+    stPrice,
+    duration,
+    endDate,
+    endTime,
+    shipTo,
+    shippingTime,
+    shippingPrice,
+    image1,
+    image2,
+    image3,
+    image4,
+    image5,
+  } = req.body;
+
+  if (!sellerID) {
+    return res.json({ error: "Something Went Wrong!" });
+  }
+
+  if (!title) {
+    return res.json({ error: "title can't be empty" });
+  }
+
+  if (!description) {
+    return res.json({ error: "descrption can't be empty" });
+  }
+
+  if (!category) {
+    return res.json({ error: "category can't be empty" });
+  }
+
+  if (!subCategory) {
+    return res.json({ error: "subcategory can't be empty" });
+  }
+
+  if (!stPrice) {
+    return res.json({ error: "starting price can't be empty" });
+  }
+
+  if (!duration) {
+    return res.json({ error: "duration can't be empty" });
+  }
+  if (!endDate) {
+    return res.json({ error: "Something went wrong" });
+  }
+  if (!endTime) {
+    return res.json({ error: "Something went wrong" });
+  }
+
+  if (!shippingTime) {
+    return res.json({ error: "shipping time Went Wrong!" });
+  }
+
+  if (!shippingPrice) {
+    return res.json({ error: "shipping price Went Wrong!" });
+  }
+
+  if (!image1) {
+    return res.json({ error: "images must be uploaded" });
+  }
+  if (!image2) {
+    return res.json({ error: "images must be uploaded" });
+  }
+  if (!image3) {
+    return res.json({ error: "images must be uploaded" });
+  }
+  if (!image4) {
+    return res.json({ error: "images must be uploaded" });
+  }
+  if (!image5) {
+    return res.json({ error: "images must be uploaded" });
+  }
+
+  //attribute list
+
+  let attrNames = [null, null, null, null, null];
+  let attrValues = [null, null, null, null, null];
+
+  for (let i = 0; i < attributes.length; i++) {
+    attrNames[i] = attributes[i].name;
+    attrValues[i] = attributes[i].value;
+  }
+
+  try {
+    await sellerModel
+      .addAuction(
+        sellerID,
+        title,
+        description,
+        category,
+        subCategory,
+        attrNames,
+        attrValues,
+        stPrice,
+        duration,
+        endDate,
+        endTime,
+        shipTo,
+        shippingTime,
+        shippingPrice,
+        res
+      )
+      .then((auction) => {
+        console.log(auction);
+        const auctionID = auction.auctionID;
+
+        sellerModel.addAuctionImages(
+          auctionID,
+          image1,
+          image2,
+          image3,
+          image4,
+          image5,
+          res
+        );
+      });
+  } catch (err) {
+    res.json({ error: err });
+  }
+};
+
+const getSellerAuctions = async (req, res) => {
+  const { sellerID } = req.body;
+  console.log(sellerID);
+
+  try {
+    await sellerModel.getSellerAuctions(sellerID, res).then((results) => {
+      const auctions = results;
+      console.log(auctions);
+      res.json({ auctions: auctions });
+    });
+  } catch (err) {
+    return res.json({ error: "Internal Server Error!" });
+  }
+};
+
 module.exports = {
   submitSellerRequests,
   loginSeller,
   addProduct,
   getSellerListings,
+  getSellerAuctions,
+  addAuction,
 };

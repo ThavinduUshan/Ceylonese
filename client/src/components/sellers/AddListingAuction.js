@@ -1,19 +1,16 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "../../api/axios";
 import NavBar from "../NavBar";
 import useAuth from "../../hooks/useAuth";
 
-const UPLOAD_URL = "upload/products";
-const ADD_PRODUCT_URL = "sellers/addproduct";
+const UPLOAD_URL = "upload/auctions";
+const ADD_AUCTION_URL = "sellers/addauction";
 
-const AddListing = (props) => {
+const AddListingAuction = (props) => {
   const { auth } = useAuth();
 
   const navigateTo = useNavigate();
-
-  const colorRef = useRef(null);
-  const sizeRef = useRef(null);
 
   const [listings, setListings] = useState({
     title: "",
@@ -25,23 +22,6 @@ const AddListing = (props) => {
 
   const [category, setCategory] = useState();
   const [subCategory, setSubCategory] = useState();
-
-  const [colors, setColors] = useState([]);
-  const [sizes, setSizes] = useState([]);
-
-  const addColor = () => {
-    if (colorRef.current.value !== "") {
-      setColors([...colors, colorRef.current.value]);
-      colorRef.current.value = "";
-    }
-  };
-
-  const addSize = () => {
-    if (sizeRef.current.value !== "") {
-      setSizes([...sizes, sizeRef.current.value]);
-      sizeRef.current.value = "";
-    }
-  };
 
   const [attributes, setAttributes] = useState([]);
   const [attributeCount, setAttributeCount] = useState(0);
@@ -68,9 +48,9 @@ const AddListing = (props) => {
     image5: "",
   });
 
-  const [price, setPrice] = useState({
-    price: "",
-    quantity: "",
+  const [auction, setAuction] = useState({
+    stPrice: "",
+    duration: "",
   });
 
   const [shipping, setShipping] = useState({
@@ -159,6 +139,16 @@ const AddListing = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const time = Date.now() + parseInt(auction.duration) * 1000 * 60 * 60 * 24;
+    const date = new Date(time);
+
+    const endDate =
+      date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+
+    const endTime =
+      date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+
     let data = {
       sellerID: auth.user.sellerID,
       title: listings.title,
@@ -166,11 +156,11 @@ const AddListing = (props) => {
       type: props.type,
       category: listings.category,
       subCategory: listings.subCategory,
-      colors: colors,
-      sizes: sizes,
       attributes: attributes,
-      price: price.price,
-      quantity: price.quantity,
+      stPrice: auction.stPrice,
+      duration: auction.duration,
+      endDate: endDate,
+      endTime: endTime,
       shipTo: shipping.shipTo,
       shippingTime: shipping.shippingTime,
       shippingPrice: shipping.shippingPrice,
@@ -184,7 +174,7 @@ const AddListing = (props) => {
     console.log(data);
 
     try {
-      await axios.post(ADD_PRODUCT_URL, data).then((res) => {
+      await axios.post(ADD_AUCTION_URL, data).then((res) => {
         if (res.data.error) {
           console.log(`${res.data.error}`);
         } else {
@@ -199,14 +189,22 @@ const AddListing = (props) => {
           setListings({
             title: "",
             description: "",
-            type: "",
+            type: 1,
             category: "",
             subCategory: "",
           });
 
-          setPrice({
-            price: "",
-            quantity: "",
+          setAttributes([]);
+          setAttributeCount(0);
+          setAddAttribute({
+            name: "",
+            value: "",
+          });
+          setAddAttributeStatus(false);
+
+          setAuction({
+            stPrice: "",
+            duration: "",
           });
 
           setShipping({
@@ -252,11 +250,11 @@ const AddListing = (props) => {
 
             <div className="flex flex-wrap space-x-2 pt-6 pl-4 mb-5">
               <h2 className="font-medium leading-tight text-3xl mt-0 mb-2 text-gray-900">
-                Add a new listing
+                Add a new Auction
               </h2>
             </div>
 
-            <div className=" pt-14 pb-10  ">
+            <div className=" pt-14 pb-10 ">
               <div className="w-auto bg-gray-200 rounded">
                 <h2 className="font-medium leading-tight text-2xl pt-4 pl-8 pb-4 text-gray-900">
                   Listing Details
@@ -342,10 +340,9 @@ const AddListing = (props) => {
                         <input
                           id="buynow"
                           type="radio"
-                          checked
-                          name="selecttype"
                           value={0}
-                          className="w-4 h-4 text-orange-600 bg-gray-100 border-gray-300 focus:ring-orange-500 dark:focus:ring-orange-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                          name="selecttype"
+                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                           onChange={changeType}
                         />
                         <label
@@ -359,9 +356,10 @@ const AddListing = (props) => {
                         <input
                           id="auction"
                           type="radio"
+                          checked
                           name="selecttype"
                           value={1}
-                          className="w-4 h-4 text-orange-600 bg-gray-100 border-gray-300 focus:ring-orange-500 dark:focus:ring-orange-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                           onChange={changeType}
                         />
                         <label
@@ -540,171 +538,6 @@ const AddListing = (props) => {
                         </select>
                       </div>
                     </div>
-                  </>
-                )}
-                <div className="md:flex md:items-center mb-6">
-                  <div className="md:w-1/3">
-                    <label
-                      className="block text-gray-900 font-semibold pl-40 mb-1 md:mb-0 pr-4"
-                      htmlFor="inline-full-name"
-                    >
-                      Colors
-                    </label>
-                    <p className="text-sm text-gray-500 dark:text-gray-500 pl-40 pr-12">
-                      optional -You can add multiple colors of your product if
-                      available
-                    </p>
-                  </div>
-                  <div className="md:w-1/4">
-                    <input
-                      className="bg-white appearance-none border-2 border-gray-200 rounded w-full py-2 px-4  text-gray-700 leading-tight focus:bg-white focus:border-gray-500"
-                      id="inline-full-name"
-                      type="text"
-                      ref={colorRef}
-                      placeholder="Enter a color and click on add color"
-                    />
-                  </div>
-                  <button
-                    onClick={addColor}
-                    className="ml-5 flex items-center bg-gray-800 hover:bg-gray-900  px-3 py-1 rounded"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="#fff"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                    <p className="text-white ml-2">Add Color</p>
-                  </button>
-                </div>
-
-                {colors.length > 0 && (
-                  <>
-                    {colors.map((color, index) => {
-                      return (
-                        <div
-                          key={index}
-                          className="md:flex md:items-center mb-3"
-                        >
-                          <div className="md:w-1/3 "></div>
-                          <div className="flex justify-between md:w-1/4">
-                            <div className="flex">
-                              <li className="text-base bg-gray-200 w-24">
-                                {color}
-                              </li>
-                              <p className="ml-3  px-1 rounded border  border-green-500  text-green-500 text-sm">
-                                selected
-                              </p>
-                            </div>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth="1.5"
-                              stroke="#000"
-                              className="w-5 h-5 hover:cursor-pointer"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                              />
-                            </svg>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </>
-                )}
-
-                <div className="md:flex md:items-center mb-6">
-                  <div className="md:w-1/3">
-                    <label
-                      className="block text-gray-900 font-semibold pl-40 mb-1 md:mb-0 pr-4"
-                      htmlFor="inline-full-name"
-                    >
-                      Sizes
-                    </label>
-                    <p className="text-sm text-gray-500 dark:text-gray-500 pl-40 pr-12">
-                      optional - You can add multiple sizes of your product if
-                      available
-                    </p>
-                  </div>
-                  <div className="md:w-1/4">
-                    <input
-                      className="bg-white appearance-none border-2 border-gray-200 rounded w-full py-2 px-4  text-gray-700 leading-tight focus:bg-white focus:border-gray-500"
-                      id="inline-full-name"
-                      type="text"
-                      ref={sizeRef}
-                      placeholder="Enter a size and click on add size"
-                    />
-                  </div>
-                  <button
-                    onClick={addSize}
-                    className="ml-5 w-32 flex items-center bg-gray-800 hover:bg-gray-900  px-3 py-1 rounded"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.5"
-                      stroke="#fff"
-                      className="w-5 h-5"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                    <p className="text-white ml-2">Add Size</p>
-                  </button>
-                </div>
-
-                {sizes.length > 0 && (
-                  <>
-                    {sizes.map((size, index) => {
-                      return (
-                        <div
-                          key={index}
-                          className="md:flex md:items-center mb-3"
-                        >
-                          <div className="md:w-1/3 "></div>
-                          <div className="flex justify-between md:w-1/4">
-                            <div className="flex">
-                              <li className="text-base bg-gray-200 w-24">
-                                {size}
-                              </li>
-                              <p className="ml-3  px-1 rounded border  border-green-500  text-green-500 text-sm">
-                                selected
-                              </p>
-                            </div>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth="1.5"
-                              stroke="#000"
-                              className="w-5 h-5 hover:cursor-pointer"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
-                              />
-                            </svg>
-                          </div>
-                        </div>
-                      );
-                    })}
                   </>
                 )}
               </div>
@@ -1260,31 +1093,31 @@ const AddListing = (props) => {
             <div className=" pt-4 pb-10 ">
               <div className="w-auto bg-gray-200 rounded">
                 <h2 className="font-medium leading-tight text-2xl pt-4 pl-8 pb-4 text-gray-900">
-                  Inventory and Pricing
+                  Pricing and Duration
                 </h2>
               </div>
 
               <div className="w-auto grid bg-gray-200 rounded">
                 <div className="md:flex md:items-center mb-6">
-                  <div className="flex justify-between md:w-1/3">
+                  <div className="flex justify-between  md:w-1/3">
                     <label
                       className="block text-gray-900 font-semibold pl-40 mb-1 md:mb-0 pr-4"
-                      htmlFor="price"
+                      htmlFor="startingprice"
                     >
-                      Price
+                      Starting Price
                     </label>
                     <h3 className="font-bold pr-1">$</h3>
                   </div>
                   <div className="md:w-2/5">
                     <input
                       className="bg-white appearance-none border-2 border-gray-200 rounded w-2/3 py-2 px-4 text-gray-700 leading-tight focus:bg-white focus:border-gray-500"
-                      id="price"
+                      id="startingprice"
                       type="text"
-                      value={price.price}
+                      value={auction.stPrice}
                       onChange={(e) =>
-                        setPrice({ ...price, price: e.target.value })
+                        setAuction({ ...auction, stPrice: e.target.value })
                       }
-                      placeholder="Price of the Product"
+                      placeholder="Starting Price"
                     />
                   </div>
                 </div>
@@ -1295,7 +1128,7 @@ const AddListing = (props) => {
                       className="block text-gray-900 font-semibold pl-40 mb-1 md:mb-0 pr-4"
                       htmlFor="quantity"
                     >
-                      Quantity
+                      Duration
                     </label>
                   </div>
                   <div className="md:w-2/5">
@@ -1303,11 +1136,11 @@ const AddListing = (props) => {
                       className="bg-white appearance-none border-2 border-gray-200 rounded w-2/3 py-2 px-4 text-gray-700 leading-tight focus:bg-white focus:border-gray-500"
                       id="quantity"
                       type="number"
-                      value={price.quantity}
+                      value={auction.duration}
                       onChange={(e) =>
-                        setPrice({ ...price, quantity: e.target.value })
+                        setAuction({ ...auction, duration: e.target.value })
                       }
-                      placeholder="Available Quantity of the Product"
+                      placeholder="Duration of the auction in Days"
                     />
                   </div>
                 </div>
@@ -1333,13 +1166,13 @@ const AddListing = (props) => {
                   </div>
                   <div className="md:w-2/5">
                     <div className="flex">
-                      <div className="flex items-center  mb-4">
+                      <div className="flex items-center mb-4">
                         <input
                           id="worldwide"
                           type="radio"
                           value=""
                           name="default-radio"
-                          className="w-4 h-4 text-orange-600 bg-gray-100 border-gray-300 focus:ring-orange-500 dark:focus:ring-orange-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                           onChange={(e) =>
                             setShipping({ ...shipping, shipTo: 1 })
                           }
@@ -1348,16 +1181,16 @@ const AddListing = (props) => {
                           for="worldwide"
                           className="ml-2 text-sm font-medium text-gray-700 "
                         >
-                          WorldWide
+                          World Wide
                         </label>
                       </div>
-                      <div className="flex items-center ml-10 mb-4">
+                      <div className="flex items-center ml-10    mb-4">
                         <input
                           id="sri-lanka"
                           type="radio"
                           value=""
                           name="default-radio"
-                          className="w-4 h-4 text-orange-600 bg-gray-100 border-gray-300 focus:ring-orange-500 dark:focus:ring-orange-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                           onChange={(e) =>
                             setShipping({ ...shipping, shipTo: 0 })
                           }
@@ -1373,7 +1206,7 @@ const AddListing = (props) => {
                   </div>
                 </div>
 
-                <div className="md:flex md:items-center  mb-6">
+                <div className="md:flex md:items-center mb-6">
                   <div className="md:w-1/3">
                     <label
                       className="block text-gray-900 font-semibold pl-40 mb-1 md:mb-0 pr-4"
@@ -1479,4 +1312,4 @@ const AddListing = (props) => {
   );
 };
 
-export default AddListing;
+export default AddListingAuction;

@@ -1,63 +1,74 @@
 import React from "react";
 import CategoriesBar from "../CategoriesBar";
 import NavBar from "../NavBar";
-import mask from "../../images/mask2.jpg";
+import useCart from "../../hooks/useCart";
 
 const Checkout = () => {
+  const { cart, setCart } = useCart();
+
   return (
     <>
       <NavBar />
       <CategoriesBar />
       <div className="grid grid-cols-4 bg-white">
         <div className="col-start-1 col-end-4 bg-white-500">
-          <div className=" text-gray-700 font-bold text-3xl ml-20 mt-10">
-            Review Order
-          </div>
-
-          <ul className="flex flex-col p-6 md:flex-row md:space-x-32 md:mt-1 md:text-sm md:font-medium bg-white">
-            <li className="block ml-32 mr-72 py-4 pr-4 pl-3 md:p-0 text-gray-400">
+          <div className="grid grid-cols-6 text-center my-8 mx-16 bg-gray-100">
+            <div className="flex justify-center items-center font-medium text-gray-400 w-full h-12 mx-auto col-span-1"></div>
+            <div className="flex justify-center items-center font-medium text-gray-400 w-full h-12 mx-auto col-span-2">
               Item
-            </li>
-            <li className="block ml-32 mr-4 py-4 pr-4 pl-3 md:p-0 text-gray-400">
-              Price
-            </li>
-            <li className="block ml-32 py-4 pr-4 pl-3 md:p-0 text-gray-400">
-              Qunatity
-            </li>
-            <li className="block ml-32 py-4 pr-4 pl-3 md:p-0 text-gray-400">
+            </div>
+            <div className="flex justify-center items-center font-medium text-gray-400 w-full h-12 col-span-1">
+              price
+            </div>
+            <div className="flex justify-center items-center font-medium text-gray-400 w-full h-12 col-span-1">
+              Quantity
+            </div>
+            <div className="flex justify-center items-center font-medium text-gray-400 w-full h-12 col-span-1">
               Total
-            </li>
-          </ul>
-
-          <div className="flex flex-col p-1 ml-9 mr-4 md:flex-row md:space-x-2 md:mt-1 md:text-sm md:font-medium rounded bg-white-300 border border-gray-200 dark:border-gray-300 shadow-md">
-            <img src={mask} className="mr-3 h-28 ml-2" alt="" />
-
-            <ul className="flex flex-col md:flex-row">
-              <p className="block py-4 pr-4 w-80 text-left pl-3 ">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione
-                animi, nihil beatae molestiae recusandae quam cum corrupti
-                praesentium error maiores.
-              </p>
-              <li className="block ml-20 mt-12">$50</li>
-              <li className="block ml-36 mt-12">1</li>
-              <li className="block ml-44 mr-20 mt-12">$50</li>
-            </ul>
+            </div>
           </div>
 
-          <div className="flex flex-col p-1 ml-9 mr-4 md:flex-row md:space-x-2 md:mt-8 md:text-sm md:font-medium rounded bg-white-300 border border-gray-200 dark:border-gray-300 shadow-md">
-            <img src={mask} className="mr-3 h-28 ml-2" alt="" />
-
-            <ul className="flex flex-col md:flex-row">
-              <p className="block py-4 pr-4 w-80 text-left pl-3 ">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Ratione
-                animi, nihil beatae molestiae recusandae quam cum corrupti
-                praesentium error maiores.
-              </p>
-              <li className="block ml-20 mt-12">$50</li>
-              <li className="block ml-36 mt-12">1</li>
-              <li className="block ml-44 mr-20 mt-12">$50</li>
-            </ul>
-          </div>
+          {Object.keys(cart.cartItems).length !== 0 ? (
+            <>
+              {cart.cartItems.map((item) => {
+                return (
+                  <>
+                    <div key={item.productID}>
+                      <div className="grid grid-cols-6 h-36 text-center m-16 mt-0 shadow-md rounded-md">
+                        <div className="flex justify-center font-medium items-center w-full col-span-1">
+                          <img
+                            src={`http://localhost:3500/products/${item.image1}`}
+                            class="mr-3 h-28 ml-2"
+                            alt=""
+                          />
+                        </div>
+                        <div className="flex justify-center font-medium items-center w-full col-span-2">
+                          <p class="block ">{item.title}</p>
+                        </div>
+                        <div className="flex justify-center font-medium items-center w-full  col-span-1">
+                          <p class="block  ">{item.price}</p>
+                        </div>
+                        <div className="flex justify-center font-medium items-center w-full col-span-1">
+                          <p class="block ">{item.qt ? item.qt : 1}</p>
+                        </div>
+                        <div className="flex justify-center font-medium items-center w-full col-span-1">
+                          <p class="block ">
+                            ${item.price * (item.qt ? item.qt : 1)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                );
+              })}
+            </>
+          ) : (
+            <>
+              <div className="flex justify-center ml-8 mr-4 mt-5 px-3 py-10 bg-gray-100">
+                <p className="text-lg text-gray-300">No items to Display</p>
+              </div>
+            </>
+          )}
 
           <div className=" text-gray-700 font-bold text-3xl ml-20 mt-10">
             Delivery Options
