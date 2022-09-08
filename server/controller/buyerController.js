@@ -122,6 +122,21 @@ const getOrders = async (req, res) => {
   }
 };
 
+const getCompletedOrders = async (req, res) => {
+  const { buyerID } = req.body;
+
+  try {
+    await buyerModel.getCompletedOrders(buyerID, res).then((response) => {
+      const orders = response;
+      console.log(orders);
+      res.json({ orders: orders });
+    });
+  } catch (err) {
+    return res.json({ error: "Internal Server Error" });
+  }
+};
+
 module.exports = { createBuyer, LoginBuyer,
   getCheckoutDetails,
-  getOrders };
+  getOrders,
+  getCompletedOrders, };
