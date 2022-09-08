@@ -75,7 +75,9 @@ Sellers can generate the reports to get insights about their sales.
 # Tech Stack 
 
 **Client** - React JS, tailwind CSS
+
 **Server** - Node JS, Express JS
+
 **Database** - MYSQL
 
 # Team
