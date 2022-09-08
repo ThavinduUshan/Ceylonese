@@ -106,6 +106,16 @@ function App() {
           <Route path="/buyers/profile" element={<Profile />} />
           <Route path="/buyers/checkout" element={<Checkout />} />
           <Route path="/buyers/support" element={<Support/>} />
+          <Route path="/buyers/orders" element={<BuyerOrders />} />
+          <Route
+            path="/buyers/orders/completed"
+            element={<BuyerOrdersCompleted />}
+          />
+          <Route path="/buyers/order/review/:id" element={<AddRating />} />
+          <Route path="/buyers/biddings" element={<BuyerBids />} />
+          <Route path="/buyers/biddings/ended" element={<BuyerBidsEnded />} />
+          <Route path="/buyers/biddings/won" element={<BuyerBidsWon />} />
+          <Route path="/buyers/chat" element={<BuyerChats />} />
         </Route>
 
         {/* unauthorized route */}

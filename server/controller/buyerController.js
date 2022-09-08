@@ -97,4 +97,46 @@ const LoginBuyer = async (req, res) => {
   }
 };
 
-module.exports = { createBuyer, LoginBuyer };
+const getCheckoutDetails = async (req, res) => {
+  const { buyerID } = req.body;
+
+  if (buyerID) {
+    buyerModel.getCheckoutDetails(buyerID, res);
+  } else {
+    return res.json({ error: "Something went wrong!" });
+  }
+};
+
+const getOrders = async (req, res) => {
+  console.log("here");
+  const { buyerID } = req.body;
+  console.log("this", buyerID);
+  try {
+    await buyerModel.getOrders(buyerID, res).then((response) => {
+      const requests = response;
+      console.log(requests);
+      res.json({ requests: requests });
+    });
+  } catch (err) {
+    return res.json({ error: "Internal Server Error" });
+  }
+};
+
+const getCompletedOrders = async (req, res) => {
+  const { buyerID } = req.body;
+
+  try {
+    await buyerModel.getCompletedOrders(buyerID, res).then((response) => {
+      const orders = response;
+      console.log(orders);
+      res.json({ orders: orders });
+    });
+  } catch (err) {
+    return res.json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports = { createBuyer, LoginBuyer,
+  getCheckoutDetails,
+  getOrders,
+  getCompletedOrders, };
