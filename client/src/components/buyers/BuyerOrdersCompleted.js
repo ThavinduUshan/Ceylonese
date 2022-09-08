@@ -10,7 +10,21 @@ import CategoriesBar from "../CategoriesBar";
 const GET_ORDER_ITEMS_COMPLETED_URL = "buyers/orders/completed";
 
 const BuyerOrdersCompleted = () => {
+    const { auth } = useAuth();
 
+    const [listOfOrders, setListOfOrders] = useState();
+  
+    useEffect(() => {
+      const data = {
+        buyerID: auth.user.id,
+      };
+  
+      axios.post(GET_ORDER_ITEMS_COMPLETED_URL, data).then((response) => {
+        console.log(response.data.orders);
+        setListOfOrders(response.data.orders);
+      });
+    }, []);
+    
   return (
     <>
       <NavBar />
