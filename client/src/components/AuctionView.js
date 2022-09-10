@@ -53,6 +53,7 @@ const AuctionView = () => {
         buyerID: auth.user.id,
         bidAmount: bidAmount,
       };
+      console.log(data);
     }
   };
 
