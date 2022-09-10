@@ -69,8 +69,8 @@ const getAuctionDetails = (auctionID, res) => {
         return res.json({ error: "Internal Server Error" });
       } else {
         const sql =
-          "SELECT sellers.sellerID, stores.storeName, auctions.*, auction_images.image1, auction_images.image2, auction_images.image3, auction_images.image4,auction_images.image5 FROM sellers INNER JOIN stores ON sellers.sellerID = stores.sellerID INNER JOIN auctions ON auctions.sellerID = sellers.sellerID INNER JOIN auction_images ON auctions.auctionID = auction_images.auctionID WHERE auctions.auctionID = ?";
-        connection.query(sql, [auctionID], (err, results) => {
+          "SELECT sellers.sellerID, stores.storeName, auctions.*, biddings.bidAmount, auction_images.image1, auction_images.image2, auction_images.image3, auction_images.image4,auction_images.image5 FROM sellers INNER JOIN stores ON sellers.sellerID = stores.sellerID INNER JOIN auctions ON auctions.sellerID = sellers.sellerID INNER JOIN auction_images ON auctions.auctionID = auction_images.auctionID LEFT JOIN biddings ON auctions.auctionID = biddings.auctionID WHERE (CASE WHEN biddings.bidAmount IS NULL THEN auctions.auctionID = ? ELSE auctions.auctionID = ? AND biddings.status = ? END)";
+        connection.query(sql, [auctionID, auctionID, 1], (err, results) => {
           if (err) {
             reject();
           } else {

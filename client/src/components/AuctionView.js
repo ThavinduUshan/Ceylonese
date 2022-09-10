@@ -5,6 +5,8 @@ import CategoriesBar from "./CategoriesBar";
 import NavBar from "./NavBar";
 import useAuth from "../hooks/useAuth";
 
+const ADD_BID_URL = "buyers/bid";
+
 const AuctionView = () => {
   const { id } = useParams();
   const { auth } = useAuth();
@@ -17,6 +19,20 @@ const AuctionView = () => {
   const [auction, setAuction] = useState();
   const [bidAmount, setBidAmount] = useState();
   const [remainingTime, setRemainingTime] = useState([0, 0, 0, 0]);
+  const [nextBidAmount, setNextBidAmount] = useState();
+  const [bidError, setBidError] = useState(false);
+
+  const handleBidAmount = (e) => {
+    e.preventDefault();
+    const bid = e.target.value;
+    if (bid < nextBidAmount) {
+      setBidError(true);
+      setBidAmount(bid);
+    } else {
+      setBidError(false);
+      setBidAmount(bid);
+    }
+  };
 
   const calculateRemaningTime = (endDate) => {
     endDate = "2022-09-12T18:30:00.000Z";
@@ -48,12 +64,19 @@ const AuctionView = () => {
         replace: true,
       });
     } else {
-      const data = {
-        auctionID: id,
-        buyerID: auth.user.id,
-        bidAmount: bidAmount,
-      };
-      console.log(data);
+      if (bidAmount < nextBidAmount) {
+        setBidError(true);
+      } else {
+        const data = {
+          auctionID: id,
+          buyerID: auth.user.id,
+          bidAmount: bidAmount,
+        };
+
+        axios.post(ADD_BID_URL, data).then((res) => {
+          console.log(res);
+        });
+      }
     }
   };
 
@@ -62,6 +85,15 @@ const AuctionView = () => {
       console.log(response.data.auction);
       setAuction(response.data.auction);
       calculateRemaningTime(response.data.auction.endDate);
+
+      if (response.data.auction.bidAmount == null) {
+        const nextBid = parseFloat(response.data.auction.startingPrice);
+        setNextBidAmount(nextBid);
+      } else {
+        const bidAmount = parseFloat(response.data.auction.bidAmount);
+        const nextBid = bidAmount + (bidAmount * 10) / 100;
+        setNextBidAmount(nextBid);
+      }
     });
   }, []);
 
@@ -101,16 +133,32 @@ const AuctionView = () => {
         </div>
         <div className="col-span-1 p-10">
           <p className="text-2xl">{auction?.title}</p>
-          <div className="flex gap-1 mt-1">
-            <p className="bg-green-500 text-white mt-2 px-3 py-1 rounded text-sm">
-              Current Bid is at
-            </p>
-          </div>
-          <p className="text-gray-900 text-5xl mt-2">
-            <b>USD 58.00</b>
-          </p>
 
-          <p className="text-gray-500">Deliver to worldwide</p>
+          {auction?.bidAmount ? (
+            <>
+              <div className="flex gap-1 mt-1">
+                <p className="bg-green-500 text-white mt-2 px-3 py-1 rounded text-sm">
+                  Current Bid is at
+                </p>
+              </div>
+              <p className="text-gray-900 text-5xl mt-3">
+                <b>${auction?.bidAmount}</b>
+              </p>
+            </>
+          ) : (
+            <>
+              <div className="flex gap-1 mt-1">
+                <p className="bg-green-500 text-white mt-2 px-3 py-1 rounded text-sm">
+                  First Bid Starting at
+                </p>
+              </div>
+              <p className="text-gray-900 text-5xl mt-2">
+                <b>${auction?.startingPrice}</b>
+              </p>
+            </>
+          )}
+
+          <p className="text-gray-500 mt-2">Deliver to worldwide</p>
 
           {remainingTime[0] < 0 &&
           remainingTime[1] < 0 &&
@@ -169,19 +217,41 @@ const AuctionView = () => {
           )}
 
           <form onSubmit={handleSubmit} className="mt-14">
-            <p className="font-medium text-green-500 mb-3">
+            <p className="font-medium text-gray-800 mb-3">
               Minimum amount for next bid :
+              <span className="text-green-500"> ${nextBidAmount}</span>
             </p>
             <input
               className="w-4/5 border border-gray-800 rounded px-5 py-3"
               type="number"
               name="bidamount"
               value={bidAmount}
-              onChange={(e) => {
-                e.preventDefault();
-                setBidAmount(parseInt(e.target.value));
-              }}
+              onChange={(e) => handleBidAmount(e)}
+              onBlur={() => setBidError(false)}
             />
+            {bidError && (
+              <>
+                <div className="flex mt-6 items-center mt-2 px-3 py-2 bg-red-100">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-5 w-5 mr-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="#dc2626"
+                    strokeWidth="2"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                  <p className="bg-red-100 text-sm  text-red-500">
+                    `Bid must be greater than ${nextBidAmount}`
+                  </p>
+                </div>
+              </>
+            )}
             <div class="mt-5">
               <button
                 className="rounded font-semibold shadow-lg text-white bg-orange-500 p-2.5 w-60"

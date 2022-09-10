@@ -97,4 +97,34 @@ const LoginBuyer = async (req, res) => {
   }
 };
 
-module.exports = { createBuyer, LoginBuyer };
+const placeBid = async (req, res) => {
+  const { buyerID, auctionID, bidAmount } = req.body;
+
+  try {
+    await buyerModel.checkBidCount().then((count) => {
+      console.log(count);
+      if (count) {
+        console.log("came");
+        buyerModel
+          .updateLastBid()
+          .then(() => {
+            buyerModel.newBid(buyerID, auctionID, bidAmount, res);
+          })
+          .catch(() => {
+            return res.json({ error: "Internal Server Error" });
+          });
+      } else if (count === 0 && count >= 0) {
+        console.log("here");
+        buyerModel.newBid(buyerID, auctionID, bidAmount, res);
+      } else {
+        console.log("came");
+        return res.json({ error: "Internal Server Error" });
+      }
+    });
+  } catch (err) {
+    console.log("came");
+    return res.json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports = { createBuyer, LoginBuyer, placeBid };
