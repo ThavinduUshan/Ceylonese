@@ -1,20 +1,66 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import axios from "../api/axios";
-import { useParams } from "react-router-dom";
-import statue from "../images/home/06.jpg";
 import CategoriesBar from "./CategoriesBar";
 import NavBar from "./NavBar";
+import useAuth from "../hooks/useAuth";
 
 const AuctionView = () => {
   const { id } = useParams();
+  const { auth } = useAuth();
+
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const GET_AUCTION_DETAILS_URL = `root/getauctions/${id}`;
 
   const [auction, setAuction] = useState();
+  const [bidAmount, setBidAmount] = useState();
+  const [remainingTime, setRemainingTime] = useState([0, 0, 0, 0]);
+
+  const calculateRemaningTime = (endDate) => {
+    endDate = "2022-09-12T18:30:00.000Z";
+    const countDown = new Date(endDate).getTime();
+
+    const second = 1000;
+    const minute = second * 60;
+    const hour = minute * 60;
+    const day = hour * 24;
+
+    setInterval(function () {
+      const now = new Date().getTime();
+      const distance = countDown - now;
+      const days = Math.floor(distance / day);
+      const hours = Math.floor((distance % day) / hour);
+      const minutes = Math.floor((distance % hour) / minute);
+      const seconds = Math.floor((distance % minute) / second);
+
+      setRemainingTime([days, hours, minutes, seconds]);
+    }, 0);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!auth?.user) {
+      navigate("/buyers/login", {
+        state: { from: { pathname: location.pathname } },
+        replace: true,
+      });
+    } else {
+      const data = {
+        auctionID: id,
+        buyerID: auth.user.id,
+        bidAmount: bidAmount,
+      };
+    }
+  };
 
   useEffect(() => {
     axios.get(GET_AUCTION_DETAILS_URL).then((response) => {
       console.log(response.data.auction);
       setAuction(response.data.auction);
+      calculateRemaningTime(response.data.auction.endDate);
     });
   }, []);
 
@@ -65,30 +111,80 @@ const AuctionView = () => {
 
           <p className="text-gray-500">Deliver to worldwide</p>
 
-          <div className="flex gap-5 mt-8">
-            <div>
-              <span className="countdown font-mono text-5xl">10</span>
-              days
-            </div>
-            <div>
-              <span className="countdown font-mono text-5xl">05</span>
-              hours
-            </div>
-            <div>
-              <span className="countdown font-mono text-5xl">06</span>
-              min
-            </div>
-            <div>
-              <span className="countdown font-mono text-5xl">23</span>
-              sec
-            </div>
-          </div>
+          {remainingTime[0] < 0 &&
+          remainingTime[1] < 0 &&
+          remainingTime[2] < 0 &&
+          remainingTime[3] < 0 ? (
+            <>
+              <div className="flex mt-8 items-center mt-2 px-3 py-2 bg-red-100">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 mr-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="#dc2626"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <p className="bg-red-100 text-sm  text-red-500">
+                  Auction has ended!
+                </p>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="flex gap-5 mt-8">
+                <div>
+                  <span className="countdown font-mono text-5xl">
+                    {remainingTime[0]}
+                  </span>
+                  days
+                </div>
+                <div>
+                  <span className="countdown font-mono text-5xl">
+                    {remainingTime[1]}
+                  </span>
+                  hours
+                </div>
+                <div>
+                  <span className="countdown font-mono text-5xl">
+                    {remainingTime[2]}
+                  </span>
+                  min
+                </div>
+                <div>
+                  <span className="countdown font-mono text-5xl">
+                    {remainingTime[3]}
+                  </span>
+                  sec
+                </div>
+              </div>
+            </>
+          )}
 
-          <form action="" class="mt-5">
-            <div class="mt-14">
+          <form onSubmit={handleSubmit} className="mt-14">
+            <p className="font-medium text-green-500 mb-3">
+              Minimum amount for next bid :
+            </p>
+            <input
+              className="w-4/5 border border-gray-800 rounded px-5 py-3"
+              type="number"
+              name="bidamount"
+              value={bidAmount}
+              onChange={(e) => {
+                e.preventDefault();
+                setBidAmount(parseInt(e.target.value));
+              }}
+            />
+            <div class="mt-5">
               <button
-                class="rounded font-semibold shadow-lg text-white bg-orange-500 p-2.5 w-60"
-                type="button"
+                className="rounded font-semibold shadow-lg text-white bg-orange-500 p-2.5 w-60"
+                type="type"
                 value="Add to Cart"
               >
                 Place Bid
