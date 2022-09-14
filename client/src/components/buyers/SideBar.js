@@ -67,8 +67,8 @@ const SideBar = () => {
             </li>
 
             <li>
-              <a
-                href="#"
+              <Link
+                to="/buyers/support"
                 className="flex items-center p-4 text-lg font-normal text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 <svg
@@ -85,7 +85,7 @@ const SideBar = () => {
                   ></path>
                 </svg>
                 <span className="flex-1 ml-3">Support</span>
-              </a>
+              </Link>
               <hr className="bg-gray-100 opacity-20" />
             </li>
 
