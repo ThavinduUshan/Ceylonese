@@ -26,6 +26,7 @@ import AddModerators from "./components/sys/admins/AddModerators";
 import AddLisitingForm from "./components/sellers/AddLisitingForm";
 import AuctionView from "./components/AuctionView";
 import Auctions from "./components/sellers/Auctions";
+import BuyerChat from "./components/chat/BuyerChat";
 
 function App() {
   return (
@@ -90,6 +91,7 @@ function App() {
         <Route element={<RequireAuth allowedRole={5150} />}>
           <Route path="/buyers/profile" element={<Profile />} />
           <Route path="/buyers/checkout" element={<Checkout />} />
+          <Route path="/buyers/chat" element={<BuyerChat />} />
         </Route>
 
         {/* unauthorized route */}

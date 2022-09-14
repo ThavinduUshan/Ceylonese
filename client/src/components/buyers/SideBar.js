@@ -48,7 +48,7 @@ const SideBar = () => {
 
             <li>
               <Link
-                to="/buyers/profile"
+                to="/buyers/chat"
                 className="flex items-center p-4 text-lg font-normal text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
               >
                 <svg
