@@ -7,39 +7,10 @@ const BuyerChat = () => {
     <>
       <NavBar />
       <CategoriesBar />
-      <div className="w-screen">
-        <div
-          className="grid grid-cols-3 min-w-full border rounded"
-          style={{ minHeight: "80vh" }}
-        >
-          <div className="col-span-1 bg-white border-r border-gray-300">
-            <div className="my-3 mx-3 ">
-              <div className="relative text-gray-600 focus-within:text-gray-400">
-                <span className="absolute inset-y-0 left-0 flex items-center pl-2">
-                  <svg
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    viewBox="0 0 24 24"
-                    className="w-6 h-6 text-gray-500"
-                  >
-                    <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                  </svg>
-                </span>
-                <input
-                  aria-placeholder="Busca tus amigos o contacta nuevos"
-                  placeholder="Busca tus amigos"
-                  className="py-2 pl-10 block w-full rounded bg-gray-100 outline-none focus:text-gray-700"
-                  type="search"
-                  name="search"
-                  required
-                />
-              </div>
-            </div>
-
-            <ul className="overflow-auto" style={{ height: "500px" }}>
+      <div>
+        <div className="grid grid-cols-3 min-w-full border rounded">
+          <div className="col-span-1 bg-white border-r border-gray-900 mt-8 ml-4">
+            <ul className="overflow-auto">
               <h2 className="ml-2 mb-10 text-gray-600 text-lg my-2">Chats</h2>
               <li>
                 <a className="hover:bg-gray-100 border-b border-gray-300 px-3 py-2 cursor-pointer flex items-center text-sm focus:outline-none focus:border-gray-300 transition duration-150 ease-in-out">
@@ -105,15 +76,15 @@ const BuyerChat = () => {
               </li>
             </ul>
           </div>
-          <div className="col-span-2 bg-white">
+          <div className="col-span-2 bg-white mt-8">
             <div className="w-full">
-              <div className="flex items-center border-b border-gray-300 pl-3 py-3">
+              <div className="flex items-center border-b border-gray-300 pl-3 py-3 ml-8">
                 <img
                   className="h-10 w-10 rounded-full object-cover"
                   src="https://images.pexels.com/photos/3777931/pexels-photo-3777931.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260"
                   alt="username"
                 />
-                <span className="block ml-2 font-bold text-base text-gray-600">
+                <span className="block ml-4 font-bold text-base text-gray-600">
                   Eduard
                 </span>
                 <span className="connected text-green-500 ml-2">
@@ -122,11 +93,7 @@ const BuyerChat = () => {
                   </svg>
                 </span>
               </div>
-              <div
-                id="chat"
-                className="w-full overflow-y-auto p-10 relative"
-                style={{ height: "700px" }}
-              >
+              <div id="chat" className="w-full overflow-y-auto p-10 relative">
                 <ul>
                   <li className="clearfix2">
                     <div className="w-full flex justify-start">
@@ -167,6 +134,15 @@ const BuyerChat = () => {
                         <span className="block text-xs text-right">
                           10:42pm
                         </span>
+                      </div>
+                    </div>
+                    <div className="w-full flex justify-end">
+                      <div
+                        className="bg-gray-100 rounded px-5 py-2 my-2 text-gray-700 relative"
+                        style={{ maxWidth: "300px" }}
+                      >
+                        <span className="block">how are you again?</span>
+                        <span className="block text-xs text-left">10:55pm</span>
                       </div>
                     </div>
                   </li>
