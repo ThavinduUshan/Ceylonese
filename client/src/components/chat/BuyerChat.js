@@ -26,7 +26,7 @@ const BuyerChat = () => {
               </svg>
             </button>
             <ul className="overflow-auto mr-4">
-              <h2 className="ml-2 mb-10 text-gray-600 text-lg my-2">Chats</h2>
+              <h2 className="ml-2 mb-10 text-gray-600 text-3xl my-2">Chats</h2>
               <li>
                 <a className="hover:bg-gray-100 border-b border-gray-300 px-3 py-2 cursor-pointer flex items-center text-sm focus:outline-none focus:border-gray-300 transition duration-150 ease-in-out">
                   <img
@@ -111,7 +111,7 @@ const BuyerChat = () => {
 
               <div id="chat" className="w-full overflow-y-auto p-10 relative">
                 <ul>
-                  <li className="clearfix2">
+                  <li className="clearfix2 m-4">
                     <div className="w-full flex justify-start">
                       <div
                         className="bg-gray-100 rounded px-5 py-2 my-2 text-gray-700 relative"
@@ -166,39 +166,6 @@ const BuyerChat = () => {
               </div>
 
               <div className="w-full py-3 px-3 flex items-center justify-between border-t border-gray-300">
-                <button className="outline-none focus:outline-none">
-                  <svg
-                    className="text-gray-400 h-6 w-6"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                    />
-                  </svg>
-                </button>
-                <button className="outline-none focus:outline-none ml-1">
-                  <svg
-                    className="text-gray-400 h-6 w-6"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"
-                    />
-                  </svg>
-                </button>
-
                 <input
                   aria-placeholder="Message"
                   placeholder="Message"
