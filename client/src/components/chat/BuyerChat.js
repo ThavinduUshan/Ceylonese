@@ -10,7 +10,22 @@ const BuyerChat = () => {
       <div>
         <div className="grid grid-cols-3 min-w-full border rounded">
           <div className="col-span-1 bg-white border-r border-gray-900 mt-8 ml-4">
-            <ul className="overflow-auto">
+            <button className="outline-none focus:outline-none">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="currentColor"
+                class="bi bi-arrow-left-short"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"
+                />
+              </svg>
+            </button>
+            <ul className="overflow-auto mr-4">
               <h2 className="ml-2 mb-10 text-gray-600 text-lg my-2">Chats</h2>
               <li>
                 <a className="hover:bg-gray-100 border-b border-gray-300 px-3 py-2 cursor-pointer flex items-center text-sm focus:outline-none focus:border-gray-300 transition duration-150 ease-in-out">
@@ -93,6 +108,7 @@ const BuyerChat = () => {
                   </svg>
                 </span>
               </div>
+
               <div id="chat" className="w-full overflow-y-auto p-10 relative">
                 <ul>
                   <li className="clearfix2">
