@@ -9,6 +9,20 @@ import CategoriesBar from "../CategoriesBar";
 const GET_ORDER_ITEMS_URL = "buyers/orders";
 
 const BuyerOrders = () => {
+    const { auth } = useAuth();
+
+  const [listOfOrders, setListOfOrders] = useState();
+
+  useEffect(() => {
+    const data = {
+      buyerID: auth.user.id,
+    };
+
+    axios.post(GET_ORDER_ITEMS_URL, data).then((response) => {
+      console.log(response.data.requests);
+      setListOfOrders(response.data.requests);
+    });
+  }, []);
 
   return (
     <>
