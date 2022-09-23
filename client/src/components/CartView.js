@@ -1,16 +1,50 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import CategoriesBar from "./CategoriesBar";
 import NavBar from "./NavBar";
 import useCart from "../hooks/useCart";
+import axios from "../api/axios";
+import useAuth from "../hooks/useAuth";
+
+const CREATE_CHECKOUT_URL = "stripe/create-checkout-session";
 
 const CartView = () => {
   const { cart, setCart } = useCart();
+  const { auth, setAuth } = useAuth();
+  const navigateTo = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    let tprice = 0;
+    cart.cartItems.map((item) => {
+      tprice += parseFloat(item.price);
+    });
+
+    let subTotalPrice = tprice;
+
+    if (cart?.discount) {
+      let totalPrice = subTotalPrice * cart.discount;
+      setCart({
+        ...cart,
+        subTotal: subTotalPrice,
+        total: totalPrice,
+      });
+    } else {
+      setCart({
+        ...cart,
+        subTotal: subTotalPrice,
+        total: subTotalPrice,
+      });
+    }
+  }, []);
 
   const clearCart = () => {
     setCart({
       cartItems: [],
       count: 0,
+      subTotal: 0,
+      discount: 0,
+      total: 0,
     });
   };
 
@@ -22,6 +56,40 @@ const CartView = () => {
       cartItems: newCart,
       count: cart.count - 1,
     });
+  };
+
+  const handleCheckout = (e) => {
+    e.preventDefault();
+
+    if (!auth.user) {
+      navigateTo(
+        "/buyers/login",
+        {
+          state: {
+            from: location,
+          },
+        },
+        { replace: true }
+      );
+    } else {
+      const data = {
+        cartItems: cart.cartItems,
+        buyerID: auth?.user.id,
+        cart: cart,
+        auth: auth,
+      };
+      axios
+        .post(CREATE_CHECKOUT_URL, data)
+        .then((response) => {
+          if (response.data.url) {
+            window.location.replace(response.data.url);
+            console.log("here");
+            setAuth(response.data.auth);
+            setCart(response.data.cart);
+          }
+        })
+        .catch((err) => console.log(err.message));
+    }
   };
 
   return (
@@ -114,7 +182,7 @@ const CartView = () => {
               <div className="flex justify-end">
                 <button
                   onClick={clearCart}
-                  className="mr-16 px-5 py-3 bg-orange-500 text-white"
+                  className="mr-16 px-5 py-3 bg-orange-500 text-white rounded-md"
                 >
                   Clear Cart
                 </button>
@@ -133,33 +201,33 @@ const CartView = () => {
 
             <div class="flex-grow border-t border-gray-400"></div>
 
-            <div class="flex flex-col p-3 mr-4 ml-2 md:flex-row md:space-x-8 md:mt-6 md:text-sm md:font-medium md:bg-white dark:bg-gray-800 md:dark:bg-gray-200 dark:border-gray-500">
-              <ul class="flex flex-col md:flex-row md:space-x-40">
+            <div class="p-3 mr-4 ml-2 md:flex-row md:space-x-8 md:mt-6 md:text-sm md:font-medium md:bg-white dark:bg-gray-800 md:dark:bg-gray-200 dark:border-gray-500">
+              <ul class="flex justify-between ">
                 <li class="block  text-gray-600 ml-5">Sub-total</li>
-                <li class="block  text-gray-600">$50.00</li>
+                <li class="block  text-gray-600 mr-5">${cart.subTotal}.00</li>
               </ul>
             </div>
 
-            <div class="flex flex-col p-3 mr-4 ml-2 md:flex-row md:space-x-8 md:mt-6 md:text-sm md:font-medium md:bg-white dark:bg-gray-800 md:dark:bg-gray-200 dark:border-gray-700">
-              <ul class="flex flex-col md:flex-row md:space-x-40">
+            <div class="p-3 mr-4 ml-2 md:flex-row md:space-x-8 md:mt-6 md:text-sm md:font-medium md:bg-white dark:bg-gray-800 md:dark:bg-gray-200 dark:border-gray-700">
+              <ul class="flex justify-between ">
                 <li class="block  text-gray-600 ml-5">Discount</li>
-                <li class="block  text-gray-600">$50.00</li>
+                <li class=" block text-gray-600 mr-5">${cart.discount}.00</li>
               </ul>
             </div>
 
-            <div class="flex flex-col p-3 mr-4 ml-2 md:flex-row md:space-x-8 md:mt-6 md:text-sm md:font-medium md:bg-white dark:bg-gray-800 md:dark:bg-gray-200 dark:border-gray-700">
-              <ul class="flex flex-col md:flex-row md:space-x-48">
+            <div class="p-3 mr-4 ml-2 md:flex-row md:space-x-8 md:mt-6 md:text-sm md:font-medium md:bg-white dark:bg-gray-800 md:dark:bg-gray-200 dark:border-gray-500">
+              <ul class="flex justify-between ">
                 <li class="block  text-gray-600 ml-5">Total</li>
-                <li class="block  text-gray-600">$50.00</li>
+                <li class="block  text-gray-600 mr-5">${cart.total}.00</li>
               </ul>
             </div>
 
-            <Link
-              to="/buyers/checkout"
-              class="flex flex-col p-1 ml-2 w-80 h-12 pl-24 text-white text-center md:flex-row  md:mt-6 md:text-2xl md:font-medium rounded-xl md:bg-orange-500 dark:bg-white shadow-xl"
+            <button
+              onClick={handleCheckout}
+              className="flex flex-col p-1 ml-2 w-80 h-12 pl-24 text-white text-center md:flex-row  md:mt-6 md:text-2xl md:font-medium rounded-xl md:bg-orange-500 dark:bg-white shadow-xl"
             >
               Checkout
-            </Link>
+            </button>
 
             <div class="flex flex-col  text-gray-700 font-bold text-3xl p-3 md:flex-row md:space-x-8 md:mt-6 md:bg-white dark:bg-gray-800 dark:border-gray-700">
               Discount codes
