@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 const AddressForm = () => {
-  
+    const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <>
       <div className="w-full md:w-96 md:max-w-full mx-auto">
