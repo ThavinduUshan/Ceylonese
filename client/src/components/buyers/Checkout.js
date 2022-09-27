@@ -9,7 +9,27 @@ import useAuth from "../../hooks/useAuth";
 const GET_CHECKOUT_DETAILS_URL = "buyers/checkout/details";
 
 const Checkout = () => {
+  const { cart, setCart } = useCart();
+  const { auth } = useAuth();
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [address, setAddress] = useState();
+
+  useEffect(() => {
+    const data = {
+      buyerID: auth.user.id,
+    };
+
+    axios.post(GET_CHECKOUT_DETAILS_URL, data).then((response) => {
+      if (response.data.error) {
+        console.log(response.data.error);
+      } else {
+        console.log(response.data.address);
+        const address = response.data.address;
+        setAddress(address);
+      }
+    });
+  }, []);
   return (
     <>
       <NavBar />
