@@ -7,6 +7,21 @@ const ADD_SUPPORT_URL = "/root/addsupportticket";
 
 const SupportTicket = () => {
 
+    const navigateTo = useNavigate();
+
+  const [ticket, setTicket] = useState({
+    name: "",
+    email: "",
+    type: 1,
+    subject: "",
+    description: "",
+  });
+
+  const handleType = (e) => {
+    e.preventDefault();
+    setTicket({ ...ticket, type: e.target.value });
+  };
+
   return (
     <>
       <NavBar />
