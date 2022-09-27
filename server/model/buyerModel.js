@@ -60,4 +60,25 @@ const isBuyerExists = (username) => {
   });
 };
 
-module.exports = { createBuyer, findBuyer, isBuyerExists };
+const getCheckoutDetails = (buyerID, res) => {
+  db.getConnection((err, connection) => {
+    if (err) {
+      return res.json({ error: "Internal Server Error" });
+    } else {
+      const status = 1;
+      const sql =
+        "SELECT * FROM address_book WHERE buyerID = ?  AND status = ?";
+      connection.query(sql, [buyerID, status], (err, result) => {
+        connection.release();
+        if (err) {
+          return res.json({ error: "Internal Server Error" });
+        } else {
+          res.json({ address: result[0] });
+        }
+      });
+    }
+  });
+};
+
+module.exports = { createBuyer, findBuyer, isBuyerExists,
+  getCheckoutDetails, };
