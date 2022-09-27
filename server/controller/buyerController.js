@@ -97,4 +97,15 @@ const LoginBuyer = async (req, res) => {
   }
 };
 
-module.exports = { createBuyer, LoginBuyer };
+const getCheckoutDetails = async (req, res) => {
+  const { buyerID } = req.body;
+
+  if (buyerID) {
+    buyerModel.getCheckoutDetails(buyerID, res);
+  } else {
+    return res.json({ error: "Something went wrong!" });
+  }
+};
+
+module.exports = { createBuyer, LoginBuyer,
+  getCheckoutDetails, };
