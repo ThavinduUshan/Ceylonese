@@ -30,6 +30,9 @@ import BuyerChats from "./components/chat/BuyerChats";
 import Support from "./components/buyers/Support";
 import Chat from "./components/chat/Chat";
 import SellerChats from "./components/chat/SellerChats";
+import SellerOrders from "./components/sellers/SellerOrders";
+import SellerOrdersCompleted from "./components/sellers/SellerOrdersCompleted";
+import SellerOrdersShipped from "./components/sellers/SellerOrdersShipped";
 
 function App() {
   return (
@@ -60,8 +63,18 @@ function App() {
             path="/sellers/profile/newlisting"
             element={<AddLisitingForm />}
           />
+          <Route path="/sellers/chat" element={<SellerChats />} />
+
+          <Route path="/sellers/orders/" element={<SellerOrders />} />
+          <Route
+            path="/sellers/orders/shipped"
+            element={<SellerOrdersShipped />}
+          />
+          <Route
+            path="/sellers/orders/completed"
+            element={<SellerOrdersCompleted />}
+          />
         </Route>
-        <Route path="/sellers/chat" element={<SellerChats />} />
 
         {/* Admin Routes */}
         <Route path="/sys/login" element={<LoginAdmin />} />
@@ -90,7 +103,7 @@ function App() {
             path="/sys/moderators/sellerrequests/:id"
             element={<SellerRequestDetails />}
           />
-           <Route
+          <Route
             path="/sys/moderators/support/"
             element={<SupportTicketIssues />}
           />
@@ -104,12 +117,12 @@ function App() {
             element={<ComplainDetails />}
           />
         </Route>
-        
+
         {/* Protected Routes */}
         <Route element={<RequireAuth allowedRole={5150} />}>
           <Route path="/buyers/profile" element={<Profile />} />
           <Route path="/buyers/checkout" element={<Checkout />} />
-          <Route path="/buyers/support" element={<Support/>} />
+          <Route path="/buyers/support" element={<Support />} />
           <Route path="/buyers/orders" element={<BuyerOrders />} />
           <Route
             path="/buyers/orders/completed"
