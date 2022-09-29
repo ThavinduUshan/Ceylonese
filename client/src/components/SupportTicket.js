@@ -22,6 +22,31 @@ const SupportTicket = () => {
     setTicket({ ...ticket, type: e.target.value });
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    try {
+      axios.post(ADD_SUPPORT_URL, ticket).then((response) => {
+        if (response.data.error) {
+          console.log(response.data.error);
+        } else {
+          setTicket({
+            name: "",
+            email: "",
+            type: "",
+            subject: "",
+            description: "",
+          });
+
+          navigateTo("/");
+          alert("Ticket added. Our team will contact you soon.");
+        }
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <>
       <NavBar />
