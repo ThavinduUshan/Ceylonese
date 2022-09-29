@@ -6,7 +6,31 @@ import NavBar from "../NavBar";
 import SellerSideBar from "./SellerSideBar";
 import useAuth from "../../hooks/useAuth";
 
+const GET_ORDER_ITEMS_URL = "sellers/orders";
+const MARK_AS_SHIPPED_URL = "sellers/orders/update/shipping";
+
 const SellerOrders = () => {
+  const { auth } = useAuth();
+
+  const [listOfOrders, setListOfOrders] = useState();
+
+  const navigateTo = useNavigate();
+
+  useEffect(() => {
+    const data = {
+      sellerID: auth.user.sellerID,
+    };
+
+    axios.post(GET_ORDER_ITEMS_URL, data).then((response) => {
+      if (response.data.error) {
+        console.log(response.data.error);
+      } else {
+        console.log(response.data.orders);
+        setListOfOrders(response.data.orders);
+      }
+    });
+  }, []);
+
   return (
     <>
       <NavBar />

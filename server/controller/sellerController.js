@@ -408,6 +408,20 @@ const getSellerAuctions = async (req, res) => {
   }
 };
 
+const getPendingOrders = async (req, res) => {
+  const { sellerID } = req.body;
+
+  try {
+    await sellerModel.getPendingOrders(sellerID, res).then((results) => {
+      const orders = results;
+
+      res.json({ orders: orders });
+    });
+  } catch (err) {
+    return res.json({ error: "Internal Error" });
+  }
+};
+
 module.exports = {
   submitSellerRequests,
   loginSeller,
@@ -415,4 +429,5 @@ module.exports = {
   getSellerListings,
   getSellerAuctions,
   addAuction,
+  getPendingOrders,
 };
