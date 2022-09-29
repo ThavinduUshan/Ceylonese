@@ -77,3 +77,51 @@ router.post("/create-checkout-session", async (req, res) => {
 
   res.json({ url: session.url, cart: req.body.cart, auth: req.body.auth });
 });
+
+// This is your Stripe CLI webhook secret for testing your endpoint locally.
+let endpointSecret;
+// endpointSecret =
+//   "whsec_50a3996cbf03f0eba459c7c13c884a6bb88187ef8da33080db68edb3f25726b3";
+
+router.post(
+  "/webhook",
+  express.raw({ type: "application/json" }),
+  (req, res) => {
+    const sig = req.headers["stripe-signature"];
+
+    let data;
+    let eventType;
+
+    if (endpointSecret) {
+      let event;
+
+      try {
+        event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+        console.log("webhook verified");
+      } catch (err) {
+        console.log("errrpr");
+        res.status(400).send(`Webhook Error: ${err.message}`);
+        return;
+      }
+    } else {
+      data = req.body.data.object;
+      eventType = req.body.type;
+    }
+
+    // Handle the event
+    if (eventType == "checkout.session.completed") {
+      stripe.customers
+        .retrieve(data.customer)
+        .then((customer) => {
+          console.log("Buyer ID is : ", customer);
+          console.log("dataa :", data);
+          buyerController.addPayment(customer, data);
+        })
+        .catch((err) => console.log(err.message));
+    }
+    // Return a 200 res to acknowledge receipt of the event
+    res.send();
+  }
+);
+
+module.exports = router;
