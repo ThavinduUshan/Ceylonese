@@ -386,6 +386,29 @@ const getPendingOrders = (sellerID, res) => {
   });
 };
 
+const updateShippingStatus = (orderItemID, res) => {
+  const now = new Date();
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "UPDATE order_items SET status =?, shippedDate=? WHERE orderItemID = ?";
+        connection.query(sql, ["Shipped", now, orderItemID], (err, results) => {
+          connection.release();
+          if (err) {
+            reject();
+          } else {
+            console.log(results);
+            resolve();
+          }
+        });
+      }
+    });
+  });
+};
+
 module.exports = {
   createSellerRequest,
   submitSellerVerificationDocs,
@@ -397,4 +420,5 @@ module.exports = {
   getSellerListings,
   getSellerAuctions,
   getPendingOrders,
+  updateShippingStatus,
 };
