@@ -68,7 +68,7 @@ const SupportTicket = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 divide-x divide-x-2 divide-gray-300">
+      <div className="grid grid-cols-3 divide-x  divide-gray-300">
         <div className="col-span-2">
           <form onSubmit={handleSubmit}>
             <div className="pl-12 pr-12 pt-8 pb-10 ">
