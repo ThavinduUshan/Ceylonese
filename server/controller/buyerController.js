@@ -209,11 +209,52 @@ const getOrdersCompletedTop = async (req, res) => {
   }
 };
 
-module.exports = { createBuyer, LoginBuyer,
+const addPayment = async (customer, data) => {
+  const buyerID = customer.metadata.buyerID;
+  const cart = JSON.parse(customer.metadata.cart);
+  const subTotal = data.amount_subtotal / 100;
+  const total = data.amount_total / 100;
+  const address = data.customer_details.address;
+
+  console.log("address", address);
+  console.log(cart);
+  console.log("this is cart length : ", cart.length);
+
+  let date = new Date();
+  console.log(date);
+  let currentDate =
+    date.getDay() + "-" + date.getMonth() + "-" + date.getFullYear();
+
+  let currentTime =
+    date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+  try {
+    await buyerModel
+      .createOrder(buyerID, subTotal, total, currentDate, currentTime)
+      .then((order) => {
+        const orderID = order.orderID;
+        console.log(orderID);
+
+        buyerModel.addOrderAddress(orderID, address).then(() => {
+          cart.map((item) => {
+            console.log(item);
+            buyerModel.placeOrder(orderID, item);
+          });
+        });
+      });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+module.exports = {
+  createBuyer,
+  LoginBuyer,
   getCheckoutDetails,
   getOrders,
   getCompletedOrders,
   ratingItem,
   submitReview,
   getOrdersTop,
-  getOrdersCompletedTop };
+  getOrdersCompletedTop,
+  addPayment,
+};
