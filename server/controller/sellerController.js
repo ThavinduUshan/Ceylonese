@@ -422,6 +422,19 @@ const getPendingOrders = async (req, res) => {
   }
 };
 
+const updateShippingStatus = async (req, res) => {
+  const { orderItemID } = req.body;
+  console.log("herrrrr");
+
+  try {
+    await sellerModel.updateShippingStatus(orderItemID, res).then(() => {
+      res.json({ success: "Marked as Shippped" });
+    });
+  } catch (err) {
+    return res.json({ error: err });
+  }
+};
+
 module.exports = {
   submitSellerRequests,
   loginSeller,
@@ -430,4 +443,5 @@ module.exports = {
   getSellerAuctions,
   addAuction,
   getPendingOrders,
+  updateShippingStatus,
 };

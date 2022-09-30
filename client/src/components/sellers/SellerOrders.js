@@ -31,6 +31,22 @@ const SellerOrders = () => {
     });
   }, []);
 
+  const handleShipping = (event, orderItemID) => {
+    event.preventDefault();
+    const data = {
+      orderItemID: orderItemID,
+    };
+
+    axios.post(MARK_AS_SHIPPED_URL, data).then((response) => {
+      if (response.data.error) {
+        console.log(response.data.error);
+      } else {
+        setListOfOrders("");
+        navigateTo("/sellers/orders/shipped");
+      }
+    });
+  };
+
   return (
     <>
       <NavBar />

@@ -9,5 +9,8 @@ router.route("/addauction").post(sellerController.addAuction);
 router.route("/getlistings").post(sellerController.getSellerListings);
 router.route("/getauctions").post(sellerController.getSellerAuctions);
 router.route("/orders").post(sellerController.getPendingOrders);
+router
+  .route("/orders/update/shipping")
+  .post(sellerController.updateShippingStatus);
 
 module.exports = router;
