@@ -50,9 +50,43 @@ const getAuctionDetails = async (req, res) => {
   }
 };
 
+const addSupportTicket = async (req, res) => {
+  const { name, email, type, subject, description } = req.body;
+
+  if (!name) {
+    return res.json({ error: "Name is required!" });
+  }
+
+  if (!email) {
+    return res.json({ error: "Email is required!" });
+  }
+
+  if (!subject) {
+    return res.json({ error: "Subject is required!" });
+  }
+
+  if (!description) {
+    return res.json({ error: "Description is required!" });
+  }
+
+  try {
+    const data = {
+      name: name,
+      email: email,
+      type: type,
+      subject: subject,
+      description: description,
+    };
+    rootModel.addSupportTicket(data, res);
+  } catch (err) {
+    res.json({ error: err });
+  }
+};
+
 module.exports = {
   getProducts,
   getProductDetails,
   getAuctions,
   getAuctionDetails,
+  addSupportTicket
 };
