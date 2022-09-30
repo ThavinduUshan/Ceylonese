@@ -226,11 +226,55 @@ const getOrdersTop = (buyerID, res) => {
   });
 };
 
-module.exports = { createBuyer, findBuyer, isBuyerExists,
+const createOrder = (buyerID, subTotal, total) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        console.log(err);
+      } else {
+        const sql =
+          "INSERT INTO orders (buyerID, subTotal, total) VALUES (?, ?, ?)";
+        connection.query(sql, [buyerID, subTotal, total], (err, results) => {
+          connection.release();
+          if (err) {
+            console.log(err);
+            reject();
+          } else {
+            console.log(results);
+            db.getConnection((err, connection) => {
+              if (err) {
+                console.log(err);
+              } else {
+                const sql =
+                  "SELECT * FROM orders ORDER BY orderID DESC LIMIT 1";
+                connection.query(sql, [], (err, results) => {
+                  connection.release();
+                  if (err) {
+                    reject();
+                  } else {
+                    console.log(results);
+                    resolve(results[0]);
+                  }
+                });
+              }
+            });
+          }
+        });
+      }
+    });
+  });
+};
+
+module.exports = {
+  createBuyer,
+  findBuyer,
+  isBuyerExists,
   getCheckoutDetails,
   getOrders,
   getCompletedOrders,
   ratingItem,
   submitReview,
   getCompletedOrdersTop,
-  getOrdersTop, };
+  getOrdersTop,
+  createOrder,
+};
