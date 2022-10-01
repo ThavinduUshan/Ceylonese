@@ -293,6 +293,34 @@ const addOrderAddress = (orderID, address) => {
   });
 };
 
+const placeOrder = (orderID, cart) => {
+  db.getConnection((err, connection) => {
+    if (err) {
+      console.log(err);
+    } else {
+      const sql =
+        "INSERT INTO order_items (orderID,productID, sellerID, orderQuantity, orderPrice, status) VALUES (?, ?, ? ,? , ? ,? )";
+      connection.query(
+        sql,
+        [
+          orderID,
+          cart.productID,
+          cart.sellerID,
+          cart.quantity,
+          cart.price,
+          "Pending",
+        ],
+        (err, results) => {
+          connection.release();
+          if (err) {
+            console.log("error");
+          }
+        }
+      );
+    }
+  });
+};
+
 module.exports = {
   createBuyer,
   findBuyer,
@@ -306,4 +334,5 @@ module.exports = {
   getOrdersTop,
   createOrder,
   addOrderAddress,
+  placeOrder,
 };
