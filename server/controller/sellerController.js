@@ -435,6 +435,20 @@ const updateShippingStatus = async (req, res) => {
   }
 };
 
+const getShippedOrders = async (req, res) => {
+  const { sellerID } = req.body;
+
+  try {
+    await sellerModel.getShippedOrders(sellerID, res).then((results) => {
+      const orders = results;
+
+      res.json({ orders: orders });
+    });
+  } catch (err) {
+    return res.json({ error: "Internal Error" });
+  }
+};
+
 module.exports = {
   submitSellerRequests,
   loginSeller,
@@ -444,4 +458,5 @@ module.exports = {
   addAuction,
   getPendingOrders,
   updateShippingStatus,
+  getShippedOrders,
 };

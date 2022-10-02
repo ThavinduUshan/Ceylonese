@@ -12,5 +12,6 @@ router.route("/orders").post(sellerController.getPendingOrders);
 router
   .route("/orders/update/shipping")
   .post(sellerController.updateShippingStatus);
+router.route("/orders/shipped").post(sellerController.getShippedOrders);
 
 module.exports = router;
