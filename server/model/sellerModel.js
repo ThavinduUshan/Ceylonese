@@ -409,6 +409,27 @@ const updateShippingStatus = (orderItemID, res) => {
   });
 };
 
+const getShippedOrders = (sellerID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "SELECT order_items.*, order_address.*, products.title, products.shippingTime, product_images.image1, orders.datetime FROM order_items INNER JOIN orders ON order_items.orderID = orders.orderID INNER JOIN products ON order_items.productID = products.productID INNER JOIN product_images ON products.productID = product_images.productID INNER JOIN order_address ON order_items.orderID = order_address.orderID WHERE order_items.sellerID = ? AND order_items.status = ? ORDER BY order_items.orderItemID";
+        connection.query(sql, [sellerID, "Shipped"], (err, results) => {
+          connection.release();
+          if (err) {
+            reject();
+          } else {
+            resolve(results);
+          }
+        });
+      }
+    });
+  });
+};
+
 module.exports = {
   createSellerRequest,
   submitSellerVerificationDocs,
@@ -421,4 +442,5 @@ module.exports = {
   getSellerAuctions,
   getPendingOrders,
   updateShippingStatus,
+  getShippedOrders,
 };
