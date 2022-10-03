@@ -8,7 +8,17 @@ const GET_SUPPORT_TICKET_ISSUES_URL = "moderators/supportticketissues";
 
 const SupportTicketIssues = () => {
   
+    const [listOfTickets, setListOfTickets] = useState();
 
+    const navigateTo = useNavigate();
+  
+    useEffect(() => {
+      axios.post(GET_SUPPORT_TICKET_ISSUES_URL).then((response) => {
+        console.log(response.data.requests);
+        setListOfTickets(response.data.requests);
+      });
+    }, []);
+    
   return (
     <>
       <NavBar />
