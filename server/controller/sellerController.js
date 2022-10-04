@@ -449,6 +449,20 @@ const getShippedOrders = async (req, res) => {
   }
 };
 
+const getCompletedOrders = async (req, res) => {
+  const { sellerID } = req.body;
+
+  try {
+    await sellerModel.getCompletedOrders(sellerID, res).then((results) => {
+      const orders = results;
+
+      res.json({ orders: orders });
+    });
+  } catch (err) {
+    return res.json({ error: "Internal Error" });
+  }
+};
+
 module.exports = {
   submitSellerRequests,
   loginSeller,
@@ -459,4 +473,5 @@ module.exports = {
   getPendingOrders,
   updateShippingStatus,
   getShippedOrders,
+  getCompletedOrders,
 };

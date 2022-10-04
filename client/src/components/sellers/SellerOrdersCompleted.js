@@ -7,7 +7,28 @@ import SellerSideBar from "./SellerSideBar";
 import useAuth from "../../hooks/useAuth";
 import mask from "../../images/mask2.jpg";
 
+const GET_ORDER_ITEMS_URL = "sellers/orders/completed";
+
 const SellerOrdersCompleted = () => {
+  const { auth } = useAuth();
+
+  const [listOfOrders, setListOfOrders] = useState();
+
+  useEffect(() => {
+    const data = {
+      sellerID: auth.user.sellerID,
+    };
+
+    axios.post(GET_ORDER_ITEMS_URL, data).then((response) => {
+      if (response.data.error) {
+        console.log(response.data.error);
+      } else {
+        console.log(response.data.orders);
+        setListOfOrders(response.data.orders);
+      }
+    });
+  }, []);
+
   return (
     <>
       <NavBar />

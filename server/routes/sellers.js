@@ -13,5 +13,6 @@ router
   .route("/orders/update/shipping")
   .post(sellerController.updateShippingStatus);
 router.route("/orders/shipped").post(sellerController.getShippedOrders);
+router.route("/orders/completed").post(sellerController.getCompletedOrders);
 
 module.exports = router;
