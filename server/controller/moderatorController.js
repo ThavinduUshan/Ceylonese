@@ -90,6 +90,19 @@ const rejectSeller = async (req, res) => {
   }
 };
 
+const getSupportTicketIssues = async (req, res) => {
+  try {
+    await moderatorModel.getSupportTicketIssues().then((response) => {
+      const requests = response;
+      console.log(requests);
+      res.json({ requests: requests });
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+
 module.exports = {
   getSellerRequests,
   getRequestDetails,
