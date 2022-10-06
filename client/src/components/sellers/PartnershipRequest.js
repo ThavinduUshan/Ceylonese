@@ -97,6 +97,48 @@ const PartnershipRequest = () => {
     });
   });
 
+  const sendPartnershipRequest = (e) => {
+    e.preventDefault();
+    {
+      !myProduct
+        ? setErrorMsg("You need to select a product from your list")
+        : !otherProduct
+        ? setErrorMsg("You need to select a product from other seller list")
+        : !otherDetails.description
+        ? setErrorMsg("you need to add a description")
+        : !otherDetails.myDiscount
+        ? setErrorMsg("You need to add a discount for your product")
+        : isNaN(otherDetails.myDiscount)
+        ? setErrorMsg("Discount must be an Number")
+        : setErrorMsg(false);
+      const data = {
+        senderID: myId,
+        senderProduct: myProduct.value,
+        receiverID: id,
+        receiverProduct: otherProduct.value,
+        description: otherDetails.description,
+        senderDiscount: otherDetails.myDiscount,
+      };
+
+      axios.post(REQUEST_PARTNERSHIP_URL, data).then((response) => {
+        if (response.data.error) {
+          console.log(response.data.error);
+        } else {
+          setSuccess(true);
+          setTimeout(() => {
+            setSuccess(false);
+          }, 5000);
+          setMyProduct("");
+          setOtherProduct("");
+          setOtherDetails({
+            description: "",
+            myDiscount: "",
+          });
+        }
+      });
+    }
+  };
+
   return (
     <>
       <NavBar />
