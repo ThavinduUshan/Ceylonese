@@ -365,6 +365,25 @@ const getSellerAuctions = (sellerID, res) => {
   });
 };
 
+const getSellerFromStore = (storeID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error!" });
+      } else {
+        const sql = "SELECT sellerID FROM stores WHERE storeID = ?";
+        connection.query(sql, [storeID], (err, results) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(results[0]);
+          }
+        });
+      }
+    });
+  });
+};
+
 module.exports = {
   createSellerRequest,
   submitSellerVerificationDocs,
@@ -375,4 +394,5 @@ module.exports = {
   addProductImages,
   getSellerListings,
   getSellerAuctions,
+  getSellerFromStore,
 };
