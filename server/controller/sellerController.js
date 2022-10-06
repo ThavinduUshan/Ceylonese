@@ -463,6 +463,25 @@ const getCompletedOrders = async (req, res) => {
   }
 };
 
+const getProductsFromStore = async (req, res) => {
+  const { storeID } = req.body;
+
+  try {
+    await sellerModel.getSellerFromStore(storeID, res).then((seller) => {
+      const sellerID = seller.sellerID;
+      sellerModel.getSellerListings(sellerID, res).then((results) => {
+        const listings = results;
+        res.json({
+          sellerID: sellerID,
+          listings: listings,
+        });
+      });
+    });
+  } catch (err) {
+    res.json({ error: err });
+  }
+};
+
 module.exports = {
   submitSellerRequests,
   loginSeller,
@@ -474,4 +493,5 @@ module.exports = {
   updateShippingStatus,
   getShippedOrders,
   getCompletedOrders,
+  getProductsFromStore,
 };

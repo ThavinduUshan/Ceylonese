@@ -6,7 +6,35 @@ import mask from "../../images/mask2.jpg";
 import NavBar from "../NavBar";
 import useAuth from "../../hooks/useAuth";
 
+const GET_PRODUCTS_BY_STORE_URL = "sellers/getproductsfromstore";
+
 const Store = () => {
+  const { auth } = useAuth();
+  const { id } = useParams();
+
+  const [storeOwner, setStoreOwner] = useState({
+    id: "",
+  });
+  const [products, setProducts] = useState();
+
+  useEffect(() => {
+    let data = {
+      storeID: id,
+    };
+
+    axios.post(GET_PRODUCTS_BY_STORE_URL, data).then((response) => {
+      if (response.data.error) {
+        console.log(response.data.error);
+      } else {
+        const products = response.data.listings;
+        const storeOwnerID = response.data.sellerID;
+
+        console.log(products);
+        setProducts(products);
+        setStoreOwner({ id: storeOwnerID });
+      }
+    });
+  }, []);
   return (
     <>
       <NavBar />
