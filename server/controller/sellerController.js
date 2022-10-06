@@ -265,6 +265,25 @@ const getSellerListings = async (req, res) => {
   }
 };
 
+const getProductsFromStore = async (req, res) => {
+  const { storeID } = req.body;
+
+  try {
+    await sellerModel.getSellerFromStore(storeID, res).then((seller) => {
+      const sellerID = seller.sellerID;
+      sellerModel.getSellerListings(sellerID, res).then((results) => {
+        const listings = results;
+        res.json({
+          sellerID: sellerID,
+          listings: listings,
+        });
+      });
+    });
+  } catch (err) {
+    res.json({ error: err });
+  }
+};
+
 const addAuction = async (req, res) => {
   const {
     sellerID,
@@ -415,4 +434,5 @@ module.exports = {
   getSellerListings,
   getSellerAuctions,
   addAuction,
+  getProductsFromStore,
 };

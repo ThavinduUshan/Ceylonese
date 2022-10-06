@@ -7,6 +7,8 @@ import useAuth from "../../hooks/useAuth";
 import { useParams } from "react-router-dom";
 
 const GET_MY_PRODUCTS_URL = "sellers/getlistings";
+const GET_PRODUCTS_BY_STORE_URL = "sellers/getproductsfromstore";
+const REQUEST_PARTNERSHIP_URL = "sellers/partnership/request";
 
 const PartnershipRequest = () => {
   const { auth } = useAuth();

@@ -8,5 +8,11 @@ router.route("/addproduct").post(sellerController.addProduct);
 router.route("/addauction").post(sellerController.addAuction);
 router.route("/getlistings").post(sellerController.getSellerListings);
 router.route("/getauctions").post(sellerController.getSellerAuctions);
+router
+  .route("/getproductsfromstore")
+  .post(sellerController.getProductsFromStore);
+router
+  .route("/partnership/request")
+  .post(sellerController.addPartnershipRequest);
 
 module.exports = router;
