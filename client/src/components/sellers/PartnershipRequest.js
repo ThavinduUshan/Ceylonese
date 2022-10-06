@@ -59,6 +59,42 @@ const PartnershipRequest = () => {
     });
   });
 
+  useEffect(() => {
+    const data = {
+      storeID: id,
+    };
+
+    axios.post(GET_PRODUCTS_BY_STORE_URL, data).then((response) => {
+      if (response.data.error) {
+        console.log(response.data.error);
+      } else {
+        const products = response.data.listings;
+        const storeOwnerID = response.data.sellerID;
+
+        setStoreOwner(storeOwnerID);
+
+        console.log("other seller", products);
+
+        products.map((product) => {
+          otherProducts.push({
+            value: product?.productID,
+            label: (
+              <div className="flex">
+                <img
+                  src={`http://localhost:3500/products/${product?.image1}`}
+                  height="30px"
+                  width="30px"
+                  className="mr-6"
+                />
+                <p>{product?.title}</p>
+              </div>
+            ),
+          });
+        });
+      }
+    });
+  });
+
   return (
     <>
       <NavBar />
