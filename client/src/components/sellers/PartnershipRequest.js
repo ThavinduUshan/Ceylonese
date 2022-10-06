@@ -6,7 +6,59 @@ import axios from "../../api/axios";
 import useAuth from "../../hooks/useAuth";
 import { useParams } from "react-router-dom";
 
+const GET_MY_PRODUCTS_URL = "sellers/getlistings";
+
 const PartnershipRequest = () => {
+  const { auth } = useAuth();
+  const myId = auth?.user.sellerID;
+  const { id } = useParams();
+
+  const myProducts = [];
+  const otherProducts = [];
+
+  const [myProduct, setMyProduct] = useState(null);
+  const [otherProduct, setOtherProduct] = useState(null);
+  const [storeOwner, setStoreOwner] = useState();
+  const [otherDetails, setOtherDetails] = useState({
+    description: "",
+    myDiscount: "",
+  });
+
+  const [errorMsg, setErrorMsg] = useState();
+  const [success, setSuccess] = useState(false);
+
+  useEffect(() => {
+    const data = {
+      sellerID: myId,
+    };
+
+    axios.post(GET_MY_PRODUCTS_URL, data).then((response) => {
+      if (response.data.error) {
+        console.log(response.data.error);
+      } else {
+        const products = response.data.listings;
+        console.log("my product", products);
+
+        products.map((product) => {
+          myProducts.push({
+            value: product?.productID,
+            label: (
+              <div className="flex">
+                <img
+                  src={`http://localhost:3500/products/${product?.image1}`}
+                  height="30px"
+                  width="30px"
+                  className="mr-6"
+                />
+                <p>{product?.title}</p>
+              </div>
+            ),
+          });
+        });
+      }
+    });
+  });
+
   return (
     <>
       <NavBar />
