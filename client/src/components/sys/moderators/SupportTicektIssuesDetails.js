@@ -8,6 +8,21 @@ const OPEN_TICKET_URL = "/moderators/supportticket/open";
 const CLOSE_TICKET_URL = "/moderators/supportticket/close";
 
 const SupportTicketIssuesDetails = () => {
+
+    const { id } = useParams();
+
+  const navigateTo = useNavigate();
+
+  const [request, setRequest] = useState();
+
+  const GET_SELLER_REQUESTS_URL = `moderators/supportticketissues/${id}`;
+
+  useEffect(() => {
+    axios.get(GET_SELLER_REQUESTS_URL).then((response) => {
+      setRequest(response.data.request);
+      console.log(response.data.request);
+    });
+  }, []);
   
   return (
     <>
