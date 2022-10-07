@@ -103,9 +103,27 @@ const getSupportTicketIssues = async (req, res) => {
 };
 
 
+const getSupportTicketIssuesDetails = async (req, res) => {
+  const requestID = req.params.id;
+  try {
+    await moderatorModel
+      .getSupportTicketIssuesDetails(requestID, res)
+      .then((response) => {
+        const details = response;
+        res.json({
+          request: details,
+        });
+      });
+  } catch (err) {
+    res.json({ error: err });
+  }
+};
+
+
 module.exports = {
   getSellerRequests,
   getRequestDetails,
   acceptSeller,
   rejectSeller,
+  getSupportTicketIssuesDetails
 };

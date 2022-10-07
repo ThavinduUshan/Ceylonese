@@ -227,6 +227,28 @@ const getSupportTicketIssues = (req, res) => {
   });
 };
 
+const getSupportTicketIssuesDetails = (requestID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal Server Error!" });
+      } else {
+        const sql =
+          "SELECT * FROM support_tickets WHERE ticket_id=? ORDER BY ticket_id DESC";
+        connection.query(sql, [requestID], (error, results) => {
+          connection.release();
+          if (error) {
+            reject();
+          } else {
+            resolve(results[0]);
+          }
+        });
+      }
+    });
+  });
+};
+
+
 module.exports = {
   getSellerRequests,
   getRequestDetails,
@@ -235,5 +257,6 @@ module.exports = {
   createStore,
   addVerificationDocs,
   requestRejected,
-  getSupportTicketIssues
+  getSupportTicketIssues,
+  getSupportTicketIssuesDetails
 };
