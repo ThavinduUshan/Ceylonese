@@ -427,6 +427,29 @@ const getSellerAuctions = async (req, res) => {
   }
 };
 
+const addPartnershipRequest = (req, res) => {
+  const {
+    senderID,
+    senderProduct,
+    receiverID,
+    receiverProduct,
+    description,
+    senderDiscount,
+  } = req.body;
+
+  const data = {
+    senderID: senderID,
+    senderProduct: senderProduct,
+    receiverID: receiverID,
+    receiverProduct: receiverProduct,
+    description: description,
+    senderDiscount: senderDiscount,
+    status: "Pending",
+  };
+
+  sellerModel.createPartnership(data, res);
+};
+
 module.exports = {
   submitSellerRequests,
   loginSeller,
@@ -435,4 +458,5 @@ module.exports = {
   getSellerAuctions,
   addAuction,
   getProductsFromStore,
+  addPartnershipRequest,
 };

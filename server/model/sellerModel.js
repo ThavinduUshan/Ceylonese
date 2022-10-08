@@ -384,6 +384,48 @@ const getSellerFromStore = (storeID, res) => {
   });
 };
 
+const createPartnership = (data, res) => {
+  const {
+    senderID,
+    senderProduct,
+    senderDiscount,
+    receiverID,
+    receiverProduct,
+    description,
+    status,
+  } = data;
+
+  db.getConnection((err, connection) => {
+    if (err) {
+      return res.json({ error: "Internal Server Error" });
+    } else {
+      const sql =
+        " INSERT INTO partnerships (senderID, senderProduct,senderDiscount, receiverID, receiverProduct, receiverDiscount, description, status) VALUES (?, ?, ?, ? ,?, ?, ?, ?)";
+      connection.query(
+        sql,
+        [
+          senderID,
+          senderProduct,
+          senderDiscount,
+          receiverID,
+          receiverProduct,
+          null,
+          description,
+          status,
+        ],
+        (error, results) => {
+          connection.release();
+          if (error) {
+            return res.json({ error: error });
+          } else {
+            res.json({ success: "Partnership request successfully sent" });
+          }
+        }
+      );
+    }
+  });
+};
+
 module.exports = {
   createSellerRequest,
   submitSellerVerificationDocs,
@@ -395,4 +437,5 @@ module.exports = {
   getSellerListings,
   getSellerAuctions,
   getSellerFromStore,
+  createPartnership,
 };
