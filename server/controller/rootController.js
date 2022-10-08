@@ -83,10 +83,24 @@ const addSupportTicket = async (req, res) => {
   }
 };
 
+const getProductReviews = async (req, res) => {
+  const { productID } = req.body;
+
+  try {
+    await rootModel.getProductReviews(productID, res).then((results) => {
+      const reviews = results;
+      res.json({ reviews: reviews });
+    });
+  } catch (err) {
+    return res.json({ error: "Something went wrong" });
+  }
+};
+
 module.exports = {
   getProducts,
   getProductDetails,
   getAuctions,
   getAuctionDetails,
-  addSupportTicket
+  addSupportTicket,
+  getProductReviews,
 };

@@ -6,10 +6,7 @@ router.route("/getproducts").get(rootController.getProducts);
 router.route("/getproducts/:id").get(rootController.getProductDetails);
 router.route("/getauctions").get(rootController.getAuctions);
 router.route("/getauctions/:id").get(rootController.getAuctionDetails);
-
-
-
-
 router.route("/addsupportticket").post(rootController.addSupportTicket);
+router.route("/reviews/product").post(rootController.getProductReviews);
 
 module.exports = router;
