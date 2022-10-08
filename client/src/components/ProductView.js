@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import axios from "../api/axios";
 import CategoriesBar from "./CategoriesBar";
 import NavBar from "./NavBar";
-import mask2 from "../images/mask2.jpg";
+import vector from "../images/vector.jpg";
 import useCart from "../hooks/useCart";
+import StarComponent from "./StarComponent";
+
+const GET_REVIEWS_URL = "root/reviews/product";
 
 const ProductView = () => {
   const { cart, setCart } = useCart();
@@ -15,11 +18,30 @@ const ProductView = () => {
   const [product, setProduct] = useState();
   const [alreadyAdded, setAlreadyAdded] = useState(false);
   const [qt, setQt] = useState(1);
+  const [reviewAverage, setReviewAverage] = useState(2);
+  const [reviews, setReviews] = useState();
+  const [cartSuccess, setCartSuccess] = useState(false);
 
   useEffect(() => {
     axios.get(GET_PRODUCT_DETAILS_URL).then((response) => {
       console.log(response.data.product);
       setProduct(response.data.product);
+      setReviewAverage();
+    });
+  }, []);
+
+  useEffect(() => {
+    const data = {
+      productID: id,
+    };
+    axios.post(GET_REVIEWS_URL, data).then((response) => {
+      if (response.data.error) {
+        console.log(response.data.error);
+      } else {
+        const reviews = response.data.reviews;
+        console.log(reviews);
+        setReviews(reviews);
+      }
     });
   }, []);
 
@@ -32,10 +54,14 @@ const ProductView = () => {
     );
 
     if (isItemAlreadyAdded) {
-      setAlreadyAdded(true);
+      setCartSuccess(true);
+      // setAlreadyAdded(true);
+      // setTimeout(() => {
+      //   setAlreadyAdded(false);
+      // }, 3000);
       setTimeout(() => {
-        setAlreadyAdded(false);
-      }, 3000);
+        setCartSuccess(false);
+      }, 1000);
     } else {
       console.log(product);
       let items = cart.cartItems.push(product);
@@ -44,6 +70,10 @@ const ProductView = () => {
         ...cart,
         count: ++itemCount,
       });
+      setCartSuccess(true);
+      setTimeout(() => {
+        setCartSuccess(false);
+      }, 1000);
     }
   };
 
@@ -53,6 +83,24 @@ const ProductView = () => {
       <CategoriesBar />
       <div class="grid grid-cols-2 gap-6">
         <div class="p-10 col-span-1 border-r-2">
+          <Link to="/support">
+            <span class="bg-red-200 py-2 text-red-800 text-xs mb-5 font-medium inline-flex items-center px-2.5 rounded mr-2 ">
+              <svg
+                aria-hidden="true"
+                class="mr-1 w-3 h-3"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+              Report Item #{id}
+            </span>
+          </Link>
           <img
             src={`http://localhost:3500/products/${product?.image1}`}
             class="w-auto h-auto"
@@ -80,349 +128,66 @@ const ProductView = () => {
               alt=""
             />
           </div>
-          <div class="mt-6">
-            <p class="mt-8 text-lg">
-              <b>Product Ratings & Reviews</b>
-            </p>
-            <p class="text-4xl mt-2">4.5/5</p>
-            <div class="flex mt-3">
-              <img
-                class="w-9 h-9"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-9 h-9"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-9 h-9"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-9 h-9"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-9 h-9"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB13svEgfDH8KJjy1XcXXcpdXXa-64-64.png"
-                alt=""
-              />
-            </div>
-            <p class="text-gray-500">760 ratings</p>
-            <div class="flex mt-6">
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-
-              <div class="bg-gray-100 h-3 w-44 ml-5 mt-1">
-                <div class="h-3 w-36 bg-yellow-400"></div>
-              </div>
-              <p class="ml-5">604</p>
-            </div>
-            <div class="flex mt-3">
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB18ZvEgfDH8KJjy1XcXXcpdXXa-64-64.png"
-                alt=""
-              />
-              <div class="bg-gray-100 h-3 w-44 ml-5 mt-1">
-                <div class="h-3 w-8 bg-yellow-400"></div>
-              </div>
-              <p class="ml-5">57</p>
-            </div>
-            <div class="flex mt-3">
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB18ZvEgfDH8KJjy1XcXXcpdXXa-64-64.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB18ZvEgfDH8KJjy1XcXXcpdXXa-64-64.png"
-                alt=""
-              />
-              <div class="bg-gray-100 h-3 w-44 ml-5 mt-1">
-                <div class="h-3 w-5 bg-yellow-400"></div>
-              </div>
-              <p class="ml-5">38</p>
-            </div>
-            <div class="flex mt-3">
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB18ZvEgfDH8KJjy1XcXXcpdXXa-64-64.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB18ZvEgfDH8KJjy1XcXXcpdXXa-64-64.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB18ZvEgfDH8KJjy1XcXXcpdXXa-64-64.png"
-                alt=""
-              />
-              <div class="bg-gray-100 h-3 w-44 ml-5 mt-1">
-                <div class="h-3 w-2 bg-yellow-400"></div>
-              </div>
-              <p class="ml-5">14</p>
-            </div>
-            <div class="flex mt-3">
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB18ZvEgfDH8KJjy1XcXXcpdXXa-64-64.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB18ZvEgfDH8KJjy1XcXXcpdXXa-64-64.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB18ZvEgfDH8KJjy1XcXXcpdXXa-64-64.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB18ZvEgfDH8KJjy1XcXXcpdXXa-64-64.png"
-                alt=""
-              />
-              <div class="bg-gray-100 h-3 w-44 ml-5 mt-1">
-                <div class="h-3 w-4 bg-yellow-400"></div>
-              </div>
-              <p class="ml-5">47</p>
-            </div>
-          </div>
 
           <div>
-            <p class="mt-8 text-lg">
-              <b>Reviews</b>
+            <p class="my-12 text-3xl">
+              <b>Reviews & Ratings</b>
             </p>
-            <div class="mt-4 flex">
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <p class="ml-64">15 Mar 2022</p>
-            </div>
-            <p>by Ashan A.</p>
-            <p class="mt-3">
-              I really love it!, This is second time I bought these nice mask.
-              Good quality and It had been packed very safely. Thank you so
-              much. Recommend for other buyers also.good luck!
-            </p>
-            <img class="w-32 h-32" src={mask2} alt="" />
+            {reviews ? (
+              <>
+                {reviews.map((review) => {
+                  return (
+                    <div key={review.id}>
+                      <div class="mt-4 flex">
+                        <div className="flex">
+                          <StarComponent
+                            width={5}
+                            rating={review.productRating}
+                          />
+                          <p className="text-sm ml-5 bg-yellow-300 px-3 py-1 font-bold rounded-md">
+                            {review.productRating} Stars
+                          </p>
+                        </div>
 
-            <div class="mt-4 flex">
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <p class="ml-64">6 june 2022</p>
-            </div>
-            <p>by Priyantha G.</p>
-            <p class="mt-3">
-              Amazing! Thank you for the quick service and super product.fast
-              delivery
-              <br />
-              Good quality.
-            </p>
-            <div class="mt-4 flex">
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <img
-                class="w-5 h-5"
-                src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-                alt=""
-              />
-              <p class="ml-64">23 July 2022</p>
-            </div>
-            <p>by Lakshan K.H</p>
-            <p class="mt-3">
-              Highly recommended the product very happy with is good for the
-              price 🛳️❤️
-            </p>
-            <button class="text-blue-600">see more...</button>
-            <br />
-            <br />
+                        <p class="ml-96">
+                          On{" "}
+                          {new Date(review.date).getDate() +
+                            "-" +
+                            (new Date(review.date).getMonth() + 1) +
+                            "-" +
+                            new Date(review.date).getFullYear()}
+                        </p>
+                      </div>
+                      <p>{review.username}</p>
+                      <p class="mt-3">{review.review}</p>
+                    </div>
+                  );
+                })}
+              </>
+            ) : (
+              <>
+                <div className="flex justify-center ml-8 mr-4 mt-5 px-3 py-10 bg-gray-100">
+                  <p className="text-lg text-gray-300">No Reviews to Display</p>
+                </div>
+              </>
+            )}
           </div>
         </div>
 
         <div class="col-span-1 p-10">
           <p class="text-2xl">{product?.title}</p>
           <div class="flex gap-1 mt-1">
-            <img
-              class="w-5 h-5"
-              src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-              alt=""
-            />
-            <img
-              class="w-5 h-5"
-              src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-              alt=""
-            />
-            <img
-              class="w-5 h-5"
-              src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-              alt=""
-            />
-            <img
-              class="w-5 h-5"
-              src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-              alt=""
-            />
-            <img
-              class="w-5 h-5"
-              src="https://laz-img-cdn.alicdn.com/tfs/TB14SXtAXOWBuNjy0FiXXXFxVXa-30-30.png"
-              alt=""
-            />
-            <p class="text-gray-400">760 ratings (2567 sold)</p>
-            <p class="text-green-500">in-stock</p>
+            <StarComponent width={8} rating={product?.averageRating} />
+            <p class="mt-1 text-gray-400">
+              {product?.averageRating == "0" ? product?.averageRating : 0} Out
+              of 5 Stars
+            </p>
+            <p class="mt-1 ml-3 text-green-500">in-stock</p>
           </div>
-          <p class="text-gray-900 text-4xl mt-2">
+          <p class="text-gray-900 text-4xl mb-2">
             <b>USD {product?.price}.00</b>
           </p>
-          <div class="flex gap-2">
-            <p class="line-through text-orange-600 text-xl">USD 62.50</p>
-            <p class="mt-0.5">38%</p>
-          </div>
+
           <p class="text-gray-500">Deliver to worldwide</p>
           <form action="" class="mt-5">
             <br />
@@ -457,6 +222,28 @@ const ProductView = () => {
             </div>
           </form>
 
+          {cartSuccess && (
+            <>
+              <div className="flex mt-5 px-3 py-2 bg-green-100">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5 mr-2"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="#16a34a"
+                  strokeWidth="2"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <p className="text-sm text-green-500">Item Added to the Cart</p>
+              </div>
+            </>
+          )}
+
           {alreadyAdded && (
             <>
               <div className="flex mt-5 px-3 py-2 bg-green-100">
@@ -487,7 +274,7 @@ const ProductView = () => {
             </p>
             <p>{product?.description}</p>
             <p class="mt-8 text-lg">
-              <b>SHIPPING</b>
+              <b>Shipping</b>
             </p>
             <p>
               I accept orders from all over the world, and I'm working hard to
@@ -496,22 +283,22 @@ const ProductView = () => {
               days. Feel free to contact me if you would like to find out the
               lead time for a specific item you are interested in.
             </p>
-            <p class="mt-2 underline text-gray-500">Estimated arrival</p>
-            <p class="text-xl text-gray-600">Sep 23-29</p>
-            <p class="mt-2 underline text-gray-500">Cost to ship</p>
-            <p class="text-xl text-gray-600">USD 4.99</p>
-            <p class="mt-5">RETURN AND EXCHANGE:</p>
+            <p class="mt-3 font-medium text-gray-500">
+              Estimated arrival within
+            </p>
+            <p class="text-xl text-gray-600">{product?.shippingTime} Days</p>
+            <p class="mt-3 font-medium text-gray-500">Shipping Cost</p>
+            <p class="text-xl text-gray-600">
+              USD {parseFloat(product?.shippingPrice).toFixed(2)}
+            </p>
+            <p class="mt-5 m">Returns and Refunds:</p>
             <p>
               Please feel free to contact me if there are any problems after you
               got my products, Replacement is free of charge if item comes
               damaged.
             </p>
 
-            <p class="mt-6">
-              <b>
-                ****************************CONTACT_ME***************************
-              </b>
-            </p>
+            <p class="mt-6"></p>
             <p class="mt-4">
               * For any further information or wholesale orders contact me at
               any time.
@@ -528,19 +315,20 @@ const ProductView = () => {
             <p class="mt-5">
               <b>Meet your sellers</b>
             </p>
-            <div class="mt-4 flex">
-              <img
-                src="https://i.etsystatic.com/isla/a37ea4/42486621/isla_75x75.42486621_m57y49qe.jpg?version=0"
-                alt=""
-              />
-              <p class="ml-4 mt-2 text-xl">
-                <b>Kayla</b>
-                <br />
-                Owner of SunFayStudioCo
-              </p>
+            <div>
+              <Link
+                to={`/sellers/store/${product?.storeID}`}
+                className="mt-4 flex"
+              >
+                <img src={vector} alt="seller-image" className="h-16 rounded" />
+                <p class="ml-4 mt-2 text-xl">
+                  <b>{product?.storeName}</b>
+                  <br />
+                </p>
+              </Link>
             </div>
             <button class="mt-6 ml-0 rounded font-semibold shadow-lg text-white bg-gray-900 p-2.5 w-60">
-              Message
+              Contact Seller
             </button>
           </div>
         </div>
