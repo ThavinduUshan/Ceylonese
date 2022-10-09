@@ -82,9 +82,30 @@ const getAuctionDetails = (auctionID, res) => {
   });
 };
 
+const getProductReviews = (productID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "SELECT  review, date, productRating, reviewID FROM reviews  WHERE productID = ? ORDER BY productRating DESC ";
+        connection.query(sql, [productID], (error, results) => {
+          if (error) {
+            reject();
+          } else {
+            resolve(results);
+          }
+        });
+      }
+    });
+  });
+};
+
 module.exports = {
   getProducts,
   getProductDetails,
   getAuctions,
   getAuctionDetails,
+  getProductReviews,
 };
