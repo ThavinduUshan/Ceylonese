@@ -26,6 +26,11 @@ import AddModerators from "./components/sys/admins/AddModerators";
 import AddLisitingForm from "./components/sellers/AddLisitingForm";
 import AuctionView from "./components/AuctionView";
 import Auctions from "./components/sellers/Auctions";
+import PartnershipRequest from "./components/sellers/PartnershipRequest";
+import PartnershipAccept from "./components/sellers/PartnershipAccept";
+import PartnershipsRequests from "./components/sellers/PartnershipsRequests";
+import PartnershipsEnded from "./components/sellers/PartnershipsEnded";
+import PartnershipsActive from "./components/sellers/PartnershipsActive";
 
 function App() {
   return (
@@ -41,6 +46,8 @@ function App() {
         <Route path="/cart" element={<CartView />} />
         <Route path="/buyers/login" element={<Login />} />
         <Route path="/buyers/register" element={<Register />} />
+        <Route path="/product/:id/:pid" element={<PartnershipView />} />
+        <Route path="/product/form/:id" element={<ProductViewForm />} />
 
         {/* Seller Routes */}
         <Route path="/sellers/register" element={<RegisterForm />} />
@@ -55,6 +62,30 @@ function App() {
           <Route
             path="/sellers/profile/newlisting"
             element={<AddLisitingForm />}
+          />
+          <Route
+            path="/sellers/partnerships/request/:id"
+            element={<PartnershipRequest />}
+          />
+          <Route
+            path="/sellers/partnerships/accept/:id"
+            element={<PartnershipAccept />}
+          />
+          <Route
+            path="/sellers/partnerships/details/:id"
+            element={<PartnershipDetailsForm />}
+          />
+          <Route
+            path="/sellers/partnerships/requests"
+            element={<PartnershipsRequests />}
+          />
+          <Route
+            path="/sellers/partnerships/active"
+            element={<PartnershipsActive />}
+          />
+          <Route
+            path="/sellers/partnerships/ended"
+            element={<PartnershipsEnded />}
           />
         </Route>
 

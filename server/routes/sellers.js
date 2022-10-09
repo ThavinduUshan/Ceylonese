@@ -14,5 +14,8 @@ router
 router
   .route("/partnership/request")
   .post(sellerController.addPartnershipRequest);
+router
+  .route("/partnerships/pending")
+  .post(sellerController.getPendingPartnerships);
 
 module.exports = router;

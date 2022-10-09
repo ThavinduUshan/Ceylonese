@@ -450,6 +450,19 @@ const addPartnershipRequest = (req, res) => {
   sellerModel.createPartnership(data, res);
 };
 
+const getPendingPartnerships = async (req, res) => {
+  const { sellerID } = req.body;
+
+  try {
+    await sellerModel.getPendingPartnerships(sellerID, res).then((results) => {
+      const partnerships = results;
+      res.json({ partnerships: partnerships });
+    });
+  } catch (err) {
+    res.json({ error: "Something wsent Wrong" });
+  }
+};
+
 module.exports = {
   submitSellerRequests,
   loginSeller,
@@ -459,4 +472,5 @@ module.exports = {
   addAuction,
   getProductsFromStore,
   addPartnershipRequest,
+  getPendingPartnerships,
 };
