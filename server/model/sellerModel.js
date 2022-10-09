@@ -426,6 +426,28 @@ const createPartnership = (data, res) => {
   });
 };
 
+const getPendingPartnerships = (sellerID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "SELECT * FROM partnerships WHERE receiverID = ? AND status = ? ";
+        connection.query(sql, [sellerID, "Pending"], (err, results) => {
+          connection.release();
+          if (err) {
+            reject();
+          } else {
+            resolve(results);
+            console.log(results);
+          }
+        });
+      }
+    });
+  });
+};
+
 module.exports = {
   createSellerRequest,
   submitSellerVerificationDocs,
@@ -438,4 +460,5 @@ module.exports = {
   getSellerAuctions,
   getSellerFromStore,
   createPartnership,
+  getPendingPartnerships,
 };
