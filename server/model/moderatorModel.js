@@ -267,6 +267,27 @@ const openSupportTicket = (requestID, res) => {
   });
 };
 
+const closeSupportTicket = (requestID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql = "UPDATE support_tickets SET status = ? WHERE ticket_id = ?";
+        connection.query(sql, ["Closed", requestID], (error, results) => {
+          if (error) {
+            reject();
+          } else {
+            console.log(results);
+            console.log("ticket closed");
+            resolve();
+          }
+        });
+      }
+    });
+  });
+};
+
 
 
 module.exports = {
@@ -279,5 +300,6 @@ module.exports = {
   requestRejected,
   getSupportTicketIssues,
   getSupportTicketIssuesDetails, 
-  openSupportTicket
+  openSupportTicket, 
+  closeSupportTicket
 };

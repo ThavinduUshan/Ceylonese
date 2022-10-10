@@ -131,6 +131,22 @@ const openSupportTicket = async (req, res) => {
   }
 };
 
+const closeSupportTicket = async (req, res) => {
+  console.log("heree");
+  const { requestID } = req.body;
+  console.log("requestID is this", requestID);
+
+  try {
+    await moderatorModel.closeSupportTicket(requestID, res).then(() => {
+      res.json({ success: "Ticekt Successfully Closed!" });
+    });
+  } catch (err) {
+    return res.json({ error: err });
+  }
+};
+
+
+
 
 module.exports = {
   getSellerRequests,
@@ -138,5 +154,6 @@ module.exports = {
   acceptSeller,
   rejectSeller,
   getSupportTicketIssuesDetails,
-  openSupportTicket
+  openSupportTicket, 
+  closeSupportTicket
 };
