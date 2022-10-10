@@ -344,6 +344,29 @@ const getBidsActive = (buyerID, res) => {
   });
 };
 
+const getBidsEnded = (buyerID, res) => {
+  const now = new Date();
+  console.log(now);
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "SELECT biddings.*, auctions.*, auction_images.* FROM biddings INNER JOIN auctions ON biddings.auctionID = auctions.auctionID INNER JOIN auction_images ON auctions.auctionID = auction_images.auctionID WHERE biddings.buyerID = ? AND auctions.endDate < ? ";
+        connection.query(sql, [buyerID, now], (err, results) => {
+          connection.release();
+          if (err) {
+            reject();
+          } else {
+            resolve(results);
+          }
+        });
+      }
+    });
+  });
+};
+
 module.exports = {
   createBuyer,
   findBuyer,
@@ -359,4 +382,5 @@ module.exports = {
   addOrderAddress,
   placeOrder,
   getBidsActive,
+  getBidsEnded,
 };
