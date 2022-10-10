@@ -468,6 +468,50 @@ const getPartnershipById = (partnershipID, res) => {
   });
 };
 
+const getPartnershipSender = (senderProduct, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: err });
+      } else {
+        const sql =
+          "SELECT products.title, product_images.image1 FROM products INNER JOIN product_images ON products.productID = product_images.productID WHERE products.productID = ?";
+        connection.query(sql, [senderProduct], (err, results) => {
+          connection.release();
+          if (err) {
+            reject();
+          } else {
+            console.log(results);
+            resolve(results[0]);
+          }
+        });
+      }
+    });
+  });
+};
+
+const getPartnershipReceiver = (receiverProduct, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: err });
+      } else {
+        const sql =
+          "SELECT products.title, product_images.image1 FROM products INNER JOIN product_images ON products.productID = product_images.productID WHERE products.productID = ?";
+        connection.query(sql, [receiverProduct], (err, results) => {
+          connection.release();
+          if (err) {
+            reject();
+          } else {
+            console.log(results);
+            resolve(results[0]);
+          }
+        });
+      }
+    });
+  });
+};
+
 module.exports = {
   createSellerRequest,
   submitSellerVerificationDocs,
@@ -482,4 +526,6 @@ module.exports = {
   createPartnership,
   getPendingPartnerships,
   getPartnershipById,
+  getPartnershipSender,
+  getPartnershipReceiver,
 };
