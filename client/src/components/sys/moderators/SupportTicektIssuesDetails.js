@@ -71,6 +71,21 @@ const SupportTicketIssuesDetails = () => {
     });
   };
 
+  const closeTicket = (e) => {
+    e.preventDefault();
+    const data = {
+      requestID: request.ticket_id,
+    };
+    axios.post(CLOSE_TICKET_URL, data).then((response) => {
+      if (response.data.error) {
+        console.log(response.data.error);
+      } else {
+        console.log("success!");
+        navigateTo("/sys/moderators/support/");
+      }
+    });
+  };
+
   
   return (
     <>
