@@ -463,6 +463,57 @@ const getPendingPartnerships = async (req, res) => {
   }
 };
 
+const getPartnership = async (req, res) => {
+  console.log("here");
+  const partnershipID = req.params.id;
+  console.log("here");
+  try {
+    await sellerModel.getPartnershipById(partnershipID, res).then((result) => {
+      const partnership = result;
+      console.log("here");
+
+      const senderProduct = partnership.senderProduct;
+      console.log(senderProduct);
+
+      sellerModel
+        .getPartnershipSender(senderProduct, res)
+        .then((senderDetails) => {
+          const sender = senderDetails;
+
+          console.log(sender);
+
+          const receiverProduct = partnership.receiverProduct;
+
+          sellerModel
+            .getPartnershipReceiver(receiverProduct, res)
+            .then((receiverDetails) => {
+              const receiver = receiverDetails;
+              console.log(receiver);
+
+              const partnershipDetails = {
+                partnershipID: partnershipID,
+                senderID: partnership.senderID,
+                senderProduct: partnership.senderProduct,
+                senderProductName: sender.title,
+                senderProductImage: sender.image1,
+                senderDiscount: partnership.senderDiscount,
+                receiverID: partnership.receiverID,
+                receiverProduct: partnership.receiverProduct,
+                receiverProductName: receiver.title,
+                receiverProductImage: receiver.image1,
+                receiverDiscount: partnership.receiverDiscount,
+                description: partnership.description,
+              };
+
+              res.json({ partnership: partnershipDetails });
+            });
+        });
+    });
+  } catch (err) {
+    return res.json({ error: err });
+  }
+};
+
 module.exports = {
   submitSellerRequests,
   loginSeller,

@@ -18,4 +18,6 @@ router
   .route("/partnerships/pending")
   .post(sellerController.getPendingPartnerships);
 
+router.route("/partnership/:id").get(sellerController.getPartnership);
+
 module.exports = router;
