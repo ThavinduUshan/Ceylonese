@@ -261,6 +261,21 @@ const getBidsActive = async (req, res) => {
   }
 };
 
+const getBidsEnded = async (req, res) => {
+  const { buyerID } = req.body;
+
+  try {
+    await buyerModel.getBidsEnded(buyerID, res).then((results) => {
+      const bids = results;
+      res.json({
+        bids: bids,
+      });
+    });
+  } catch (err) {
+    return res.json({ error: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   createBuyer,
   LoginBuyer,
@@ -273,4 +288,5 @@ module.exports = {
   getOrdersCompletedTop,
   addPayment,
   getBidsActive,
+  getBidsEnded,
 };
