@@ -524,4 +524,5 @@ module.exports = {
   getProductsFromStore,
   addPartnershipRequest,
   getPendingPartnerships,
+  getPartnership,
 };

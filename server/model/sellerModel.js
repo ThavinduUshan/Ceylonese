@@ -448,6 +448,26 @@ const getPendingPartnerships = (sellerID, res) => {
   });
 };
 
+const getPartnershipById = (partnershipID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql = "SELECT * FROM partnerships WHERE partnershipID = ?";
+        connection.query(sql, [partnershipID], (error, results) => {
+          connection.release();
+          if (error) {
+            reject();
+          } else {
+            resolve(results[0]);
+          }
+        });
+      }
+    });
+  });
+};
+
 module.exports = {
   createSellerRequest,
   submitSellerVerificationDocs,
@@ -461,4 +481,5 @@ module.exports = {
   getSellerFromStore,
   createPartnership,
   getPendingPartnerships,
+  getPartnershipById,
 };
