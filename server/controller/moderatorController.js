@@ -119,11 +119,24 @@ const getSupportTicketIssuesDetails = async (req, res) => {
   }
 };
 
+const openSupportTicket = async (req, res) => {
+  const { requestID } = req.body;
+
+  try {
+    await moderatorModel.openSupportTicket(requestID, res).then(() => {
+      res.json({ success: "Ticekt Successfully Opned!" });
+    });
+  } catch (err) {
+    return res.json({ error: err });
+  }
+};
+
 
 module.exports = {
   getSellerRequests,
   getRequestDetails,
   acceptSeller,
   rejectSeller,
-  getSupportTicketIssuesDetails
+  getSupportTicketIssuesDetails,
+  openSupportTicket
 };
