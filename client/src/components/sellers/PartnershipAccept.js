@@ -2,8 +2,24 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "../../api/axios";
 import NavBar from "../NavBar";
+const ACCEPT_PARTERSHIP_URL = "sellers/partnerships/accept";
+const REJECT_PARTERSHIP_URL = "sellers/partnerships/reject";
 
 const PartnershipAccept = () => {
+  const { id } = useParams();
+  const GET_PARTNERSHIP_INFO_URL = `sellers/partnership/${id}`;
+
+  useEffect(() => {
+    axios.get(GET_PARTNERSHIP_INFO_URL).then((response) => {
+      if (response.data.error) {
+        console.log(response.data.error);
+      } else {
+        const partnership = response.data.partnership;
+        setPartnership(partnership);
+        console.log(partnership);
+      }
+    });
+  }, []);
   return (
     <>
       <NavBar />
