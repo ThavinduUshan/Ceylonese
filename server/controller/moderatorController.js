@@ -90,9 +90,98 @@ const rejectSeller = async (req, res) => {
   }
 };
 
+const getSupportTicketIssues = async (req, res) => {
+  try {
+    await moderatorModel.getSupportTicketIssues().then((response) => {
+      const requests = response;
+      console.log(requests);
+      res.json({ requests: requests });
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+
+const getSupportTicketIssuesDetails = async (req, res) => {
+  const requestID = req.params.id;
+  try {
+    await moderatorModel
+      .getSupportTicketIssuesDetails(requestID, res)
+      .then((response) => {
+        const details = response;
+        res.json({
+          request: details,
+        });
+      });
+  } catch (err) {
+    res.json({ error: err });
+  }
+};
+
+const openSupportTicket = async (req, res) => {
+  const { requestID } = req.body;
+
+  try {
+    await moderatorModel.openSupportTicket(requestID, res).then(() => {
+      res.json({ success: "Ticekt Successfully Opned!" });
+    });
+  } catch (err) {
+    return res.json({ error: err });
+  }
+};
+
+const closeSupportTicket = async (req, res) => {
+  console.log("heree");
+  const { requestID } = req.body;
+  console.log("requestID is this", requestID);
+
+  try {
+    await moderatorModel.closeSupportTicket(requestID, res).then(() => {
+      res.json({ success: "Ticekt Successfully Closed!" });
+    });
+  } catch (err) {
+    return res.json({ error: err });
+  }
+};
+
+const getSupportTicketComplains = async (req, res) => {
+  try {
+    await moderatorModel.getSupportTicketComplains().then((response) => {
+      const requests = response;
+      console.log(requests);
+      res.json({ requests: requests });
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const getSupportTicketComplainDetails = async (req, res) => {
+  const requestID = req.params.id;
+  try {
+    await moderatorModel
+      .getSupportTicketComplainDetails(requestID, res)
+      .then((response) => {
+        const details = response;
+        res.json({
+          request: details,
+        });
+      });
+  } catch (err) {
+    res.json({ error: err });
+  }
+};
+
+
 module.exports = {
   getSellerRequests,
   getRequestDetails,
   acceptSeller,
   rejectSeller,
+  getSupportTicketIssuesDetails,
+  openSupportTicket, 
+  closeSupportTicket, 
+  getSupportTicketComplains,
+  getSupportTicketComplainDetails
 };

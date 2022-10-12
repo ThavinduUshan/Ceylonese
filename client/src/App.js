@@ -86,7 +86,21 @@ function App() {
             path="/sys/moderators/sellerrequests/:id"
             element={<SellerRequestDetails />}
           />
+           <Route
+            path="/sys/moderators/support/"
+            element={<SupportTicketIssues />}
+          />
+          <Route
+            path="/sys/moderators/support/:id"
+            element={<SupportTicketIssuesDetails />}
+          />
+          <Route path="/sys/moderators/complains/" element={<Complains />} />
+          <Route
+            path="/sys/moderators/complains/:id"
+            element={<ComplainDetails />}
+          />
         </Route>
+        
         {/* Protected Routes */}
         <Route element={<RequireAuth allowedRole={5150} />}>
           <Route path="/buyers/profile" element={<Profile />} />

@@ -206,6 +206,132 @@ const requestRejected = (requestID, res) => {
   });
 };
 
+const getSupportTicketIssues = (req, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "SELECT * FROM support_tickets WHERE status !=? AND type != ? ORDER BY ticket_id DESC";
+        connection.query(sql, ["Closed", 3], (error, results) => {
+          connection.release();
+          if (error) {
+            return res.status(500).json({ error: "Internal Server Error" });
+          } else {
+            resolve(results);
+          }
+        });
+      }
+    });
+  });
+};
+
+const getSupportTicketIssuesDetails = (requestID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal Server Error!" });
+      } else {
+        const sql =
+          "SELECT * FROM support_tickets WHERE ticket_id=? ORDER BY ticket_id DESC";
+        connection.query(sql, [requestID], (error, results) => {
+          connection.release();
+          if (error) {
+            reject();
+          } else {
+            resolve(results[0]);
+          }
+        });
+      }
+    });
+  });
+};
+
+const openSupportTicket = (requestID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql = "UPDATE support_tickets SET status = ? WHERE ticket_id = ?";
+        connection.query(sql, ["Opened", requestID], (error, results) => {
+          if (error) {
+            reject();
+          } else {
+            resolve();
+          }
+        });
+      }
+    });
+  });
+};
+
+const closeSupportTicket = (requestID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql = "UPDATE support_tickets SET status = ? WHERE ticket_id = ?";
+        connection.query(sql, ["Closed", requestID], (error, results) => {
+          if (error) {
+            reject();
+          } else {
+            console.log(results);
+            console.log("ticket closed");
+            resolve();
+          }
+        });
+      }
+    });
+  });
+};
+
+const getSupportTicketComplains = (req, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "SELECT * FROM support_tickets WHERE status !=? AND type = ? ORDER BY ticket_id DESC";
+        connection.query(sql, ["Closed", 3], (error, results) => {
+          connection.release();
+          if (error) {
+            return res.status(500).json({ error: "Internal Server Error" });
+          } else {
+            resolve(results);
+          }
+        });
+      }
+    });
+  });
+};
+
+const getSupportTicketComplainDetails = (requestID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal Server Error!" });
+      } else {
+        const sql =
+          "SELECT * FROM support_tickets WHERE ticket_id=? ORDER BY ticket_id DESC";
+        connection.query(sql, [requestID], (error, results) => {
+          connection.release();
+          if (error) {
+            reject();
+          } else {
+            resolve(results[0]);
+          }
+        });
+      }
+    });
+  });
+};
+
+
+
 module.exports = {
   getSellerRequests,
   getRequestDetails,
@@ -214,4 +340,10 @@ module.exports = {
   createStore,
   addVerificationDocs,
   requestRejected,
+  getSupportTicketIssues,
+  getSupportTicketIssuesDetails, 
+  openSupportTicket, 
+  closeSupportTicket,
+  getSupportTicketComplains,
+  getSupportTicketComplainDetails
 };
