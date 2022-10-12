@@ -8,6 +8,83 @@ const OPEN_TICKET_URL = "/moderators/supportticket/open";
 const CLOSE_TICKET_URL = "/moderators/supportticket/close";
 
 const ComplainDetails = () => {
+
+    const { id } = useParams();
+
+  const navigateTo = useNavigate();
+
+  const [request, setRequest] = useState();
+
+  const GET_SELLER_REQUESTS_URL = `moderators/supportticketcomplains/${id}`;
+
+  useEffect(() => {
+    axios.get(GET_SELLER_REQUESTS_URL).then((response) => {
+      setRequest(response.data.request);
+      console.log(response.data.request);
+    });
+  }, []);
+
+  const sendTicketEmail = (e) => {
+    e.preventDefault();
+    let data = {
+      service_id: "service_26984ak",
+      template_id: "template_scq6tah",
+      user_id: "7v0_CisEp31iy063a",
+      template_params: {
+        to_email: `${request?.email}`,
+        to_name: `${request?.name}`,
+        ticket_id: `${request?.ticket_id}`,
+      },
+    };
+
+    axios
+      .post(
+        "https://api.emailjs.com/api/v1.0/email/send",
+        JSON.stringify(data),
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then(() => {
+        console.log("Success!");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const openTicket = (e) => {
+    e.preventDefault();
+    const data = {
+      requestID: request.ticket_id,
+    };
+    axios.post(OPEN_TICKET_URL, data).then((response) => {
+      if (response.data.error) {
+        console.log(response.data.error);
+      } else {
+        console.log("success!");
+        //sendTicketEmail(e);
+        navigateTo("/sys/moderators/support/");
+      }
+    });
+  };
+
+  const closeTicket = (e) => {
+    e.preventDefault();
+    const data = {
+      requestID: request.requestID,
+    };
+    axios.post(CLOSE_TICKET_URL, data).then((response) => {
+      if (response.data.error) {
+        console.log(response.data.error);
+      } else {
+        console.log("success!");
+        navigateTo("/sys/moderators/support/");
+      }
+    });
+  };
   
   return (
     <>
