@@ -288,6 +288,27 @@ const closeSupportTicket = (requestID, res) => {
   });
 };
 
+const getSupportTicketComplains = (req, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "SELECT * FROM support_tickets WHERE status !=? AND type = ? ORDER BY ticket_id DESC";
+        connection.query(sql, ["Closed", 3], (error, results) => {
+          connection.release();
+          if (error) {
+            return res.status(500).json({ error: "Internal Server Error" });
+          } else {
+            resolve(results);
+          }
+        });
+      }
+    });
+  });
+};
+
 
 
 module.exports = {
@@ -301,5 +322,6 @@ module.exports = {
   getSupportTicketIssues,
   getSupportTicketIssuesDetails, 
   openSupportTicket, 
-  closeSupportTicket
+  closeSupportTicket,
+  getSupportTicketComplains
 };

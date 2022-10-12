@@ -145,7 +145,17 @@ const closeSupportTicket = async (req, res) => {
   }
 };
 
-
+const getSupportTicketComplains = async (req, res) => {
+  try {
+    await moderatorModel.getSupportTicketComplains().then((response) => {
+      const requests = response;
+      console.log(requests);
+      res.json({ requests: requests });
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
 
 
 module.exports = {
@@ -155,5 +165,6 @@ module.exports = {
   rejectSeller,
   getSupportTicketIssuesDetails,
   openSupportTicket, 
-  closeSupportTicket
+  closeSupportTicket, 
+  getSupportTicketComplains
 };
