@@ -7,7 +7,27 @@ import useAuth from "../../hooks/useAuth";
 import axios from "../../api/axios";
 import CategoriesBar from "../CategoriesBar";
 
+const GET_COMPLETED_BIDS = "buyers/bids/completed";
+
 const BuyerBidsWon = () => {
+  const { auth } = useAuth();
+  const [bids, setBids] = useState();
+
+  useEffect(() => {
+    const data = {
+      buyerID: auth.user.id,
+    };
+
+    axios.post(GET_COMPLETED_BIDS, data).then((response) => {
+      if (response.data.error) {
+        console.log(response.data.error);
+      } else {
+        console.log(response.data.bids);
+        setBids(response.data.bids);
+      }
+    });
+  }, []);
+
   return (
     <>
       <NavBar />
