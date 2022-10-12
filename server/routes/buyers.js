@@ -19,4 +19,6 @@ router
   .route("/orders/completed/top")
   .post(buyerController.getOrdersCompletedTop);
 
+router.route("/bids/completed").post(buyerController.getBidsCompleted);
+
 module.exports = router;
