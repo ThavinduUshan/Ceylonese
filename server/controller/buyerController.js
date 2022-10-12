@@ -304,4 +304,5 @@ module.exports = {
   addPayment,
   getBidsActive,
   getBidsEnded,
+  getBidCompleted,
 };
