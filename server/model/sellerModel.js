@@ -512,6 +512,30 @@ const getPartnershipReceiver = (receiverProduct, res) => {
   });
 };
 
+const acceptPartnership = (partnershipID, myDiscount, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "UPDATE partnerships SET receiverDiscount = ? , status = ? WHERE partnershipID = ?";
+        connection.query(
+          sql,
+          [myDiscount, "Active", partnershipID],
+          (err, results) => {
+            if (err) {
+              reject();
+            } else {
+              resolve(results);
+            }
+          }
+        );
+      }
+    });
+  });
+};
+
 module.exports = {
   createSellerRequest,
   submitSellerVerificationDocs,
@@ -528,4 +552,5 @@ module.exports = {
   getPartnershipById,
   getPartnershipSender,
   getPartnershipReceiver,
+  acceptPartnership,
 };
