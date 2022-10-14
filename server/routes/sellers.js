@@ -19,5 +19,6 @@ router
   .post(sellerController.getPendingPartnerships);
 
 router.route("/partnership/:id").get(sellerController.getPartnership);
+router.route("/partnerships/accept").post(sellerController.acceptPartnership);
 
 module.exports = router;

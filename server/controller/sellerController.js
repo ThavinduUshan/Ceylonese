@@ -514,6 +514,24 @@ const getPartnership = async (req, res) => {
   }
 };
 
+const acceptPartnership = async (req, res) => {
+  const { partnershipID, myDiscount } = req.body;
+  console.log([partnershipID, myDiscount]);
+  if (myDiscount) {
+    try {
+      await sellerModel
+        .acceptPartnership(partnershipID, myDiscount, res)
+        .then(() => {
+          res.json({ success: "Partnership Accepted" });
+        });
+    } catch (err) {
+      return res.json({ error: "Something went wrong" });
+    }
+  } else {
+    return res.json({ error: "Something went wrong" });
+  }
+};
+
 module.exports = {
   submitSellerRequests,
   loginSeller,
@@ -525,4 +543,5 @@ module.exports = {
   addPartnershipRequest,
   getPendingPartnerships,
   getPartnership,
+  acceptPartnership,
 };
