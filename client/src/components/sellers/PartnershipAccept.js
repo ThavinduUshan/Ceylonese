@@ -6,6 +6,35 @@ const ACCEPT_PARTERSHIP_URL = "sellers/partnerships/accept";
 const REJECT_PARTERSHIP_URL = "sellers/partnerships/reject";
 
 const PartnershipAccept = () => {
+  const [partnership, setPartnership] = useState();
+  const [myDiscount, setMyDiscount] = useState();
+  const [isError, setIsError] = useState(false);
+
+  const navigateTo = useNavigate();
+
+  const acceptPartnership = (e) => {
+    e.preventDefault();
+    if (myDiscount) {
+      const data = {
+        partnershipID: partnership.partnershipID,
+        myDiscount: myDiscount,
+      };
+
+      axios.post(ACCEPT_PARTERSHIP_URL, data).then((response) => {
+        if (response.data.error) {
+          console.log(response.data.error);
+        } else {
+          console.log(response.data.success);
+          setPartnership("");
+          setMyDiscount("");
+          navigateTo("/sellers/partnerships/active");
+        }
+      });
+    } else {
+      setIsError(true);
+    }
+  };
+
   const { id } = useParams();
   const GET_PARTNERSHIP_INFO_URL = `sellers/partnership/${id}`;
 
