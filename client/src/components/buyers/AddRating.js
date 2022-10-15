@@ -6,7 +6,62 @@ import NavBar from "../NavBar";
 import CategoriesBar from "../CategoriesBar";
 import RatingStars from "./RatingStars";
 
+const ADD_REVIEW_URL = "buyers/orders/review/submit";
+
 const AddRating = () => {
+
+    const { id } = useParams();
+
+    const navigateTo = useNavigate();
+  
+    const [request, setRequest] = useState();
+    const [storeRating, setStoreRating] = useState(false);
+    const [productRating, setProductRating] = useState(false);
+    const [reviewMsg, setReviewMsg] = useState();
+    const [error, setError] = useState();
+  
+    const GET_BUYER_REQUESTS_URL = `buyers/orders/orderitem/${id}`;
+  
+    const setRating = (isStore, val) => {
+      if (isStore) {
+        setStoreRating(val);
+      } else {
+        setProductRating(val);
+      }
+    };
+  
+    useEffect(() => {
+      axios.get(GET_BUYER_REQUESTS_URL).then((response) => {
+        setRequest(response.data.request);
+        console.log(response.data.request);
+      });
+    }, []);
+  
+    const handleSubmit = (e) => {
+      e.preventDefault();
+  
+      if (!storeRating || !productRating) {
+        setError(true);
+      } else {
+        const data = {
+          orderItemID: id,
+          storeID: request.storeID,
+          productID: request.productID,
+          storeRating: storeRating,
+          productRating: productRating,
+          review: reviewMsg,
+        };
+  
+        axios.post(ADD_REVIEW_URL, data).then((response) => {
+          if (response.data.error) {
+            console.log(response.data.error);
+          } else {
+            console.log(response.data.success);
+            navigateTo("/buyers/orders/completed", { replace: true });
+          }
+        });
+      }
+    };
 
   return (
     <>
