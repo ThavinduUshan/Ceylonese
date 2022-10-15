@@ -532,6 +532,23 @@ const acceptPartnership = async (req, res) => {
   }
 };
 
+const rejectPartnership = async (req, res) => {
+  const { partnershipID, myDiscount } = req.body;
+  if (myDiscount) {
+    try {
+      await sellerModel
+        .rejectPartnership(partnershipID, myDiscount, res)
+        .then(() => {
+          res.json({ success: "Partnership Rejected" });
+        });
+    } catch (err) {
+      return res.json({ error: "Something went wrong" });
+    }
+  } else {
+    return res.json({ error: "Something went wrong" });
+  }
+};
+
 module.exports = {
   submitSellerRequests,
   loginSeller,
@@ -544,4 +561,5 @@ module.exports = {
   getPendingPartnerships,
   getPartnership,
   acceptPartnership,
+  rejectPartnership,
 };
