@@ -136,7 +136,53 @@ const getCompletedOrders = async (req, res) => {
   }
 };
 
+const ratingItem = async (req, res) => {
+  const requestID = req.params.id;
+  console.log("here", requestID);
+  try {
+    await buyerModel.ratingItem(requestID, res).then((response) => {
+      const details = response;
+      console.log(details);
+      res.json({
+        request: details,
+      });
+    });
+  } catch (err) {
+    res.json({ error: err });
+  }
+};
+
+const submitReview = async (req, res) => {
+  const data = req.body;
+  console.log(data);
+
+  try {
+    await buyerModel.submitReview(data, res).then(() => {
+      buyerModel.getProductRating(data, res).then((results) => {
+        const totalRating = results.total;
+        const reviewCount = results.reviewCount;
+
+        const averageRating = parseFloat(
+          parseInt(totalRating) / parseInt(reviewCount)
+        ).toFixed(1);
+
+        buyerModel.updateProductRating(data, averageRating, res).then(() => {
+          buyerModel
+            .updateOrderItemStatus(data, averageRating, res)
+            .then(() => {
+              res.json({ success: "Review Added" });
+            });
+        });
+      });
+    });
+  } catch (err) {
+    return res.json({ error: "Something went wrong" });
+  }
+};
+
 module.exports = { createBuyer, LoginBuyer,
   getCheckoutDetails,
   getOrders,
-  getCompletedOrders, };
+  getCompletedOrders,
+  ratingItem,
+  submitReview, };
