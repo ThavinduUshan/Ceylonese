@@ -126,7 +126,63 @@ const getCompletedOrders = (buyerID, res) => {
   });
 };
 
+const ratingItem = (requestID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal Server Error!" });
+      } else {
+        const sql =
+          "SELECT stores.sellerID, stores.storeID, stores.storeName, products.productID, products.title, product_images.image1 FROM order_items INNER JOIN products on order_items.productID = products.productID INNER JOIN stores on stores.sellerID = products.sellerID INNER JOIN product_images on product_images.productID = products.productID WHERE order_items.orderItemID=? ";
+        connection.query(sql, [requestID], (error, results) => {
+          connection.release();
+          if (error) {
+            reject();
+          } else {
+            resolve(results[0]);
+          }
+        });
+      }
+    });
+  });
+};
+
+const submitReview = (data, res) => {
+  const {
+    orderItemID,
+    storeID,
+    productID,
+    storeRating,
+    productRating,
+    review,
+  } = data;
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "INSERT INTO reviews (orderItemID, storeID, storeRating, productID, productRating, review) VALUES (?,?,?,?,?,?)";
+        connection.query(
+          sql,
+          [orderItemID, storeID, storeRating, productID, productRating, review],
+          (error, results) => {
+            connection.release();
+            if (error) {
+              reject();
+            } else {
+              resolve(results);
+            }
+          }
+        );
+      }
+    });
+  });
+};
+
 module.exports = { createBuyer, findBuyer, isBuyerExists,
   getCheckoutDetails,
   getOrders,
-  getCompletedOrders,};
+  getCompletedOrders,
+  ratingItem,
+  submitReview, };
