@@ -35,6 +35,24 @@ const PartnershipAccept = () => {
     }
   };
 
+  const rejectPartnership = (e) => {
+    e.preventDefault();
+    const data = {
+      partnershipID: partnership.partnershipID,
+    };
+
+    axios.post(REJECT_PARTERSHIP_URL, data).then((response) => {
+      if (response.data.error) {
+        console.log(response.data.error);
+      } else {
+        console.log(response.data.success);
+        setPartnership("");
+        setMyDiscount("");
+        navigateTo("sellers/partnerships/reject");
+      }
+    });
+  };
+
   const { id } = useParams();
   const GET_PARTNERSHIP_INFO_URL = `sellers/partnership/${id}`;
 
