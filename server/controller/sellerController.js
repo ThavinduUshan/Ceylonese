@@ -549,6 +549,19 @@ const rejectPartnership = async (req, res) => {
   }
 };
 
+const getActivePartnerships = async (req, res) => {
+  const { sellerID } = req.body;
+
+  try {
+    await sellerModel.getActivePartnerships(sellerID, res).then((results) => {
+      const partnerships = results;
+      res.json({ partnerships: partnerships });
+    });
+  } catch (err) {
+    res.json({ error: "Something wsent Wrong" });
+  }
+};
+
 module.exports = {
   submitSellerRequests,
   loginSeller,
@@ -562,4 +575,5 @@ module.exports = {
   getPartnership,
   acceptPartnership,
   rejectPartnership,
+  getActivePartnerships,
 };

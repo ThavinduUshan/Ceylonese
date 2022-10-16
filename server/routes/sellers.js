@@ -21,5 +21,8 @@ router
 router.route("/partnership/:id").get(sellerController.getPartnership);
 router.route("/partnerships/accept").post(sellerController.acceptPartnership);
 router.route("/partnerships/reject").post(sellerController.rejectPartnership);
+router
+  .route("/partnerships/active")
+  .post(sellerController.getActivePartnerships);
 
 module.exports = router;
