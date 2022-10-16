@@ -26,7 +26,7 @@ import AddModerators from "./components/sys/admins/AddModerators";
 import AddLisitingForm from "./components/sellers/AddLisitingForm";
 import AuctionView from "./components/AuctionView";
 import Auctions from "./components/sellers/Auctions";
-import BuyerChat from "./components/chat/BuyerChat";
+import BuyerChats from "./components/chat/BuyerChats";
 
 function App() {
   return (
@@ -58,6 +58,7 @@ function App() {
             element={<AddLisitingForm />}
           />
         </Route>
+        <Route path="/sellers/chat" element={<SellerChats />} />
 
         {/* Admin Routes */}
         <Route path="/sys/login" element={<LoginAdmin />} />
@@ -91,11 +92,15 @@ function App() {
         <Route element={<RequireAuth allowedRole={5150} />}>
           <Route path="/buyers/profile" element={<Profile />} />
           <Route path="/buyers/checkout" element={<Checkout />} />
-          <Route path="/buyers/chat" element={<BuyerChat />} />
+          <Route path="/buyers/chat" element={<BuyerChats />} />
         </Route>
 
         {/* unauthorized route */}
         <Route path="/unauthorized" element={<Unauthorized />} />
+
+        <Route element={<RequireAuth allowedRole={2347} allowedRole2={5150} />}>
+          <Route path="/chat/:id" element={<Chat />} />
+        </Route>
 
         {/* 404 Route */}
         <Route path="*" element={<NotFound />} />
