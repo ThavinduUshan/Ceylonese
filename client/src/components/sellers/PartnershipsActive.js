@@ -5,7 +5,28 @@ import SellerSideBar from "./SellerSideBar";
 import useAuth from "../../hooks/useAuth";
 import NavBar from "../NavBar";
 
+const GET_PARTNERSHIP_DETAILS = "/sellers/partnerships/active";
+
 const PartnershipsActive = () => {
+  const { auth } = useAuth();
+  const sellerID = auth?.user.sellerID;
+  const [partnerships, setPartnerships] = useState();
+
+  useEffect(() => {
+    const data = {
+      sellerID: sellerID,
+    };
+    axios.post(GET_PARTNERSHIP_DETAILS, data).then((response) => {
+      if (response.data.error) {
+        console.log(response.data.error);
+      } else {
+        const partnerships = response.data.partnerships;
+        console.log(partnerships);
+        setPartnerships(partnerships);
+      }
+    });
+  }, []);
+
   return (
     <>
       <NavBar />
