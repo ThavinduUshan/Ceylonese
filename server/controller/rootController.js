@@ -50,9 +50,37 @@ const getAuctionDetails = async (req, res) => {
   }
 };
 
+const checkPartnershipStatus = async (req, res) => {
+  const { productID } = req.body;
+
+  if (!productID) {
+    return res.json({ error: "Something went wrong" });
+  }
+
+  try {
+    await rootModel.checkPartnershipStatus(productID, res).then((results) => {
+      const partnership = results;
+
+      console.log("partnerssshipppp", partnership);
+
+      if (!partnership || partnership.status == "Ended") {
+        return res.json({ status: false });
+      } else {
+        return res.json({
+          status: true,
+          partnershipID: partnership.partnershipID,
+        });
+      }
+    });
+  } catch (err) {
+    return res.json({ error: "Something went wrong" });
+  }
+};
+
 module.exports = {
   getProducts,
   getProductDetails,
   getAuctions,
   getAuctionDetails,
+  checkPartnershipStatus,
 };
