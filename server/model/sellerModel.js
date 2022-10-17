@@ -365,6 +365,246 @@ const getSellerAuctions = (sellerID, res) => {
   });
 };
 
+const createPartnership = (data, res) => {
+  const {
+    senderID,
+    senderProduct,
+    senderDiscount,
+    receiverID,
+    receiverProduct,
+    description,
+    status,
+  } = data;
+
+  db.getConnection((err, connection) => {
+    if (err) {
+      return res.json({ error: "Internal Server Error" });
+    } else {
+      const sql =
+        " INSERT INTO partnerships (senderID, senderProduct,senderDiscount, receiverID, receiverProduct, receiverDiscount, description, status) VALUES (?, ?, ?, ? ,?, ?, ?, ?)";
+      connection.query(
+        sql,
+        [
+          senderID,
+          senderProduct,
+          senderDiscount,
+          receiverID,
+          receiverProduct,
+          null,
+          description,
+          status,
+        ],
+        (error, results) => {
+          connection.release();
+          if (error) {
+            return res.json({ error: error });
+          } else {
+            res.json({ success: "Partnership request successfully sent" });
+          }
+        }
+      );
+    }
+  });
+};
+
+const getPendingPartnerships = (sellerID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "SELECT * FROM partnerships WHERE receiverID = ? AND status = ? ";
+        connection.query(sql, [sellerID, "Pending"], (err, results) => {
+          connection.release();
+          if (err) {
+            reject();
+          } else {
+            resolve(results);
+            console.log(results);
+          }
+        });
+      }
+    });
+  });
+};
+
+const getPartnershipById = (partnershipID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql = "SELECT * FROM partnerships WHERE partnershipID = ?";
+        connection.query(sql, [partnershipID], (error, results) => {
+          connection.release();
+          if (error) {
+            reject();
+          } else {
+            resolve(results[0]);
+          }
+        });
+      }
+    });
+  });
+};
+
+const getPartnershipSender = (senderProduct, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: err });
+      } else {
+        const sql =
+          "SELECT products.title, product_images.image1 FROM products INNER JOIN product_images ON products.productID = product_images.productID WHERE products.productID = ?";
+        connection.query(sql, [senderProduct], (err, results) => {
+          connection.release();
+          if (err) {
+            reject();
+          } else {
+            console.log(results);
+            resolve(results[0]);
+          }
+        });
+      }
+    });
+  });
+};
+
+const getPartnershipReceiver = (receiverProduct, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: err });
+      } else {
+        const sql =
+          "SELECT products.title, product_images.image1 FROM products INNER JOIN product_images ON products.productID = product_images.productID WHERE products.productID = ?";
+        connection.query(sql, [receiverProduct], (err, results) => {
+          connection.release();
+          if (err) {
+            reject();
+          } else {
+            console.log(results);
+            resolve(results[0]);
+          }
+        });
+      }
+    });
+  });
+};
+
+const acceptPartnership = (partnershipID, myDiscount, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "UPDATE partnerships SET receiverDiscount = ? , status = ? WHERE partnershipID = ?";
+        connection.query(
+          sql,
+          [myDiscount, "Active", partnershipID],
+          (err, results) => {
+            if (err) {
+              reject();
+            } else {
+              resolve(results);
+            }
+          }
+        );
+      }
+    });
+  });
+};
+
+const rejectPartnership = (partnershipID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "UPDATE partnerships SET status = ? WHERE partnershipID = ?";
+        connection.query(sql, ["Rejected", partnershipID], (err, results) => {
+          if (err) {
+            reject();
+          } else {
+            resolve(results);
+          }
+        });
+      }
+    });
+  });
+};
+
+const getActivePartnerships = (sellerID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "SELECT * FROM partnerships WHERE receiverID = ? OR senderID = ? AND status = ? ";
+        connection.query(
+          sql,
+          [sellerID, sellerID, "Active"],
+          (err, results) => {
+            connection.release();
+            if (err) {
+              reject();
+            } else {
+              resolve(results);
+              console.log(results);
+            }
+          }
+        );
+      }
+    });
+  });
+};
+
+const endPartnership = (partnershipID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "UPDATE partnerships SET status = ? WHERE partnershipID = ?";
+        connection.query(sql, ["Ended", partnershipID], (err, results) => {
+          if (err) {
+            reject();
+          } else {
+            resolve(results);
+          }
+        });
+      }
+    });
+  });
+};
+
+const getEndedPartnerships = (sellerID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "SELECT * FROM partnerships WHERE receiverID = ? OR senderID = ? AND status = ? ";
+        connection.query(sql, [sellerID, sellerID, "Ended"], (err, results) => {
+          connection.release();
+          if (err) {
+            reject();
+          } else {
+            resolve(results);
+            console.log(results);
+          }
+        });
+      }
+    });
+  });
+};
+
 const getPendingOrders = (sellerID, res) => {
   return new Promise((resolve, reject) => {
     db.getConnection((err, connection) => {
@@ -723,4 +963,15 @@ module.exports = {
   getTodaySalesCount,
   getCompletedOrdersCount,
   getBestSellingProducts,
+  getSellerFromStore,
+  createPartnership,
+  getPendingPartnerships,
+  getPartnershipById,
+  getPartnershipSender,
+  getPartnershipReceiver,
+  acceptPartnership,
+  rejectPartnership,
+  getActivePartnerships,
+  endPartnership,
+  getEndedPartnerships,
 };

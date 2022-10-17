@@ -265,6 +265,25 @@ const getSellerListings = async (req, res) => {
   }
 };
 
+const getProductsFromStore = async (req, res) => {
+  const { storeID } = req.body;
+
+  try {
+    await sellerModel.getSellerFromStore(storeID, res).then((seller) => {
+      const sellerID = seller.sellerID;
+      sellerModel.getSellerListings(sellerID, res).then((results) => {
+        const listings = results;
+        res.json({
+          sellerID: sellerID,
+          listings: listings,
+        });
+      });
+    });
+  } catch (err) {
+    res.json({ error: err });
+  }
+};
+
 const addAuction = async (req, res) => {
   const {
     sellerID,
@@ -408,222 +427,6 @@ const getSellerAuctions = async (req, res) => {
   }
 };
 
-const getPendingOrders = async (req, res) => {
-  const { sellerID } = req.body;
-
-  try {
-    await sellerModel.getPendingOrders(sellerID, res).then((results) => {
-      const orders = results;
-
-      res.json({ orders: orders });
-    });
-  } catch (err) {
-    return res.json({ error: "Internal Error" });
-  }
-};
-
-const updateShippingStatus = async (req, res) => {
-  const { orderItemID } = req.body;
-  console.log("herrrrr");
-
-  try {
-    await sellerModel.updateShippingStatus(orderItemID, res).then(() => {
-      res.json({ success: "Marked as Shippped" });
-    });
-  } catch (err) {
-    return res.json({ error: err });
-  }
-};
-
-const getShippedOrders = async (req, res) => {
-  const { sellerID } = req.body;
-
-  try {
-    await sellerModel.getShippedOrders(sellerID, res).then((results) => {
-      const orders = results;
-
-      res.json({ orders: orders });
-    });
-  } catch (err) {
-    return res.json({ error: "Internal Error" });
-  }
-};
-
-const getCompletedOrders = async (req, res) => {
-  const { sellerID } = req.body;
-
-  try {
-    await sellerModel.getCompletedOrders(sellerID, res).then((results) => {
-      const orders = results;
-
-      res.json({ orders: orders });
-    });
-  } catch (err) {
-    return res.json({ error: "Internal Error" });
-  }
-};
-
-const getProductsFromStore = async (req, res) => {
-  const { storeID } = req.body;
-
-  try {
-    await sellerModel.getSellerFromStore(storeID, res).then((seller) => {
-      const sellerID = seller.sellerID;
-      sellerModel.getSellerListings(sellerID, res).then((results) => {
-        const listings = results;
-        res.json({
-          sellerID: sellerID,
-          listings: listings,
-        });
-      });
-    });
-  } catch (err) {
-    res.json({ error: err });
-  }
-};
-
-const getAnnualSalesData = async (req, res) => {
-  const { sellerID } = req.body;
-  try {
-    await sellerModel.getAnnualSalesData(sellerID, res).then((response) => {
-      const details = response;
-      res.json({
-        request: details,
-      });
-    });
-  } catch (err) {
-    res.json({ error: err });
-  }
-};
-
-const getSalesByCategories = async (req, res) => {
-  const { sellerID } = req.body;
-  try {
-    await sellerModel.getSalesByCategories(sellerID, res).then((response) => {
-      const details = response;
-      res.json({
-        request: details,
-      });
-    });
-  } catch (err) {
-    res.json({ error: err });
-  }
-};
-
-const getTopProducts = async (req, res) => {
-  const { sellerID } = req.body;
-  try {
-    await sellerModel.getTopProducts(sellerID, res).then((response) => {
-      const details = response;
-      res.json({
-        request: details,
-      });
-    });
-  } catch (err) {
-    res.json({ error: err });
-  }
-};
-
-const getSalesCount = async (req, res) => {
-  const { sellerID } = req.body;
-  try {
-    await sellerModel.getSalesCount(sellerID, res).then((response) => {
-      const details = response;
-      res.json({
-        request: details,
-      });
-    });
-  } catch (err) {
-    res.json({ error: err });
-  }
-};
-
-const getOrdersCount = async (req, res) => {
-  const { sellerID } = req.body;
-  try {
-    await sellerModel.getOrdersCount(sellerID, res).then((response) => {
-      const details = response;
-      res.json({
-        request: details,
-      });
-    });
-  } catch (err) {
-    res.json({ error: err });
-  }
-};
-
-const getPartnershipCount = async (req, res) => {
-  const { sellerID } = req.body;
-  try {
-    await sellerModel.getPartnershipCount(sellerID, res).then((response) => {
-      const details = response;
-      res.json({
-        request: details,
-      });
-    });
-  } catch (err) {
-    res.json({ error: err });
-  }
-};
-
-const getTodaySalesCount = async (req, res) => {
-  const { sellerID } = req.body;
-  try {
-    await sellerModel.getTodaySalesCount(sellerID, res).then((response) => {
-      const details = response;
-      res.json({
-        request: details,
-      });
-    });
-  } catch (err) {
-    res.json({ error: err });
-  }
-};
-
-const getPendingOrdersCount = async (req, res) => {
-  const { sellerID } = req.body;
-  try {
-    await sellerModel.getPendingOrdersCount(sellerID, res).then((response) => {
-      const details = response;
-      res.json({
-        request: details,
-      });
-    });
-  } catch (err) {
-    res.json({ error: err });
-  }
-};
-
-const getCompletedOrdersCount = async (req, res) => {
-  const { sellerID } = req.body;
-  try {
-    await sellerModel
-      .getCompletedOrdersCount(sellerID, res)
-      .then((response) => {
-        const details = response;
-        res.json({
-          request: details,
-        });
-      });
-  } catch (err) {
-    res.json({ error: err });
-  }
-};
-
-const getBestSellingProducts = async (req, res) => {
-  const { sellerID } = req.body;
-  try {
-    await sellerModel.getBestSellingProducts(sellerID, res).then((response) => {
-      const details = response;
-      res.json({
-        request: details,
-      });
-    });
-  } catch (err) {
-    res.json({ error: err });
-  }
-};
-
 module.exports = {
   submitSellerRequests,
   loginSeller,
@@ -646,4 +449,13 @@ module.exports = {
   getPendingOrdersCount,
   getCompletedOrdersCount,
   getBestSellingProducts,
+  getProductsFromStore,
+  addPartnershipRequest,
+  getPendingPartnerships,
+  getPartnership,
+  acceptPartnership,
+  rejectPartnership,
+  getActivePartnerships,
+  endPartnership,
+  getEndedPartnerships,
 };

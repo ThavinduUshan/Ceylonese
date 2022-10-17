@@ -35,5 +35,20 @@ router
 router
   .route("/getbestsellingproducts")
   .post(sellerController.getBestSellingProducts);
+router
+  .route("/partnership/request")
+  .post(sellerController.addPartnershipRequest);
+router
+  .route("/partnerships/pending")
+  .post(sellerController.getPendingPartnerships);
+
+router.route("/partnership/:id").get(sellerController.getPartnership);
+router.route("/partnerships/accept").post(sellerController.acceptPartnership);
+router.route("/partnerships/reject").post(sellerController.rejectPartnership);
+router
+  .route("/partnerships/active")
+  .post(sellerController.getActivePartnerships);
+router.route("/partnerships/end").post(sellerController.endPartnership);
+router.route("/partnerships/ended").post(sellerController.getEndedPartnerships);
 
 module.exports = router;
