@@ -3,6 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "../../api/axios";
 import NavBar from "../NavBar";
 
+const END_PARTNERSHIP_URL = "sellers/partnerships/end";
+
 const PartnershipDetailsForm = () => {
   const [partnership, setPartnership] = useState();
   const [myDiscount, setMyDiscount] = useState();
@@ -24,6 +26,26 @@ const PartnershipDetailsForm = () => {
       }
     });
   }, []);
+
+  const endPartnership = (e) => {
+    e.preventDefault();
+
+    const data = {
+      partnershipID: partnership.partnershipID,
+    };
+
+    axios.post(END_PARTNERSHIP_URL, data).then((response) => {
+      if (response.data.error) {
+        console.log(response.data.error);
+      } else {
+        console.log(response.data.success);
+        setPartnership("");
+        setMyDiscount("");
+        navigateTo("/sellers/partnerships/active");
+      }
+    });
+  };
+
   return (
     <>
       <NavBar />
