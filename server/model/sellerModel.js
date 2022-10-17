@@ -582,6 +582,26 @@ const getActivePartnerships = (sellerID, res) => {
   });
 };
 
+const endPartnership = (partnershipID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "UPDATE partnerships SET status = ? WHERE partnershipID = ?";
+        connection.query(sql, ["Ended", partnershipID], (err, results) => {
+          if (err) {
+            reject();
+          } else {
+            resolve(results);
+          }
+        });
+      }
+    });
+  });
+};
+
 module.exports = {
   createSellerRequest,
   submitSellerVerificationDocs,
@@ -601,4 +621,5 @@ module.exports = {
   acceptPartnership,
   rejectPartnership,
   getActivePartnerships,
+  endPartnership,
 };
