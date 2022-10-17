@@ -562,6 +562,22 @@ const getActivePartnerships = async (req, res) => {
   }
 };
 
+const endPartnership = async (req, res) => {
+  const { partnershipID } = req.body;
+
+  if (!partnershipID) {
+    return res.json({ error: "Something went wrong" });
+  }
+
+  try {
+    await sellerModel.endPartnership(partnershipID, res).then(() => {
+      res.json({ success: "Partnership Ended!" });
+    });
+  } catch (error) {
+    return res.json({ error: "Something went wrong" });
+  }
+};
+
 module.exports = {
   submitSellerRequests,
   loginSeller,
@@ -576,4 +592,5 @@ module.exports = {
   acceptPartnership,
   rejectPartnership,
   getActivePartnerships,
+  endPartnership,
 };
