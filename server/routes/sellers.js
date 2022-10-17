@@ -25,5 +25,6 @@ router
   .route("/partnerships/active")
   .post(sellerController.getActivePartnerships);
 router.route("/partnerships/end").post(sellerController.endPartnership);
+router.route("/partnerships/ended").post(sellerController.getEndedPartnerships);
 
 module.exports = router;
