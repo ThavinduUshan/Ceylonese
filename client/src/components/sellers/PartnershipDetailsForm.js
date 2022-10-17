@@ -4,6 +4,26 @@ import axios from "../../api/axios";
 import NavBar from "../NavBar";
 
 const PartnershipDetailsForm = () => {
+  const [partnership, setPartnership] = useState();
+  const [myDiscount, setMyDiscount] = useState();
+  const [isError, setIsError] = useState(false);
+
+  const navigateTo = useNavigate();
+
+  const { id } = useParams();
+  const GET_PARTNERSHIP_INFO_URL = `sellers/partnership/${id}`;
+
+  useEffect(() => {
+    axios.get(GET_PARTNERSHIP_INFO_URL).then((response) => {
+      if (response.data.error) {
+        console.log(response.data.error);
+      } else {
+        const partnership = response.data.partnership;
+        setPartnership(partnership);
+        console.log(partnership);
+      }
+    });
+  }, []);
   return (
     <>
       <NavBar />
