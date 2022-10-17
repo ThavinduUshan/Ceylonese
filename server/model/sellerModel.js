@@ -602,6 +602,28 @@ const endPartnership = (partnershipID, res) => {
   });
 };
 
+const getEndedPartnerships = (sellerID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "SELECT * FROM partnerships WHERE receiverID = ? OR senderID = ? AND status = ? ";
+        connection.query(sql, [sellerID, sellerID, "Ended"], (err, results) => {
+          connection.release();
+          if (err) {
+            reject();
+          } else {
+            resolve(results);
+            console.log(results);
+          }
+        });
+      }
+    });
+  });
+};
+
 module.exports = {
   createSellerRequest,
   submitSellerVerificationDocs,
@@ -622,4 +644,5 @@ module.exports = {
   rejectPartnership,
   getActivePartnerships,
   endPartnership,
+  getEndedPartnerships,
 };
