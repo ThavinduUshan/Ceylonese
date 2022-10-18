@@ -15,6 +15,28 @@ const getRoomsByBuyer = async (req, res) => {
   }
 };
 
+const getChatsByRoomID = async (req, res) => {
+    const roomID = req.params.id;
+    console.log(roomID);
+    try {
+      await chatModel.getChatsByRoomID(roomID, res).then((results) => {
+        const messages = results;
+        console.log(results);
+        res.json({ messages: messages });
+      });
+    } catch (error) {
+      return res.json({ error: err });
+    }
+  };
+  
+  const addMessage = (req, res) => {
+    const { roomID, message, sentBy, sentDate, sentTime } = req.body;
+    chatModel.addMessage(roomID, message, sentBy, sentDate, sentTime, res);
+  };
+  
+
 module.exports = {
     getRoomsByBuyer,
+    addMessage,
+    getChatsByRoomID,
 }
