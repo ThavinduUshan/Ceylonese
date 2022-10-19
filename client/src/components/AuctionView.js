@@ -5,6 +5,9 @@ import CategoriesBar from "./CategoriesBar";
 import NavBar from "./NavBar";
 import useAuth from "../hooks/useAuth";
 
+const ADD_BID_URL = "buyers/bid";
+const GET_BIDDER_URL = "buyers/getbidder";
+
 const AuctionView = () => {
   const { id } = useParams();
   const { auth } = useAuth();
@@ -98,6 +101,27 @@ const AuctionView = () => {
         setNextBidAmount(nextBid);
       }
     });
+  }, [bidSuccess]);
+
+  useEffect(() => {
+    if (auth?.roles === 5150) {
+      const data = {
+        buyerID: auth.user.id,
+        auctionID: id,
+      };
+      console.log(data);
+      axios.post(GET_BIDDER_URL, data).then((response) => {
+        if (response.data.error) {
+          console.log(response.data.error);
+        } else {
+          const bidder = response.data.bidder;
+          console.log("this is", bidder);
+          setBidder(bidder);
+        }
+      });
+    } else {
+      console.log("No Buyer Detected");
+    }
   }, [bidSuccess]);
 
   return (
