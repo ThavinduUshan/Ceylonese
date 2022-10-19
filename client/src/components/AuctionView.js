@@ -16,6 +16,53 @@ const AuctionView = () => {
 
   const [auction, setAuction] = useState();
 
+  const [remainingTime, setRemainingTime] = useState([0, 0, 0, 0]);
+  const [nextBidAmount, setNextBidAmount] = useState();
+  const [bidAmount, setBidAmount] = useState(nextBidAmount?.toFixed(2));
+  const [bidError, setBidError] = useState(false);
+  const [bidSuccess, setBidSuccess] = useState(false);
+
+  const handleBidAmount = (e) => {
+    e.preventDefault();
+    const bid = e.target.value;
+    if (bid < nextBidAmount) {
+      setBidError(true);
+      setBidAmount(bid);
+    } else {
+      setBidError(false);
+      setBidAmount(bid);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!auth?.user) {
+      navigate("/buyers/login", {
+        state: { from: { pathname: location.pathname } },
+        replace: true,
+      });
+    } else {
+      if (bidAmount < nextBidAmount) {
+        setBidError(true);
+      } else {
+        const data = {
+          auctionID: id,
+          buyerID: auth.user.id,
+          bidAmount: bidAmount,
+        };
+
+        axios.post(ADD_BID_URL, data).then((res) => {
+          console.log(res);
+          setBidSuccess(true);
+          setTimeout(() => {
+            setBidSuccess(false);
+          }, 2000);
+        });
+      }
+    }
+  };
+
   const calculateRemaningTime = (endDate) => {
     const countDown = new Date(endDate).getTime();
 
