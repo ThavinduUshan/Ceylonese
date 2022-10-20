@@ -63,8 +63,29 @@ const getChatsByRoomID = (roomID, res) => {
     });
   };
 
+  const getRoomsBySeller = (sellerID, res) => {
+    return new Promise((resolve, reject) => {
+      db.getConnection((err, connection) => {
+        if (err) {
+          return res.json("Internal Server Error");
+        } else {
+          const sql =
+            "SELECT chats.*,chat_messages.message, chat_messages.sentDate, chat_messages.sentTime, buyers.username FROM chats INNER JOIN buyers ON chats.buyerID = buyers.id INNER JOIN chat_messages ON chats.roomID = chat_messages.roomID WHERE chats.sellerID = ? GROUP BY chats.roomID ORDER BY chat_messages.sentTime DESC";
+          connection.query(sql, [sellerID], (err, results) => {
+            if (err) {
+              reject();
+            } else {
+              resolve(results);
+            }
+          });
+        }
+      });
+    });
+  };
+
 module.exports ={
     getRoomsByBuyer,
     getChatsByRoomID,
     addMessage,
+    getRoomsBySeller,
 }
