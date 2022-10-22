@@ -470,6 +470,29 @@ const getSellerFromStore = (storeID, res) => {
   });
 };
 
+const getAnnualSalesData = (sellerID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal Server Error!" });
+      } else {
+        console.log(sellerID);
+        const sql =
+          "select date_format(orders.datetime, '%M') AS month,sum(order_items.orderPrice) AS sales from orders INNER JOIN order_items ON orders.orderID = order_items.orderID WHERE order_items.sellerID=? group by month";
+        connection.query(sql, [sellerID], (error, results) => {
+          connection.release();
+          if (error) {
+            reject();
+          } else {
+            console.log(results);
+            resolve(results);
+          }
+        });
+      }
+    });
+  });
+};
+
 module.exports = {
   createSellerRequest,
   submitSellerVerificationDocs,
@@ -484,4 +507,5 @@ module.exports = {
   updateShippingStatus,
   getShippedOrders,
   getCompletedOrders,
+  getAnnualSalesData,
 };

@@ -17,5 +17,8 @@ router.route("/orders/completed").post(sellerController.getCompletedOrders);
 router
   .route("/getproductsfromstore")
   .post(sellerController.getProductsFromStore);
+router
+  .route("/charts/getannualsalesdata")
+  .post(sellerController.getAnnualSalesData);
 
 module.exports = router;
