@@ -125,6 +125,26 @@ const newBid = (buyerID, auctionID, bidAmount, res) => {
   });
 };
 
+const getBidder = (auctionID, buyerID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "SELECT * FROM biddings WHERE buyerID = ? AND auctionID = ? ORDER BY bidID DESC LIMIT 1";
+        connection.query(sql, [buyerID, auctionID], (error, results) => {
+          if (error) {
+            reject();
+          } else {
+            resolve(results[0]);
+          }
+        });
+      }
+    });
+  });
+};
+
 module.exports = {
   createBuyer,
   findBuyer,
@@ -132,4 +152,5 @@ module.exports = {
   checkBidCount,
   updateLastBid,
   newBid,
+  getBidder,
 };
