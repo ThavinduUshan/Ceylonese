@@ -29,6 +29,7 @@ const findBuyer = (username) => {
 
       const sql = "SELECT * FROM buyers WHERE username=?";
       connection.query(sql, username, (error, results) => {
+        connection.release();
         if (error) throw error;
 
         if (results.length === 0 && !error) {
@@ -48,6 +49,7 @@ const isBuyerExists = (username) => {
 
       const sql = "SELECT * FROM buyers WHERE username=?";
       connection.query(sql, username, (error, results) => {
+        connection.release();
         if (error) throw error;
         console.log(results);
         if (results.length === 1 && !error) {
@@ -126,6 +128,26 @@ const getCompletedOrders = (buyerID, res) => {
   });
 };
 
+const checkBidCount = () => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql = "SELECT COUNT(auctionID) AS COUNT FROM biddings";
+        connection.query(sql, [], (error, results) => {
+          connection.release();
+          if (error) {
+            reject();
+          } else {
+            resolve(results[0].COUNT);
+          }
+        });
+      }
+    });
+  });
+};
+
 const ratingItem = (requestID, res) => {
   return new Promise((resolve, reject) => {
     db.getConnection((err, connection) => {
@@ -140,6 +162,24 @@ const ratingItem = (requestID, res) => {
             reject();
           } else {
             resolve(results[0]);
+          }
+        });
+      }
+    });
+  });
+};
+
+const updateLastBid = (auctionID) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) throw err;
+      else {
+        const sql = "UPDATE biddings SET status=? WHERE auctionID = ?";
+        connection.query(sql, [0, auctionID], (err, results) => {
+          if (err) {
+            reject();
+          } else {
+            resolve();
           }
         });
       }
@@ -201,6 +241,50 @@ const getCompletedOrdersTop = (buyerID, res) => {
   });
 };
 
+const newBid = (buyerID, auctionID, bidAmount, res) => {
+  db.getConnection((err, connection) => {
+    if (err) throw err;
+    else {
+      const sql =
+        "INSERT INTO biddings (auctionID, buyerID, bidAmount, status) VALUES (?, ?, ?, ?)";
+      connection.query(
+        sql,
+        [auctionID, buyerID, bidAmount, 1],
+        (error, results) => {
+          if (error) {
+            return res.json({ error: "Internal Server Error" });
+          } else {
+            console.log("hellpo");
+            res.json({
+              success: "Your Bid has been successfully added!",
+            });
+          }
+        }
+      );
+    }
+  });
+};
+
+const getBidder = (auctionID, buyerID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "SELECT * FROM biddings WHERE buyerID = ? AND auctionID = ? ORDER BY bidID DESC LIMIT 1";
+        connection.query(sql, [buyerID, auctionID], (error, results) => {
+          if (error) {
+            reject();
+          } else {
+            resolve(results[0]);
+          }
+        });
+      }
+    });
+  });
+};
+
 const getOrdersTop = (buyerID, res) => {
   return new Promise((resolve, reject) => {
     db.getConnection((err, connection) => {
@@ -226,11 +310,19 @@ const getOrdersTop = (buyerID, res) => {
   });
 };
 
-module.exports = { createBuyer, findBuyer, isBuyerExists,
+module.exports = {
+  createBuyer,
+  findBuyer,
+  isBuyerExists,
   getCheckoutDetails,
   getOrders,
   getCompletedOrders,
   ratingItem,
   submitReview,
   getCompletedOrdersTop,
-  getOrdersTop, };
+  getOrdersTop,
+  checkBidCount,
+  updateLastBid,
+  newBid,
+  getBidder,
+};

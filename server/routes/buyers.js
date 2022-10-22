@@ -3,8 +3,9 @@ const router = express.Router();
 const buyerController = require("../controller/buyerController");
 
 router.route("/register").post(buyerController.createBuyer);
-
 router.route("/login").post(buyerController.LoginBuyer);
+router.route("/bid").post(buyerController.placeBid);
+router.route("/getbidder").post(buyerController.getBidder);
 router.route("/bid").post(buyerController.placeBid);
 router.route("/checkout/details").post(buyerController.getCheckoutDetails);
 router.route("/orders").post(buyerController.getOrders);

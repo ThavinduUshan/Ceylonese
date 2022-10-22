@@ -209,11 +209,28 @@ const getOrdersCompletedTop = async (req, res) => {
   }
 };
 
-module.exports = { createBuyer, LoginBuyer,
+const getBidder = async (req, res) => {
+  const { auctionID, buyerID } = req.body;
+  try {
+    await buyerModel.getBidder(auctionID, buyerID, res).then((results) => {
+      const bidder = results;
+      res.json({ bidder: bidder });
+    });
+  } catch (err) {
+    return res.json({ error: error });
+  }
+};
+
+module.exports = {
+  createBuyer,
+  LoginBuyer,
   getCheckoutDetails,
   getOrders,
   getCompletedOrders,
   ratingItem,
   submitReview,
   getOrdersTop,
-  getOrdersCompletedTop };
+  getOrdersCompletedTop,
+  placeBid,
+  getBidder,
+};
