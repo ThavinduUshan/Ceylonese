@@ -5,5 +5,6 @@ const buyerController = require("../controller/buyerController");
 router.route("/register").post(buyerController.createBuyer);
 router.route("/login").post(buyerController.LoginBuyer);
 router.route("/bid").post(buyerController.placeBid);
+router.route("/getbidder").post(buyerController.getBidder);
 
 module.exports = router;

@@ -127,4 +127,16 @@ const placeBid = async (req, res) => {
   }
 };
 
-module.exports = { createBuyer, LoginBuyer, placeBid };
+const getBidder = async (req, res) => {
+  const { auctionID, buyerID } = req.body;
+  try {
+    await buyerModel.getBidder(auctionID, buyerID, res).then((results) => {
+      const bidder = results;
+      res.json({ bidder: bidder });
+    });
+  } catch (err) {
+    return res.json({ error: error });
+  }
+};
+
+module.exports = { createBuyer, LoginBuyer, placeBid, getBidder };
