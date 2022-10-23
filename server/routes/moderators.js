@@ -22,4 +22,13 @@ router
 router
   .route("/supportticketcomplains/:id")
   .get(moderatorController.getSupportTicketComplainDetails);
+
+  router
+  .route("/Charts/getchartdata")
+  .post(moderatorController.getSupportTicketTypes);
+
+router
+  .route("/Charts/getsellerrequestspercentages")
+  .post(moderatorController.getSellerRequestsPercentages);
+
 module.exports = router;
