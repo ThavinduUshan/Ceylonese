@@ -5,6 +5,32 @@ import { useNavigate } from "react-router-dom";
 const Reports = () => {
   
 
+    const [formState, setFormState] = useState({
+        type: 1,
+        from: "",
+        to: "",
+      });
+    
+      const [error, setError] = useState();
+    
+      const navigateTo = useNavigate();
+    
+      const setType = (e) => {
+        e.preventDefault();
+        setFormState({ ...formState, type: e.target.value });
+      };
+    
+      const setFromDate = (e) => {
+        e.preventDefault();
+        setFormState({ ...formState, from: e.target.value });
+      };
+    
+      const setTodate = (e) => {
+        e.preventDefault();
+        setFormState({ ...formState, to: e.target.value });
+      };
+
+
   return (
     <>
       <NavBar />

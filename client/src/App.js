@@ -70,6 +70,7 @@ function App() {
             element={<ViewModerators />}
           />
           <Route path="/sys/admins/addmoderators" element={<AddModerators />} />
+          <Route path="/sys/admins/reports" element={<Reports />} />
         </Route>
 
         {/* Moderator Protected Routes */}
