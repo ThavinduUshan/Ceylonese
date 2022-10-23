@@ -20,5 +20,8 @@ router
 router
   .route("/charts/getannualsalesdata")
   .post(sellerController.getAnnualSalesData);
+router
+  .route("/charts/getchartdata")
+  .post(sellerController.getSalesByCategories);
 
 module.exports = router;

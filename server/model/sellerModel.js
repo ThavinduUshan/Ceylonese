@@ -493,6 +493,29 @@ const getAnnualSalesData = (sellerID, res) => {
   });
 };
 
+const getSalesByCategories = (sellerID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal Server Error!" });
+      } else {
+        console.log(sellerID);
+        const sql =
+          "SELECT products.category, COUNT(products.category) AS count FROM order_items LEFT JOIN products ON products.productID = order_items.productID WHERE order_items.sellerID = ? GROUP BY products.category";
+        connection.query(sql, [sellerID], (error, results) => {
+          connection.release();
+          if (error) {
+            reject();
+          } else {
+            console.log(results);
+            resolve(results);
+          }
+        });
+      }
+    });
+  });
+};
+
 module.exports = {
   createSellerRequest,
   submitSellerVerificationDocs,
@@ -508,4 +531,5 @@ module.exports = {
   getShippedOrders,
   getCompletedOrders,
   getAnnualSalesData,
+  getSalesByCategories,
 };

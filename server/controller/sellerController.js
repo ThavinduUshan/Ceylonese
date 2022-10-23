@@ -496,6 +496,20 @@ const getAnnualSalesData = async (req, res) => {
   }
 };
 
+const getSalesByCategories = async (req, res) => {
+  const { sellerID } = req.body;
+  try {
+    await sellerModel.getSalesByCategories(sellerID, res).then((response) => {
+      const details = response;
+      res.json({
+        request: details,
+      });
+    });
+  } catch (err) {
+    res.json({ error: err });
+  }
+};
+
 module.exports = {
   submitSellerRequests,
   loginSeller,
@@ -509,4 +523,5 @@ module.exports = {
   getCompletedOrders,
   getProductsFromStore,
   getAnnualSalesData,
+  getSalesByCategories,
 };
