@@ -71,6 +71,14 @@ function App() {
           />
           <Route path="/sys/admins/addmoderators" element={<AddModerators />} />
           <Route path="/sys/admins/reports" element={<Reports />} />
+          <Route
+            path="/sys/admins/reports/sales/:type/:from/:to"
+            element={<SalesForecast />}
+          />
+          <Route
+            path="/sys/admins/reports/issues/:type/:from/:to"
+            element={<IssuesForecast />}
+          />
         </Route>
 
         {/* Moderator Protected Routes */}
