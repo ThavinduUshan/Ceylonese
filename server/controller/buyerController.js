@@ -180,9 +180,40 @@ const submitReview = async (req, res) => {
   }
 };
 
+const getOrdersTop = async (req, res) => {
+  console.log("here");
+  const { buyerID } = req.body;
+  console.log("this", buyerID);
+  try {
+    await buyerModel.getOrdersTop(buyerID, res).then((response) => {
+      const requests = response;
+      console.log(requests);
+      res.json({ requests: requests });
+    });
+  } catch (err) {
+    return res.json({ error: "Internal Server Error" });
+  }
+};
+
+const getOrdersCompletedTop = async (req, res) => {
+  const { buyerID } = req.body;
+
+  try {
+    await buyerModel.getCompletedOrdersTop(buyerID, res).then((response) => {
+      const orders = response;
+      console.log(orders);
+      res.json({ orders: orders });
+    });
+  } catch (err) {
+    return res.json({ error: "Internal Server Error" });
+  }
+};
+
 module.exports = { createBuyer, LoginBuyer,
   getCheckoutDetails,
   getOrders,
   getCompletedOrders,
   ratingItem,
-  submitReview, };
+  submitReview,
+  getOrdersTop,
+  getOrdersCompletedTop };

@@ -180,9 +180,57 @@ const submitReview = (data, res) => {
   });
 };
 
+const getCompletedOrdersTop = (buyerID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "SELECT order_items.*, stores.storeName, products.productID, reviews.productRating, products.title, products.shippingTime, product_images.image1, orders.datetime FROM order_items INNER JOIN orders ON order_items.orderID = orders.orderID INNER JOIN products ON order_items.productID = products.productID INNER JOIN product_images ON products.productID = product_images.productID INNER JOIN reviews ON reviews.orderItemID = order_items.orderItemID INNER JOIN stores ON stores.sellerID = order_items.sellerID WHERE orders.buyerID = ? AND order_items.status = ? ORDER BY order_items.orderItemID LIMIT 3";
+        connection.query(sql, [buyerID, "Completed"], (error, results) => {
+          connection.release();
+          if (error) {
+            reject();
+          } else {
+            resolve(results);
+          }
+        });
+      }
+    });
+  });
+};
+
+const getOrdersTop = (buyerID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "SELECT order_items.*, products.title, products.shippingTime, product_images.image1, orders.datetime FROM order_items INNER JOIN orders ON order_items.orderID = orders.orderID INNER JOIN products ON order_items.productID = products.productID INNER JOIN product_images ON products.productID = product_images.productID WHERE orders.buyerID = ? AND order_items.status = ? OR order_items.status = ? ORDER BY order_items.orderItemID DESC LIMIT 3";
+        connection.query(
+          sql,
+          [buyerID, "Pending", "Shipped"],
+          (error, results) => {
+            connection.release();
+            if (error) {
+              reject();
+            } else {
+              resolve(results);
+            }
+          }
+        );
+      }
+    });
+  });
+};
+
 module.exports = { createBuyer, findBuyer, isBuyerExists,
   getCheckoutDetails,
   getOrders,
   getCompletedOrders,
   ratingItem,
-  submitReview, };
+  submitReview,
+  getCompletedOrdersTop,
+  getOrdersTop, };
