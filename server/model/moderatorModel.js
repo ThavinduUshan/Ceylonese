@@ -352,6 +352,27 @@ const getSupportTicketTypes = (req, res) => {
   });
 };
 
+const getSellerRequestsPercentages = (req, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal Server Error!" });
+      } else {
+        const sql =
+          "Select status,COUNT(requestID) AS count FROM seller_requests GROUP BY status";
+        connection.query(sql, (error, results) => {
+          connection.release();
+          if (error) {
+            reject();
+          } else {
+            console.log(results);
+            resolve(results);
+          }
+        });
+      }
+    });
+  });
+};
 
 
 
@@ -369,5 +390,6 @@ module.exports = {
   closeSupportTicket,
   getSupportTicketComplains,
   getSupportTicketComplainDetails,
-  getSupportTicketTypes
+  getSupportTicketTypes,
+  getSellerRequestsPercentages
 };
