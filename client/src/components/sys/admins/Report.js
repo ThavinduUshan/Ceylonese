@@ -30,6 +30,27 @@ const Reports = () => {
         setFormState({ ...formState, to: e.target.value });
       };
 
+      const generateReport = (e) => {
+        e.preventDefault();
+        if (!formState.from || !formState.to) {
+          setError("From and To dates can't be empty");
+        } else if (formState.from > formState.to) {
+          setError("From date must be a past date than To date");
+        } else {
+          if (formState.type == 1) {
+            navigateTo(
+              `/sys/admins/reports/sales/${formState.type}/${formState.from}/${formState.to}`,
+              { replace: true }
+            );
+          } else if (formState.type == 2) {
+            navigateTo(
+              `/sys/admins/reports/issues/${formState.type}/${formState.from}/${formState.to}`,
+              { replace: true }
+            );
+          }
+        }
+      };
+
 
   return (
     <>
