@@ -7,6 +7,35 @@ const GEL_ISSUE_FORECAST_URL = "/admins/reports/issues";
 
 const IssuesForecast = () => {
 
+    const { type } = useParams();
+  const { from } = useParams();
+  const { to } = useParams();
+
+  const [records, setRecords] = useState();
+  const [button, setButton] = useState(true);
+
+  useEffect(() => {
+    const data = {
+      type: type,
+      from: from,
+      to: to,
+    };
+
+    if (data) {
+      axios.post(GEL_ISSUE_FORECAST_URL, data).then((response) => {
+        if (response.data.error) {
+          console.log(response.data.error);
+        } else {
+          const records = response.data.records;
+          console.log(response.data.records);
+          setRecords(records);
+        }
+      });
+    } else {
+      console.log("error");
+    }
+  }, []);
+
   return (
     <>
       <NavBar />
