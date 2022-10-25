@@ -62,4 +62,26 @@ const getIssuesData = async (req, res) => {
   }
 };
 
-module.exports = { createMod, getModerators, getIssuesData };
+const getSalesData = async (req, res) => {
+  const { from, to } = req.body;
+
+  if (!to) {
+    return res.json({ error: "To Date Can't be empty" });
+  }
+
+  if (!from) {
+    return res.json({ error: "From Date Can't be empty" });
+  }
+
+  try {
+    await adminModel.getSalesData(from, to, res).then((results) => {
+      const records = results;
+      console.log(results);
+      res.json({ records: records });
+    });
+  } catch (error) {
+    return res.json({ error: error });
+  }
+};
+
+module.exports = { createMod, getModerators, getIssuesData, getSalesData };
