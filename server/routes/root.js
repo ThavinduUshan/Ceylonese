@@ -8,5 +8,6 @@ router.route("/getauctions").get(rootController.getAuctions);
 router.route("/getauctions/:id").get(rootController.getAuctionDetails);
 router.route("/addsupportticket").post(rootController.addSupportTicket);
 router.route("/reviews/product").post(rootController.getProductReviews);
+router.route("/partnership/status").post(rootController.checkPartnershipStatus);
 
 module.exports = router;

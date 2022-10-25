@@ -102,10 +102,41 @@ const getProductReviews = (productID, res) => {
   });
 };
 
+
+const checkPartnershipStatus = (productID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Something went wrong" });
+      } else {
+        const sql =
+          "SELECT partnershipID, status FROM partnerships WHERE senderProduct = ? OR receiverProduct = ? AND status = ?";
+        connection.query(
+          sql,
+          [productID, productID, "Active"],
+          (err, results) => {
+            connection.release();
+            if (err) {
+              reject();
+            } else if (results.length === 0) {
+              resolve(false);
+            } else {
+              console.log(results[0]);
+              resolve(results[0]);
+            }
+          }
+        );
+
+      }
+    });
+  });
+};
+
 module.exports = {
   getProducts,
   getProductDetails,
   getAuctions,
   getAuctionDetails,
   getProductReviews,
+  checkPartnershipStatus,
 };

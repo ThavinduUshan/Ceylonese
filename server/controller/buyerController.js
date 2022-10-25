@@ -221,6 +221,121 @@ const getBidder = async (req, res) => {
   }
 };
 
+const addPayment = async (customer, data) => {
+  const buyerID = customer.metadata.buyerID;
+  const cart = JSON.parse(customer.metadata.cart);
+  const subTotal = data.amount_subtotal / 100;
+  const total = data.amount_total / 100;
+  const address = data.customer_details.address;
+
+  console.log("address", address);
+  console.log(cart);
+  console.log("this is cart length : ", cart.length);
+
+  let date = new Date();
+  console.log(date);
+  let currentDate =
+    date.getDay() + "-" + date.getMonth() + "-" + date.getFullYear();
+
+  let currentTime =
+    date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+  try {
+    await buyerModel
+      .createOrder(buyerID, subTotal, total, currentDate, currentTime)
+      .then((order) => {
+        const orderID = order.orderID;
+        console.log(orderID);
+
+        buyerModel.addOrderAddress(orderID, address).then(() => {
+          cart.map((item) => {
+            console.log(item);
+            buyerModel.placeOrder(orderID, item);
+          });
+        });
+      });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const getBidsActive = async (req, res) => {
+  const { buyerID } = req.body;
+
+  try {
+    await buyerModel.getBidsActive(buyerID, res).then((results) => {
+      const bids = results;
+      res.json({
+        bids: bids,
+      });
+    });
+  } catch (err) {
+    return res.json({ error: "Internal Server Error" });
+  }
+};
+
+const getBidsEnded = async (req, res) => {
+  const { buyerID } = req.body;
+
+  try {
+    await buyerModel.getBidsEnded(buyerID, res).then((results) => {
+      const bids = results;
+      res.json({
+        bids: bids,
+      });
+    });
+  } catch (err) {
+    return res.json({ error: "Internal Server Error" });
+  }
+};
+
+const getBidCompleted = async (req, res) => {
+  const { buyerID } = req.body;
+
+  try {
+    await buyerModel.getBidsCompleted(buyerID, res).then((results) => {
+      const bids = results;
+      res.json({
+        bids: bids,
+      });
+    });
+  } catch (err) {
+    return res.json({ error: "Internal Server Error" });
+
+  }
+};
+
+const placeBid = async (req, res) => {
+  const { buyerID, auctionID, bidAmount } = req.body;
+  console.log(buyerID, auctionID, bidAmount);
+
+  try {
+    await buyerModel.checkBidCount().then((count) => {
+      console.log(count);
+      if (count) {
+        console.log("came");
+        buyerModel
+          .updateLastBid(auctionID)
+          .then(() => {
+            console.log("hereee");
+            buyerModel.newBid(buyerID, auctionID, bidAmount, res);
+          })
+          .catch(() => {
+            return res.json({ error: "Internal Server Error" });
+          });
+      } else if (count === 0 && count >= 0) {
+        console.log("here");
+        buyerModel.newBid(buyerID, auctionID, bidAmount, res);
+      } else {
+        console.log("came");
+        return res.json({ error: "Internal Server Error" });
+      }
+    });
+  } catch (err) {
+    console.log("came");
+    return res.json({ error: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   createBuyer,
   LoginBuyer,
@@ -233,4 +348,8 @@ module.exports = {
   getOrdersCompletedTop,
   placeBid,
   getBidder,
+  addPayment,
+  getBidsActive,
+  getBidsEnded,
+  getBidCompleted,
 };
