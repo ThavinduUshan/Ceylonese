@@ -81,5 +81,26 @@ const getIssuesData = (from, to, res) => {
   });
 };
 
+const getSalesData = (from, to, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "SELECT SUM(total) AS total, COUNT(orderID) AS orderCount, datetime FROM orders WHERE CAST(datetime AS DATE) BETWEEN ? AND ? GROUP BY CAST(datetime AS DATE) ";
+        connection.query(sql, [from, to], (err, results) => {
+          connection.release();
+          if (err) {
+            reject();
+          } else {
+            resolve(results);
+          }
+        });
+      }
+    });
+  });
+};
 
-module.exports = { isModeratorExists, createModerator, getModerators, getIssuesData };
+
+module.exports = { isModeratorExists, createModerator, getModerators, getIssuesData, getSalesData };
