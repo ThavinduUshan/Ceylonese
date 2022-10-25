@@ -1,10 +1,31 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import axios from "../../../api/axios";
 import NavBar from "../../NavBar";
-import sales from "../../../images/sellers/sales.png";
-import pie from "../../../images/sellers/pie.png";
 import ModeratorSideBar from "./ModeratorSideBar";
+import PendingSupportTicketTypes from "./Charts/PendingSupportTicketTypes";
+import SellerRequestsPercentages from "./Charts/SellerRequestsPercentages";
 
 const ModeratorProfile = () => {
+  const GET_SELLER_REQUEST_COUNT_URL = "moderators/getsellerrequestscount";
+  const GET_SUPPORT_TICKET_COUNT_URL = "moderators/getsupportticketcount";
+
+  const [sellerrequestscount, setSellerRequestsCount] = useState();
+  const [supportticketcount, setSupportTicketCount] = useState();
+
+  useEffect(() => {
+    axios.get(GET_SELLER_REQUEST_COUNT_URL).then((response) => {
+      console.log(response.data.requests);
+      setSellerRequestsCount(response.data.requests);
+    });
+  }, []);
+
+  useEffect(() => {
+    axios.get(GET_SUPPORT_TICKET_COUNT_URL).then((response) => {
+      console.log(response.data.requests);
+      setSupportTicketCount(response.data.requests);
+    });
+  }, []);
+
   return (
     <>
       <NavBar />
@@ -16,7 +37,7 @@ const ModeratorProfile = () => {
           <section>
             <div className="container px-6 py-10 mx-auto">
               <h1 className="text-3xl font-semibold text-gray-800 capitalize lg:text-4xl ">
-                Good Evening Jeewanthi
+                Good Evening Mod!
               </h1>
 
               <div className="grid grid-cols-1 gap-8 mt-8 xl:mt-8 xl:gap-8 md:grid-cols-2 xl:grid-cols-3">
@@ -43,11 +64,11 @@ const ModeratorProfile = () => {
                       />
                     </svg>
                     <p className="pl-16 pb-4 text-xl font-semibold text-gray-400 w-full">
-                      Seller Requests
+                      Pending Seller Requests
                     </p>
                   </div>
                   <p className=" text-gray-600 text-3xl text-center w-full">
-                    5
+                    {sellerrequestscount?.RequestCount}
                   </p>
                 </div>
 
@@ -105,23 +126,36 @@ const ModeratorProfile = () => {
                       />
                     </svg>
                     <p className="pl-16 pb-4 text-xl font-semibold text-gray-400 w-full">
-                      Support Tickets
+                      Pending Support Tickets
                     </p>
                   </div>
                   <p className=" text-gray-600 text-3xl text-center w-full">
-                    9
+                    {supportticketcount?.TicketCount}
                   </p>
                 </div>
               </div>
             </div>
 
-            <p className="m-16 text-2xl text-gray-600">Sales Progress</p>
-            <div className="flex flex-row mx-8">
-              <div className="basis-4/6">
-                <img src={sales}></img>
+            <div className="flex flex-row justify-center items-center ">
+              <div className="flex flex-col justify-center items-center mx-16 my-8">
+                <div>
+                  <h3 className="text-gray-600 text-3xl p-8">
+                    Pending Support Tickets By Ticket Type
+                  </h3>
+                </div>
+                <div className="basis-3/6">
+                  <PendingSupportTicketTypes />
+                </div>
               </div>
-              <div className="basis-2/6">
-                <img src={pie}></img>
+              <div className="flex flex-col justify-center items-center mx-16 my-8">
+                <div>
+                  <h3 className="text-gray-600 text-3xl p-8">
+                    Seller Requests
+                  </h3>
+                </div>
+                <div className="basis-3/6">
+                  <SellerRequestsPercentages />
+                </div>
               </div>
             </div>
           </section>
