@@ -101,12 +101,12 @@ const Footer = () => {
                   </Link>
                 </li>
                 <li className="mb-4">
-                  <Link to="/" className="hover:underline">
+                  <Link to="/refund" className="hover:underline">
                     Terms &amp; Conditions
                   </Link>
                 </li>
                 <li className="mb-4">
-                  <Link to="/" className="hover:underline">
+                  <Link to="/support" className="hover:underline">
                     Support ticket
                   </Link>
                 </li>
