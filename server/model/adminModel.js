@@ -60,4 +60,26 @@ const getModerators = (req, res) => {
   });
 };
 
-module.exports = { isModeratorExists, createModerator, getModerators };
+const getIssuesData = (from, to, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.json({ error: "Internal Server Error" });
+      } else {
+        const sql =
+          "SELECT * FROM support_tickets WHERE CONVERT(DATE, Date) BETWEEN ? AND ?";
+        connection.query(sql, [from, to], (err, results) => {
+          connection.release();
+          if (err) {
+            reject();
+          } else {
+            resolve(results);
+          }
+        });
+      }
+    });
+  });
+};
+
+
+module.exports = { isModeratorExists, createModerator, getModerators, getIssuesData };
