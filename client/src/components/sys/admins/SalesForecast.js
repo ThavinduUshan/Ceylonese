@@ -6,7 +6,34 @@ import axios from "../../../api/axios";
 const GEL_SALES_FORECAST_URL = "/admins/reports/sales";
 
 const SalesForecast = () => {
-
+    const { type } = useParams();
+    const { from } = useParams();
+    const { to } = useParams();
+  
+    const [records, setRecords] = useState();
+    const [button, setButton] = useState(true);
+  
+    useEffect(() => {
+      const data = {
+        type: type,
+        from: from,
+        to: to,
+      };
+  
+      if (data) {
+        axios.post(GEL_SALES_FORECAST_URL, data).then((response) => {
+          if (response.data.error) {
+            console.log(response.data.error);
+          } else {
+            const records = response.data.records;
+            console.log(response.data.records);
+            setRecords(records);
+          }
+        });
+      } else {
+        console.log("error");
+      }
+    }, []);
 
   return (
     <>
