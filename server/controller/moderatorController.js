@@ -173,6 +173,32 @@ const getSupportTicketComplainDetails = async (req, res) => {
   }
 };
 
+const getSupportTicketTypes = async (req, res) => {
+  try {
+    await moderatorModel.getSupportTicketTypes(res).then((response) => {
+      const details = response;
+      res.json({
+        request: details,
+      });
+    });
+  } catch (err) {
+    res.json({ error: err });
+  }
+};
+
+const getSellerRequestsPercentages = async (req, res) => {
+  try {
+    await moderatorModel.getSellerRequestsPercentages().then((response) => {
+      const requests = response;
+
+      res.json({ requests: requests });
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+
 
 module.exports = {
   getSellerRequests,
@@ -183,5 +209,7 @@ module.exports = {
   openSupportTicket, 
   closeSupportTicket, 
   getSupportTicketComplains,
-  getSupportTicketComplainDetails
+  getSupportTicketComplainDetails,
+  getSupportTicketTypes,
+  getSellerRequestsPercentages
 };
