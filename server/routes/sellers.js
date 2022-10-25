@@ -24,5 +24,16 @@ router
   .route("/charts/getchartdata")
   .post(sellerController.getSalesByCategories);
 router.route("/charts/gettopproducts").post(sellerController.getTopProducts);
+router.route("/getsales").post(sellerController.getSalesCount);
+router.route("/getorders").post(sellerController.getOrdersCount);
+router.route("/getpartnerships").post(sellerController.getPartnershipCount);
+router.route("/gettodaysales").post(sellerController.getTodaySalesCount);
+router.route("/getpendingorders").post(sellerController.getPendingOrdersCount);
+router
+  .route("/getcompletedorders")
+  .post(sellerController.getCompletedOrdersCount);
+router
+  .route("/getbestsellingproducts")
+  .post(sellerController.getBestSellingProducts);
 
 module.exports = router;

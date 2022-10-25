@@ -524,6 +524,106 @@ const getTopProducts = async (req, res) => {
   }
 };
 
+const getSalesCount = async (req, res) => {
+  const { sellerID } = req.body;
+  try {
+    await sellerModel.getSalesCount(sellerID, res).then((response) => {
+      const details = response;
+      res.json({
+        request: details,
+      });
+    });
+  } catch (err) {
+    res.json({ error: err });
+  }
+};
+
+const getOrdersCount = async (req, res) => {
+  const { sellerID } = req.body;
+  try {
+    await sellerModel.getOrdersCount(sellerID, res).then((response) => {
+      const details = response;
+      res.json({
+        request: details,
+      });
+    });
+  } catch (err) {
+    res.json({ error: err });
+  }
+};
+
+const getPartnershipCount = async (req, res) => {
+  const { sellerID } = req.body;
+  try {
+    await sellerModel.getPartnershipCount(sellerID, res).then((response) => {
+      const details = response;
+      res.json({
+        request: details,
+      });
+    });
+  } catch (err) {
+    res.json({ error: err });
+  }
+};
+
+const getTodaySalesCount = async (req, res) => {
+  const { sellerID } = req.body;
+  try {
+    await sellerModel.getTodaySalesCount(sellerID, res).then((response) => {
+      const details = response;
+      res.json({
+        request: details,
+      });
+    });
+  } catch (err) {
+    res.json({ error: err });
+  }
+};
+
+const getPendingOrdersCount = async (req, res) => {
+  const { sellerID } = req.body;
+  try {
+    await sellerModel.getPendingOrdersCount(sellerID, res).then((response) => {
+      const details = response;
+      res.json({
+        request: details,
+      });
+    });
+  } catch (err) {
+    res.json({ error: err });
+  }
+};
+
+const getCompletedOrdersCount = async (req, res) => {
+  const { sellerID } = req.body;
+  try {
+    await sellerModel
+      .getCompletedOrdersCount(sellerID, res)
+      .then((response) => {
+        const details = response;
+        res.json({
+          request: details,
+        });
+      });
+  } catch (err) {
+    res.json({ error: err });
+  }
+};
+
+const getBestSellingProducts = async (req, res) => {
+  const { sellerID } = req.body;
+  try {
+    await sellerModel.getBestSellingProducts(sellerID, res).then((response) => {
+      const details = response;
+      res.json({
+        request: details,
+      });
+    });
+  } catch (err) {
+    res.json({ error: err });
+  }
+};
+
 module.exports = {
   submitSellerRequests,
   loginSeller,
@@ -539,4 +639,11 @@ module.exports = {
   getAnnualSalesData,
   getSalesByCategories,
   getTopProducts,
+  getSalesCount,
+  getOrdersCount,
+  getPartnershipCount,
+  getTodaySalesCount,
+  getPendingOrdersCount,
+  getCompletedOrdersCount,
+  getBestSellingProducts,
 };

@@ -539,6 +539,166 @@ const getTopProducts = (sellerID, res) => {
   });
 };
 
+const getSalesCount = (sellerID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal Server Error!" });
+      } else {
+        console.log(sellerID);
+        const sql =
+          "SELECT SUM(orderPrice) AS sales FROM order_items WHERE sellerID=?";
+        connection.query(sql, [sellerID], (error, results) => {
+          connection.release();
+          if (error) {
+            reject();
+          } else {
+            console.log(results[0]);
+            resolve(results[0]);
+          }
+        });
+      }
+    });
+  });
+};
+
+const getOrdersCount = (sellerID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal Server Error!" });
+      } else {
+        console.log(sellerID);
+        const sql =
+          "SELECT COUNT(orderItemID) AS order_count FROM order_items WHERE sellerID=?";
+        connection.query(sql, [sellerID], (error, results) => {
+          connection.release();
+          if (error) {
+            reject();
+          } else {
+            console.log(results[0]);
+            resolve(results[0]);
+          }
+        });
+      }
+    });
+  });
+};
+
+const getPartnershipCount = (sellerID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal Server Error!" });
+      } else {
+        const sql =
+          "SELECT COUNT(partnershipID) AS count FROM partnerships WHERE senderID=? AND status='Active'";
+        connection.query(sql, [sellerID], (error, results) => {
+          connection.release();
+          if (error) {
+            reject();
+          } else {
+            resolve(results[0]);
+          }
+        });
+      }
+    });
+  });
+};
+
+const getTodaySalesCount = (sellerID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal Server Error!" });
+      } else {
+        console.log(sellerID);
+        const date = new Date();
+        const sql =
+          "SELECT SUM(orderPrice) AS sales FROM order_items WHERE sellerID=?";
+        connection.query(sql, [sellerID], (error, results) => {
+          connection.release();
+          if (error) {
+            reject();
+          } else {
+            console.log(results[0]);
+            resolve(results[0]);
+          }
+        });
+      }
+    });
+  });
+};
+
+const getPendingOrdersCount = (sellerID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal Server Error!" });
+      } else {
+        console.log(sellerID);
+        const sql =
+          "SELECT COUNT(orderItemID) AS order_count FROM order_items WHERE sellerID=? AND status='Pending'";
+        connection.query(sql, [sellerID], (error, results) => {
+          connection.release();
+          if (error) {
+            reject();
+          } else {
+            console.log(results[0]);
+            resolve(results[0]);
+          }
+        });
+      }
+    });
+  });
+};
+
+const getCompletedOrdersCount = (sellerID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal Server Error!" });
+      } else {
+        console.log(sellerID);
+        const sql =
+          "SELECT COUNT(orderItemID) AS order_count FROM order_items WHERE sellerID=? AND status='Completed'";
+        connection.query(sql, [sellerID], (error, results) => {
+          connection.release();
+          if (error) {
+            reject();
+          } else {
+            console.log(results[0]);
+            resolve(results[0]);
+          }
+        });
+      }
+    });
+  });
+};
+
+const getBestSellingProducts = (sellerID, res) => {
+  return new Promise((resolve, reject) => {
+    db.getConnection((err, connection) => {
+      if (err) {
+        return res.status(500).json({ error: "Internal Server Error!" });
+      } else {
+        console.log(sellerID);
+        const sql =
+          "SELECT * FROM products INNER JOIN order_items on products.productID = order_items.productID INNER JOIN product_images on product_images.productID = products.productID WHERE order_items.sellerID = 2 GROUP By products.title LIMIT 3";
+        connection.query(sql, [sellerID], (error, results) => {
+          connection.release();
+          if (error) {
+            reject();
+          } else {
+            console.log(results);
+            resolve(results);
+          }
+        });
+      }
+    });
+  });
+};
+
 module.exports = {
   createSellerRequest,
   submitSellerVerificationDocs,
@@ -556,4 +716,11 @@ module.exports = {
   getAnnualSalesData,
   getSalesByCategories,
   getTopProducts,
+  getSalesCount,
+  getOrdersCount,
+  getPendingOrdersCount,
+  getPartnershipCount,
+  getTodaySalesCount,
+  getCompletedOrdersCount,
+  getBestSellingProducts,
 };
